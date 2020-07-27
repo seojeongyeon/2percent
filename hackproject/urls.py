@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from two import views
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,4 +26,5 @@ urlpatterns = [
     path('photodetail/', views.photodetail, name='photodetail'),
     path('contest/', views.contest, name='contest'),
     path('mission/', views.mission, name='mission'),
-]
+    path('photowrite/', views.photowrite, name='photowrite'),
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
