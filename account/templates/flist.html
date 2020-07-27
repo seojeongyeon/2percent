@@ -1,0 +1,16 @@
+
+<table>
+    {% for fuser in fusers %}
+    <tr>
+        <td>
+            <a href="{% url 'user' fuser.id %}">{{ fuser.profile }}</a>
+        </td>
+        <td>
+            <a href="{% url 'user' fuser.id %}" style="text-decoration: none;">
+                <h2>{{ fuser.username }}</h2>
+                <h4>{{ fuser.nickname }}</h4>
+            </a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
