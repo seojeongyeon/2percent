@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, login, authenticate, logout
+from .forms import LoginForm, RegisterForm
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.decorators import login_required
 from .forms import UserEditForm
@@ -8,13 +9,33 @@ User = get_user_model()
 
 # Create your views here.
 def signin(request):
-    return render(request, 'signin.html')
+    if request.method == "POST":
+        form = LoginForm(request=request, data=request)
+        if form.is_valid():
+            nickname = form.cleaned_data.get("nickname")
+            password = form.cleaned_data.get("password")
+            user = authenticate(request=request, nickname=nickname, password=password)
+    else:
+        form = LoginForm()
+        return render(request, "signin.html", {"form":form})
 
 def signup(request):
-    return render(request, 'signup.html')
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            return redirect("home")
+        return render(request, "signup.html", {"form":form})
+    else:
+
+        form = RegisterForm()
+        return render(request, "signup.html", {"form":form})
 
 def signout(request):
-    return render(request, 'signout.html')
+    logout(request)
+    return redirect('home')
 
 # 마이페이지 노출
 @login_required
