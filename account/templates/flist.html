@@ -1,9 +1,13 @@
-
+{% load static %}
 <table>
     {% for fuser in fusers %}
     <tr>
         <td>
-            <a href="{% url 'user' fuser.id %}">{{ fuser.profile }}</a>
+            <a href="{% url 'user' fuser.id %}">
+            {% if fuser.profile %} <img src="{{ fuser.profile.url }}">
+            {% else %} <img src="{% static 'default_profile.jpg' %}">
+            {% endif %}
+            </a>
         </td>
         <td>
             <a href="{% url 'user' fuser.id %}" style="text-decoration: none;">
