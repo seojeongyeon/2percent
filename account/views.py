@@ -1,9 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth import get_user_model, login, authenticate, logout
+from django.contrib.auth import get_user_model, login, authenticate, logout, update_session_auth_hash
 from .forms import LoginForm, RegisterForm
 from django.contrib.auth.forms import PasswordChangeForm
 from .forms import UserEditForm
-from django.contrib.auth.decorators import login_required
 
 User = get_user_model()
 
@@ -15,7 +14,9 @@ def signin(request):
             username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
             user = authenticate(request=request, username=username, password=password)
-            return redirect('home')
+            if user:
+                login(request, user)
+                return redirect('home')
     else:
         form = LoginForm()
     return render(request, "signin.html", {"form":form})
@@ -40,7 +41,6 @@ def signout(request):
 
 
 # 마이페이지 노출
-@login_required
 def mypage(request):
     return render(request, 'mypage.html')
 
@@ -62,7 +62,6 @@ def follower(request, user_id):
     return render(request, 'flist.html', { 'fusers': fusers })
 
 # 유저 팔로우 기능
-@login_required
 def follow(request, user_id):
     # request.user -> user(pk=user_id) 팔로우(request.user following 리스트에 user를 추가)
     user = get_object_or_404(User, pk=user_id)
@@ -72,7 +71,6 @@ def follow(request, user_id):
     return redirect('user', user_id)
 
 # 유저 언팔 기능
-@login_required
 def unfollow(request, user_id):
     # request.user -> user(pk=user_id) 팔로우(request.user following 리스트에 user를 추가)
     user = get_object_or_404(User, pk=user_id)
@@ -81,7 +79,6 @@ def unfollow(request, user_id):
         user.save()
     return redirect('user', user_id)
 
-@login_required
 def info_setting(request): 
     if request.method == "GET":
         form = UserEditForm(instance=request.user)
@@ -92,13 +89,13 @@ def info_setting(request):
             return redirect('mypage')
     return render(request, 'setting.html', { 'form': form })
 
-@login_required
 def pw_setting(request):
     if request.method == "GET":
-        form = PasswordChangeForm(request.user)
+        form = PasswordChangeForm(user=request.user)
     else:
-        form = PasswordChangeForm(request.user, request.POST)
+        form = PasswordChangeForm(user=request.user, data=request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            update_session_auth_hash(request, user)
             return redirect('mypage')
     return render(request, 'setting.html', { 'form': form })

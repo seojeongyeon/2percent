@@ -11,10 +11,9 @@
 <!-- 유저 정보 -->
 <p>닉네임: {{ request.user.nickname }}</p>
 <p>생일: {{ request.user.birthday }}</p>
+<p>이메일: {{ request.user.email }}</p>
+<p>소개: {{ request.user.info }}</p>
 
-
-<!-- 유저 이름 -->
-{{ d_user.nickname }}
 
 <!-- 유저 팔로우/팔로잉 수 노출 -->
 <div role="followers">
