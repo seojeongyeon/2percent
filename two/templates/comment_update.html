@@ -1,0 +1,9 @@
+<!-- 보정법 게시글 댓글 수정 -->
+<h1> 댓글 수정하기 </h1>
+
+<form action="{%url 'update' photoshop.comment.id %}" method = "POST">
+    {%csrf_token%}
+    본문: <textarea name="body" id="" cols="30" rows="10">{{photoshop.comment.body}}</textarea>
+    <br>
+    <button type="submit">SAVE</button>
+</form>
