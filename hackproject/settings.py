@@ -122,3 +122,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = "account.User"
+
+DATE_INPUT_FORMATS = [ '%d-%d-%Y']

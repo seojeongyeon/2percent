@@ -6,7 +6,11 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('signout/', views.signout, name='signout'),
 
-    path('user_list/<int:user_id>', views.user_list, name="user"),
+    path('user/<int:user_id>', views.user, name="user"),
     path('mypage/', views.mypage, name="mypage"),
     path('follow/<int:user_id>', views.follow, name="follow"),
+    path('following/<int:user_id>', views.following, name="following"),
+    path('follow/<int:user_id>', views.follower, name="follower"),
+    path('info_setting/', views.info_setting, name="info_setting"),
+    path('pw_setting/', views.pw_setting, name="pw_setting"),
 ]
