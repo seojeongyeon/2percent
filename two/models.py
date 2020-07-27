@@ -51,6 +51,6 @@ class MissionComment(models.Model):
     pub_date = models.DateTimeField(auto_now_add=True)
     body = models.TextField()
     image = models.ImageField(upload_to="image")
-    isPicked = models.BooleanField()
+    isPicked = models.BooleanField(default=False)
 
 

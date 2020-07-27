@@ -8,12 +8,24 @@
 
 <a href="{% url 'mission_delete' mission.id %}">삭제</a>
 
+<a href="{% url 'mission' %}">home</a>
+
+<br><br><hr>
+<h2>comments</h2>
+<form method="POST" action="{% url 'mission_comment_create' mission.id %}" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>image: <input type="file" name="image"></p>
+    <p>body: <textarea name="body"></textarea></p>
+    <p><input type="submit" value="SUBMIT"></p>
+</form>
+<hr>
 {% for comment in comments %}
-    <hr>
     <img src="{{comment.image.url}}">
     <p>writer:{{comment.writer}}</p>
     <p>pub_date:{{comment.pub_date}}</p>
     <p>body:{{comment.body}}</p>
     <p>pick:{{comment.isPicked}}</p>
+    <a href="{% url 'mission_comment_delete' comment.id %}">삭제</a>
+    <hr>
 {% endfor %}
 
