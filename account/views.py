@@ -10,14 +10,15 @@ User = get_user_model()
 # Create your views here.
 def signin(request):
     if request.method == "POST":
-        form = LoginForm(request=request, data=request)
+        form = LoginForm(request=request, data=request.POST)
         if form.is_valid():
-            nickname = form.cleaned_data.get("nickname")
+            username = form.cleaned_data.get("username")
             password = form.cleaned_data.get("password")
-            user = authenticate(request=request, nickname=nickname, password=password)
+            user = authenticate(request=request, username=username, password=password)
+            return redirect('home')
     else:
         form = LoginForm()
-        return render(request, "signin.html", {"form":form})
+    return render(request, "signin.html", {"form":form})
 
 def signup(request):
     if request.method == "POST":
