@@ -1,1 +1,14 @@
 <!-- 보정게시글(종합) -->
+<a href="{% url 'photowrite'%}">보정법 올리기</a>
+<br>
+<br>
+<hr>
+
+{% for p in photoshops.all %}
+    <div class="container">
+        <p>{{ p.title }}</p>
+        <p>{{ p.date }}</p>
+        <a href="{% url 'photodetail' p.pk %}">more</a>
+        <hr>
+    </div>
+{% endfor %}

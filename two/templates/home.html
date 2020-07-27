@@ -1,3 +1,14 @@
 <!-- 메인페이지 -->
 <h1>main</h1>
 <a href="{% url 'mission' %}">의뢰</a>
+<a href="{% url 'photoshop'%}">보정법</a>
+
+<div role="account">
+    {% if user.is_authenticated %}
+        <a href="{% url 'mypage' %}">마이페이지</a>
+        <a href="{% url 'signout' %}">로그아웃</a>
+    {% else %}
+        <a href="{% url 'signin' %}">로그인</a>
+        <a href="{% url 'signup' %}">회원가입</a>
+    {% endif %}
+</div>
