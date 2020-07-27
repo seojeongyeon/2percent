@@ -6,5 +6,7 @@ from hackproject import settings
 class User(AbstractUser):
     nickname = models.CharField(max_length=100)
     profile = models.ImageField(upload_to='account/', blank=True, null=True)
+    email = models.EmailField(max_length=200)
+    info = models.TextField(max_length=500, blank=True, null=True)
     birthday = models.DateField(blank=True, null=True)
     followers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='followings')

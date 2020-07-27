@@ -25,6 +25,17 @@
     <p>pub_date:{{comment.pub_date}}</p>
     <p>body:{{comment.body}}</p>
     <p>pick:{{comment.isPicked}}</p>
+    <p>like : {{comment.getlikes}}</p>
+    {% if user.is_authenticated %}
+    <form action="{% url 'mission_comment_like' comment.id %}" method="get">
+        {% if user in comment.likers.all %}
+        <button type="submit">취소</button>
+        {% else %}
+        <button type="submit">따봉</button>
+        {% endif %}
+        </p>
+    </form>
+    {% endif %}
     <a href="{% url 'mission_comment_delete' comment.id %}">삭제</a>
     <hr>
 {% endfor %}

@@ -1,5 +1,9 @@
 <!-- 요청 -->
 <h1>Mission</h1>
+<form method="POST">
+    <input type="text" name="search">
+    <input type="submit" value="search">
+</form>
 <a href="{% url 'mission_create' %}">글 등록</a>
 <hr>
 {% for mission in missions %}
