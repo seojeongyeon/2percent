@@ -25,16 +25,11 @@ class Comment(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='comments')
     body = models.TextField()
     pub_date = models.DateField(auto_now_add = True)
-
+    like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='likers')
+    
     def __str__(self):
         return f"{self.author}님이 {self.photoshop}에 단 댓글"
 
-class ask(models.Model):
-    title = models.CharField(max_length=100)
-    profile_pic = models.ImageField(upload_to="ask/profile_pic")
-    photo = models.ImageField(blank=True, upload_to="ask")
-    body = models.TextField()
-    pub_date = models.DateField(auto_now_add=True)
 
 class Mission(models.Model):
     title = models.CharField(max_length=100)

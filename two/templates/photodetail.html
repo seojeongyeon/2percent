@@ -2,16 +2,36 @@
 
 
 
+
+
+
+<!-- 보정게시글의 댓글 -->
+
 {% for comment in comments %}
 
     작성자:{{comment.author}}
 
     <p>내용: {{comment.body}}</p>
-     
+
+    {{comment.pub_date}}
+
+    
+    
+    <form action="/comment/like/{{comment.id}}" method="get">
+
+        <button type="submit" >♥</button>
+    </form> {{likes}}
+
+    {% if request.user = comment.author %}
+        <a href="{% url 'comment_update' comment.id%}">댓글 수정하기</a>
+        <br>
+        <a href="{% url 'comment_delete' comment.id%}">댓글 삭제하기</a>
+    
+
 
 {% endfor %}
 
-<form action="/photoshop/commenting/{{.id}}" method="POST">
+<form action="/photoshop/commenting/{{photoshop.id}}" method="POST">
     {% csrf_token %}
     <input type="text" name="body">
     <button type="submit">작성</button>

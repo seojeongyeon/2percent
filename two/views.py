@@ -24,7 +24,8 @@ def photowrite(request):
         return render(request, 'photowrite.html', {'form':form})
 
 def photodetail(request):
-    return render(request, 'photodetail.html')
+    comments = Comment.objects.filter(photoshop=photoshop)
+    return render(request, 'photodetail.html', {'photoshop':photoshop, 'comments':comments})
 
 def contest(request):
     return render(request, 'contest.html')
@@ -67,38 +68,30 @@ def commenting(request, photoshop_id):
     new_comment.photoshop = get_object_or_404(Blog, pk = photoshop_id)
     new_comment.author = request.user
     new_comment.body = request.POST.get('body')
+    like_num = len(blog.like.all())
     new_comment.save()
 
     return redirect('/photoshop/' + str(photoshop_id))
 
+def like(request, comment_id):
+    comment = get_object_or_404(Comment, pk= comment_id)
+    comment.like.add(request.user)
+    comment.save()
+
+    return redirect('/photoshop/' + str(photoshop_id))
+
+def comment_edit(request, comment_id):
+    comment_edit = get_object_or_404(Comment, pk = comment_id)
+    return render(request, "comment_edit.html", {'comment': edit_comment})
+
 def comment_update(request, comment_id):
-
-    comment = get_object_or_404(Comment, pk=comment_id)
-    document = get_object_or_404(Photoshop, pk=comment.photoshop.id)
-
-    if request.user != comment.author:
-        messages.warning(request, "권한 없음")
-        return redirect(photoshop)
-
-    if request.method == "POST":
-        form = CommentForm(request.POST, instance=comment)
-        if form.is_valid():
-            form.save()
-            return redirect(photoshop)
-    else:
-        form = CommentForm(instance=comment)
-    return render(request,'photodetail/comment/comment_update.html',{'form':form})
-
-
+    comment_update = get_object_or_404(Comment,pk = comment_id)
+    comment_update.body = request.POST['body']
+    comment_update.save()
+    return redirect('photodetail', update_comment.id)
+    
 def comment_delete(request, comment_id):
-
-    comment = get_object_or_404(Comment, pk=comment_id)
-    photoshop = get_object_or_404(Photoshop, pk=comment.photoshop.id)
-
-    if request.user != comment.author and request.user != photoshop.author:
-        messages.warning(request, '권한 없음')
-        return redirect(photodetail)
-
-    else:
-        delete_photoshop_comment.delete()
-        return redirect(photodetail)
+    comment_delete = get_object_or_404(Comment, pk = comment_id)
+    comment_delete.delete()
+    return redirect('photodetail')
+    
