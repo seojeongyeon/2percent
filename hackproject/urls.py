@@ -29,13 +29,18 @@ urlpatterns = [
     path('contest/', views.contest, name='contest'),
     path('mission/', views.mission, name='mission'),
     path('account/', include(account.urls)),
-    path('comment_update/', views.comment_update, name="comment_update"),
+    path('comment_delete/<int:comment_id>', views.comment_delete, name="comment_delete"),
     path('mission_detail/<int:mission_id>', views.mission_detail, name='mission_detail'),
     path('mission_create/', views.mission_create, name='mission_create'),
     path('mission_delete/<int:mission_id>', views.mission_delete, name='mission_delete'),
     path('mission_comment_create/<int:mission_id>', views.mission_comment_create, name='mission_comment_create'),
     path('mission_comment_delete/<int:comment_id>', views.mission_comment_delete, name='mission_comment_delete'),
+<<<<<<< HEAD
+    path('commenting/<int:pk>', views.commenting, name= 'commenting'),
+    path('comment_like/<int:pk>', views.comment_like, name='like'),
+=======
     path('mission_comment_like/<int:comment_id>', views.mission_comment_like, name='mission_comment_like'),
+>>>>>>> a3322110ff1f557d2947f31df4e7b88fbe27bff3
     path('photowrite/', views.photowrite, name='photowrite'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
