@@ -28,7 +28,7 @@
     <p>like : {{comment.getlikes}}</p>
     {% if user.is_authenticated %}
     <form action="{% url 'mission_comment_like' comment.id %}" method="get">
-        {% if user in comment.likers %}
+        {% if user in comment.likers.all %}
         <button type="submit">취소</button>
         {% else %}
         <button type="submit">따봉</button>

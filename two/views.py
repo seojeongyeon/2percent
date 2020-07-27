@@ -45,7 +45,7 @@ def mission_create(request):
         mission = Mission()
         mission.title = request.POST['title']
         mission.pub_date = timezone.datetime.now()
-        mission.writer = 'anonymous'
+        mission.writer = request.user
         mission.body = request.POST['body']
         mission.image = request.FILES['image']
         mission.point = request.POST['point']
@@ -71,7 +71,7 @@ def mission_delete(request, mission_id):
 def mission_comment_like(request, comment_id):
     comment = get_object_or_404(MissionComment, pk=comment_id)
     if request.user in comment.likers.all():
-        comment.likers.set(comment.likers.exclude(writer=request.user))
+        comment.likers.set(comment.likers.exclude(username=request.user))
     else : 
         comment.likers.add(request.user)
     comment.save()
@@ -81,7 +81,7 @@ def mission_comment_create(request, mission_id):
     comment = MissionComment()
     mission = get_object_or_404(Mission, pk=mission_id)
     comment.mission = mission
-    comment.writer = 'anonymous'
+    comment.writer = request.user
     comment.pub_date = timezone.datetime.now()
     comment.body = request.POST['body']
     comment.image = request.FILES['image']
