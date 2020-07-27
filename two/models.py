@@ -51,11 +51,11 @@ class Mission(models.Model):
     
 class MissionComment(models.Model):
     mission = models.ForeignKey(Mission, on_delete=models.CASCADE)
-    writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="writer")
+    writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="missionwriter")
     pub_date = models.DateTimeField(auto_now_add=True)
     body = models.TextField()
     image = models.ImageField(upload_to="image")
-    likers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="likers")
+    likers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="missionlikers")
     isPicked = models.BooleanField(default=False)
 
     def getlikes(self) :
