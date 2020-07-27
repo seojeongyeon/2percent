@@ -1,0 +1,16 @@
+<div class='container'>
+    <form method='POST' enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            {{form.as_table}}
+            {% if photoshop.photobefore %}
+                <img src="{{ photoshop.photobefore.url }}" >
+            {% endif %}
+            {% if photoshop.photoafter %}
+                <img src="{{ photoshop.photoafter.url }}" >
+            {% endif %}
+        </table>
+        <br>
+        <input class="btn btn-dark" type="submit" value="제출하기">
+    </form>
+</div>

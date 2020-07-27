@@ -17,6 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from two import views
 from .views import comment_update
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,4 +28,8 @@ urlpatterns = [
     path('contest/', views.contest, name='contest'),
     path('mission/', views.mission, name='mission'),
     path('comment_update/', views.comment_update, name="comment_update"),
-]
+    path('mission_detail/<int:mission_id>', views.mission_detail, name='mission_detail'),
+    path('mission_create/', views.mission_create, name='mission_create'),
+    path('mission_delete/<int:mission_id>', views.mission_delete, name='mission_delete'),
+    path('photowrite/', views.photowrite, name='photowrite'),
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
