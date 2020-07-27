@@ -1,0 +1,48 @@
+{% load static %}
+
+<!-- 유저 프로필 이미지 -->
+{% if d_user.profile %}
+    <img src="{{ d_user.profile.url}}">
+{%else%}
+    <img src="{% static 'default_profile.jpg' %}">
+{%endif%}
+
+
+<!-- 유저 이름 -->
+{{ d_user.nickname }}
+
+
+<!-- 유저 팔로우 기능 -->
+{% if user.is_authenticated %}
+    <!-- 자기 자신이 아니면: 로그인한 유저와 유저 페이지의 유저가 일치하지 않을 때 -->
+    {% if request.user != d_user %}
+        <!-- 언팔로우 노출 : 이미 팔로우한 유저일 때 -->
+        {% if request.user in d_user.followers.all %}
+            <a href="{% url 'unfollow' d_user.id %}">UNFOLLOW</a>
+        {% else %} <!-- 팔로우 노출 : 팔로우 하지 않는 유저일 때 -->
+            <a href="{% url 'follow' d_user.id %}">FOLLOW</a>
+        {% endif %}
+    {% else %} <!-- 자신의 유저 페이지이면 -->
+          <a href="{% url 'mypage' %}"></a>
+    {% endif %}
+{% else %} <!-- 로그인 안 했으면 -->
+    <!-- 팔로우인 척 하면서 로그인 페이지로 이동 -->
+    <a href="{% url 'signin' %}">FOLLOW</a>
+{% endif %}
+
+<!-- 유저 팔로우/팔로잉 수 노출 -->
+<div role="followers">
+    <a href="{% url 'follower' d_user.id %}">{{ d_user.followers.count }} followers</a>
+</div>
+<div role="followings">
+    <a href="{% url 'following' d_user.id %}">{{ d_user.followings.count }} followings</a>
+</div>
+
+
+<!-- 작성한 글 -->
+
+
+<!-- 작성한 의뢰글 -->
+
+
+<!-- 작성한 답변글 -->
