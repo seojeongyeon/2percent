@@ -1,5 +1,4 @@
 from django.db import models
-from django.conf.auth.models import User
 from django.conf import settings
 from pytz import timezone
 
@@ -8,7 +7,7 @@ from pytz import timezone
 class Mission(models.Model):
     title = models.CharField(max_length=100)
     pub_date = models.DateTimeField(auto_now_add=True)
-    writer = models.ForeignKey(User, on_delete=models.CASCADE)
+    writer = models.CharField(max_length=2)
     body = models.TextField()
     image = models.ImageField(upload_to="image")
     point = models.IntegerField(default=0)
@@ -16,7 +15,7 @@ class Mission(models.Model):
     
 class MissionComment(models.Model):
     mission = models.ForeignKey(Mission, on_delete=models.CASCADE)
-    writer = models.ForeignKey(User, on_delete=models.CASCADE)
+    writer = models.CharField(max_length=2)
     pub_date = models.DateTimeField(auto_now_add=True)
     body = models.TextField()
     image = models.ImageField(upload_to="image")
