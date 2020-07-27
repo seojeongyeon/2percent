@@ -20,6 +20,9 @@ class Photoshop(models.Model):
     photoafter = models.ImageField(upload_to="image/")
     explain = models.TextField()
 
+    def __str__(self):
+        return self.title
+
 class Comment(models.Model):
     photoshop = models.ForeignKey(Photoshop, on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='comments')
