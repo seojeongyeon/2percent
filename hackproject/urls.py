@@ -16,6 +16,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from two import views
+from .views import comment_update
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,4 +25,5 @@ urlpatterns = [
     path('photodetail/', views.photodetail, name='photodetail'),
     path('contest/', views.contest, name='contest'),
     path('mission/', views.mission, name='mission'),
+    path('comment_update/', views.comment_update, name="comment_update"),
 ]
