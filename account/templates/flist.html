@@ -7,10 +7,12 @@
         </td>
         <td>
             <a href="{% url 'user' fuser.id %}" style="text-decoration: none;">
-                <h2>{{ fuser.username }}</h2>
-                <h4>{{ fuser.nickname }}</h4>
+                <h2>{{ fuser.nickname }}</h2>
+                <h4>{{ fuser.email }}</h4>
             </a>
         </td>
     </tr>
+    {% empty %}
+        empty list
     {% endfor %}
 </table>
