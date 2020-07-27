@@ -1,1 +1,18 @@
-<!-- 보정게시글(각자) -->
+<!-- 보정게시글(각자) --> 
+
+
+
+{% for comment in comments %}
+
+    작성자:{{comment.author}}
+
+    <p>내용: {{comment.body}}</p>
+     
+
+{% endfor %}
+
+<form action="/photoshop/commenting/{{.id}}" method="POST">
+    {% csrf_token %}
+    <input type="text" name="body">
+    <button type="submit">작성</button>
+</form>
