@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Comment
-from .models import Mission, MissionComment
+from .models import Mission, MissionComment,Photoshop
 from .forms import PhotoshopForm
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
@@ -11,7 +11,8 @@ def home(request):
     return render(request, 'home.html')
 
 def photoshop(request):
-    return render(request, 'photoshop.html')
+    photoshops = Photoshop.objects
+    return render(request, 'photoshop.html',{'photoshops':photoshops})
 
 def photowrite(request):
     if request.method =='POST':
@@ -23,8 +24,9 @@ def photowrite(request):
         form = PhotoshopForm()
         return render(request, 'photowrite.html', {'form':form})
 
-def photodetail(request):
-    return render(request, 'photodetail.html')
+def photodetail(request, pk):
+    photodetail = get_object_or_404(Photoshop, pk=pk)
+    return render(request, 'photodetail.html', {'photodetail': photodetail})
 
 def contest(request):
     return render(request, 'contest.html')

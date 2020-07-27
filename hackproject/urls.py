@@ -25,7 +25,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('photoshop/', views.photoshop, name='photoshop'),
-    path('photodetail/', views.photodetail, name='photodetail'),
+    path('photodetail/<int:pk>', views.photodetail, name='photodetail'),
     path('contest/', views.contest, name='contest'),
     path('mission/', views.mission, name='mission'),
     path('account/', include(account.urls)),
