@@ -24,4 +24,7 @@ urlpatterns = [
     path('photodetail/', views.photodetail, name='photodetail'),
     path('contest/', views.contest, name='contest'),
     path('mission/', views.mission, name='mission'),
+    path('mission_detail/<int:mission_id>', views.mission_detail, name='mission_detail'),
+    path('mission_create/', views.mission_create, name='mission_create'),
+    path('mission_delete/<int:mission_id>', views.mission_delete, name='mission_delete'),
 ]
