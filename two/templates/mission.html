@@ -1,1 +1,9 @@
 <!-- 요청 -->
+<h1>Mission</h1>
+<a href="{% url 'mission_create' %}">글 등록</a>
+<hr>
+{% for mission in missions %}
+    <a href="{% url 'mission_detail' mission.id %}" style="float:left">
+        <img src="{{mission.image.url}}">
+    </a>
+{% endfor %}

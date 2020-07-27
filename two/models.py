@@ -19,3 +19,38 @@ class Photoshop(models.Model):
     photobefore = models.ImageField(upload_to="image/")
     photoafter = models.ImageField(upload_to="image/")
     explain = models.TextField()
+
+class Comment(models.Model):
+    photoshop = models.ForeignKey(Photoshop, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='comments')
+    body = models.TextField()
+    pub_date = models.DateField(auto_now_add = True)
+
+    def __str__(self):
+        return f"{self.author}님이 {self.photoshop}에 단 댓글"
+
+class ask(models.Model):
+    title = models.CharField(max_length=100)
+    profile_pic = models.ImageField(upload_to="ask/profile_pic")
+    photo = models.ImageField(blank=True, upload_to="ask")
+    body = models.TextField()
+    pub_date = models.DateField(auto_now_add=True)
+
+class Mission(models.Model):
+    title = models.CharField(max_length=100)
+    pub_date = models.DateTimeField(auto_now_add=True)
+    writer = models.CharField(max_length=2)
+    body = models.TextField()
+    image = models.ImageField(upload_to="image")
+    point = models.IntegerField(default=0)
+    end_date = models.DateTimeField()
+    
+class MissionComment(models.Model):
+    mission = models.ForeignKey(Mission, on_delete=models.CASCADE)
+    writer = models.CharField(max_length=2)
+    pub_date = models.DateTimeField(auto_now_add=True)
+    body = models.TextField()
+    image = models.ImageField(upload_to="image")
+    isPicked = models.BooleanField(default=False)
+
+
