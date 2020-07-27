@@ -51,6 +51,9 @@ class MissionComment(models.Model):
     pub_date = models.DateTimeField(auto_now_add=True)
     body = models.TextField()
     image = models.ImageField(upload_to="image")
+    likers = models.ManyToManyField(settings.AUTH_USER_MODEL)
     isPicked = models.BooleanField(default=False)
 
+    def getlikes(self) :
+        return len(self.likers.all())
 

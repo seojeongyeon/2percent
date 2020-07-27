@@ -30,8 +30,13 @@ def contest(request):
     return render(request, 'contest.html')
 
 def mission(request):
-    missions = Mission.objects.order_by('-pub_date')
-    return render(request, 'mission.html', {'missions':missions})
+    if request.method == 'POST':
+        word = request.POST['search']
+        missions = Mission.objects.filter(Q(title__icontains=word) | Q(writer__icontains=word) | Q(body__icontains=word))
+        return render(request, 'mission.html', {'missions':missions})
+    else :
+        missions = Mission.objects.order_by('-pub_date')
+        return render(request, 'mission.html', {'missions':missions})
 
 def mission_create(request):
     if request.method == 'POST' :
@@ -60,6 +65,15 @@ def mission_delete(request, mission_id):
     mission = get_object_or_404(Mission, pk=mission_id)
     mission.delete()
     return redirect('mission')
+
+def mission_comment_like(request, comment_id):
+    comment = get_object_or_404(MissionComment, pk=comment_id)
+    if request.user in comment.likers.all():
+        comment.likers.set(comment.likers.exclude(writer=request.user))
+    else : 
+        comment.likers.add(request.user)
+    comment.save()
+    return redirect('mission_detail', comment.mission.id)
 
 def mission_comment_create(request, mission_id):
     comment = MissionComment()
