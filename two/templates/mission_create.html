@@ -1,10 +1,10 @@
 <!--요청글작성-->
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    title: <input type="text" name="title">
-    body: <textarea name="body"></textarea>
-    image: <input type="file" name="image">
-    point: <input type="text" name="point">
-    end_date: <input type="date" name="end_date">
-    <input type="submit" value="SUBMIT">
+    <p>title: <input type="text" name="title"></p>
+    <p>body: <textarea name="body"></textarea></p>
+    <p>image: <input type="file" name="image"></p>
+    <p>point: <input type="text" name="point"></p>
+    <p>end_date: <input type="date" name="end_date"></p>
+    <p><input type="submit" value="SUBMIT"></p>
 </form>

@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Comment
 from .models import Mission
 from .forms import PhotoshopForm
+from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 
 
@@ -33,16 +34,20 @@ def mission(request):
     return render(request, 'mission.html', {'missions':missions})
 
 def mission_create(request):
-    new_mission = Mission()
-    new_mission.title = request.POST['title']
-    new_mission.pub_date = timezone.datetime.now()
-    new_mission.writer = request.user
-    new_mission.body = request.POST['body']
-    new_mission.image = request.FILES
-    new_mission.point = request.POST['point']
-    new_mission.end_date = request.POST['end_date']
-    new_mission.save()
-    return redirect('mission_detail', new_mission.id)
+    if request.method == 'POST' :
+        new_mission = Mission()
+        new_mission.title = request.POST['title']
+        new_mission.pub_date = timezone.datetime.now()
+        new_mission.writer = request.user
+        new_mission.body = request.POST['body']
+        new_mission.image = request.FILES
+        new_mission.point = request.POST['point']
+        new_mission.end_date = request.POST['end_date']
+        new_mission.save()
+        return redirect('mission_detail', new_mission.id)
+    else :
+        return render(request, 'mission_create.html')
+
 
 def mission_detail(request, mission_id):
     mission = get_object_or_404(Mission, pk=mission_id)
