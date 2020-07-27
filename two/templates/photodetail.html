@@ -31,21 +31,21 @@
 
     
     
-    <form action="/comment/like/{{comment.id}}" method="get">
+    <form action="/comment_like/{{comment.id}}" method="get">
 
         <button type="submit" >♥</button>
-    </form> {{likes}}
+    </form> {{comment.getlike}}
 
-    {% if request.user = comment.author %}
-        <a href="{% url 'comment_update' comment.id%}">댓글 수정하기</a>
+    {% if request.user == comment.author %}
+       
         <br>
         <a href="{% url 'comment_delete' comment.id%}">댓글 삭제하기</a>
-    
+    {% endif %}
 
 
 {% endfor %}
 
-<form action="/photoshop/commenting/{{photoshop.id}}" method="POST">
+<form action="/commenting/{{photodetail.id}}" method="POST">
     {% csrf_token %}
     <input type="text" name="body">
     <button type="submit">작성</button>

@@ -29,10 +29,13 @@ class Comment(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='comments')
     body = models.TextField()
     pub_date = models.DateField(auto_now_add = True)
-    like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='likers')
+    like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like')
     
     def __str__(self):
         return f"{self.author}님이 {self.photoshop}에 단 댓글"
+
+    def getlike(self):
+        return len(self.like.all())
 
 
 class Mission(models.Model):
