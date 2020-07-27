@@ -1,7 +1,6 @@
-from django.shortcuts import render
 from .models import Mission
+from .forms import PhotoshopForm
 from django.shortcuts import render, redirect, get_object_or_404
-
 
 # Create your views here.
 def home(request):
@@ -9,6 +8,16 @@ def home(request):
 
 def photoshop(request):
     return render(request, 'photoshop.html')
+
+def photowrite(request):
+    if request.method =='POST':
+        form = PhotoshopForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = PhotoshopForm()
+        return render(request, 'photowrite.html', {'form':form})
 
 def photodetail(request):
     return render(request, 'photodetail.html')
