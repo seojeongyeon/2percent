@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Comment
-from .models import Mission, MissionComment
+from .models import Mission, MissionComment,Photoshop
 from .forms import PhotoshopForm
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404

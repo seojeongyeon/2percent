@@ -4,6 +4,7 @@ from pytz import timezone
 
 # Create your models here.
 class Photoshop(models.Model):
+    title = models.CharField(max_length=70, null=True)
     date = models.DateTimeField(auto_now_add=True)
     device_CHOICES = (('핸드폰', 'phone'), ('카메라', 'camera'),('필름카메라','filmcamera'))
     device = models.CharField(max_length=7, choices=device_CHOICES)
