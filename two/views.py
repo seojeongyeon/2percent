@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from .models import Comment
-from .models import Mission
+from .models import Mission, MissionComment,Photoshop
 from .forms import PhotoshopForm
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
@@ -11,7 +11,8 @@ def home(request):
     return render(request, 'home.html')
 
 def photoshop(request):
-    return render(request, 'photoshop.html')
+    photoshops = Photoshop.objects
+    return render(request, 'photoshop.html',{'photoshops':photoshops})
 
 def photowrite(request):
     if request.method =='POST':
@@ -23,32 +24,33 @@ def photowrite(request):
         form = PhotoshopForm()
         return render(request, 'photowrite.html', {'form':form})
 
-def photodetail(request):
+def photodetail(request, pk):
+    photodetail = get_object_or_404(Photoshop, pk=pk)
     comments = Comment.objects.filter(photoshop=photoshop)
-    return render(request, 'photodetail.html', {'photoshop':photoshop, 'comments':comments})
+    return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
+
 
 def contest(request):
     return render(request, 'contest.html')
 
 def mission(request):
-    missions = Mission.objects.all()
+    missions = Mission.objects.order_by('-pub_date')
     return render(request, 'mission.html', {'missions':missions})
 
 def mission_create(request):
     if request.method == 'POST' :
-        new_mission = Mission()
-        new_mission.title = request.POST['title']
-        new_mission.pub_date = timezone.datetime.now()
-        new_mission.writer = request.user
-        new_mission.body = request.POST['body']
-        new_mission.image = request.FILES
-        new_mission.point = request.POST['point']
-        new_mission.end_date = request.POST['end_date']
-        new_mission.save()
-        return redirect('mission_detail', new_mission.id)
+        mission = Mission()
+        mission.title = request.POST['title']
+        mission.pub_date = timezone.datetime.now()
+        mission.writer = 'anonymous'
+        mission.body = request.POST['body']
+        mission.image = request.FILES['image']
+        mission.point = request.POST['point']
+        mission.end_date = request.POST['end_date']
+        mission.save()
+        return redirect('mission_detail', mission.id)
     else :
         return render(request, 'mission_create.html')
-
 
 def mission_detail(request, mission_id):
     mission = get_object_or_404(Mission, pk=mission_id)
@@ -61,7 +63,25 @@ def mission_detail(request, mission_id):
 def mission_delete(request, mission_id):
     mission = get_object_or_404(Mission, pk=mission_id)
     mission.delete()
-    redirect('mission')
+    return redirect('mission')
+
+def mission_comment_create(request, mission_id):
+    comment = MissionComment()
+    mission = get_object_or_404(Mission, pk=mission_id)
+    comment.mission = mission
+    comment.writer = 'anonymous'
+    comment.pub_date = timezone.datetime.now()
+    comment.body = request.POST['body']
+    comment.image = request.FILES['image']
+    comment.save()
+    return redirect('mission_detail', mission_id)
+
+
+def mission_comment_delete(request, comment_id):
+    comment = get_object_or_404(MissionComment, pk=comment_id)
+    mission_id = comment.mission.id
+    comment.delete()
+    return redirect('mission_detail', mission_id)
 
 def commenting(request, photoshop_id):
     new_comment = Comment()

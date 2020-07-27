@@ -4,6 +4,7 @@ from pytz import timezone
 
 # Create your models here.
 class Photoshop(models.Model):
+    title = models.CharField(max_length=70, null=True)
     date = models.DateTimeField(auto_now_add=True)
     device_CHOICES = (('핸드폰', 'phone'), ('카메라', 'camera'),('필름카메라','filmcamera'))
     device = models.CharField(max_length=7, choices=device_CHOICES)
@@ -19,6 +20,9 @@ class Photoshop(models.Model):
     photobefore = models.ImageField(upload_to="image/")
     photoafter = models.ImageField(upload_to="image/")
     explain = models.TextField()
+
+    def __str__(self):
+        return self.title
 
 class Comment(models.Model):
     photoshop = models.ForeignKey(Photoshop, on_delete=models.CASCADE, related_name='comments')
@@ -46,6 +50,6 @@ class MissionComment(models.Model):
     pub_date = models.DateTimeField(auto_now_add=True)
     body = models.TextField()
     image = models.ImageField(upload_to="image")
-    isPicked = models.BooleanField()
+    isPicked = models.BooleanField(default=False)
 
 
