@@ -1,14 +1,25 @@
 <!--요청글 디테일-->
 <h1>{{mission.title}}</h1>
-<p>pub_date:{{mission.pub_date}}</p>
 <p>writer:{{mission.writer}}</p>
+<p>pub_date:{{mission.pub_date}}</p>
+<p>end_date:{{mission.end_date}}</p>
+<p>point:{{mission.point}}</p>
 <p>body:{{mission.body}}</p>
 <img src="{{mission.image.url}}">
-<p>end_date:{{mission.end_date}}</p>
 
 <a href="{% url 'mission_delete' mission.id %}">삭제</a>
 
 <a href="{% url 'mission' %}">home</a>
+
+<!-- 게시글 스크랩 -->
+{% if user.is_authenticated %}
+    {% if mission not in request.user.mscraps.all %}
+        <a href="{% url 'mission_scrap' mission.id %}">스크랩</a>
+    {% else %}
+        <a href="{% url 'mission_scrap_del' mission.id %}">스크랩 취소</a>
+    {% endif %}
+{% endif %}
+
 
 <br><br><hr>
 <h2>comments</h2>
@@ -25,7 +36,17 @@
     <p>pub_date:{{comment.pub_date}}</p>
     <p>body:{{comment.body}}</p>
     <p>pick:{{comment.isPicked}}</p>
+    <p>like : {{comment.getlikes}}</p>
+    {% if user.is_authenticated %}
+    <form action="{% url 'mission_comment_like' comment.id %}" method="get">
+        {% if user in comment.likers.all %}
+        <button type="submit">취소</button>
+        {% else %}
+        <button type="submit">따봉</button>
+        {% endif %}
+        </p>
+    </form>
+    {% endif %}
     <a href="{% url 'mission_comment_delete' comment.id %}">삭제</a>
     <hr>
 {% endfor %}
-

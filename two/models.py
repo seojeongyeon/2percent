@@ -5,6 +5,7 @@ from pytz import timezone
 # Create your models here.
 class Photoshop(models.Model):
     title = models.CharField(max_length=70, null=True)
+    writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="photoshop")
     date = models.DateTimeField(auto_now_add=True)
     device_CHOICES = (('핸드폰', 'phone'), ('카메라', 'camera'),('필름카메라','filmcamera'))
     device = models.CharField(max_length=7, choices=device_CHOICES)
@@ -29,32 +30,41 @@ class Comment(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='comments')
     body = models.TextField()
     pub_date = models.DateField(auto_now_add = True)
-
+    like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like')
+    
     def __str__(self):
         return f"{self.author}님이 {self.photoshop}에 단 댓글"
 
-class ask(models.Model):
-    title = models.CharField(max_length=100)
-    profile_pic = models.ImageField(upload_to="ask/profile_pic")
-    photo = models.ImageField(blank=True, upload_to="ask")
-    body = models.TextField()
-    pub_date = models.DateField(auto_now_add=True)
+    def getlike(self):
+        return len(self.like.all())
+
 
 class Mission(models.Model):
     title = models.CharField(max_length=100)
     pub_date = models.DateTimeField(auto_now_add=True)
-    writer = models.CharField(max_length=2)
+    writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="mission")
     body = models.TextField()
     image = models.ImageField(upload_to="image")
     point = models.IntegerField(default=0)
     end_date = models.DateTimeField()
-    
+
 class MissionComment(models.Model):
     mission = models.ForeignKey(Mission, on_delete=models.CASCADE)
-    writer = models.CharField(max_length=2)
+    writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="missionwriter")
     pub_date = models.DateTimeField(auto_now_add=True)
     body = models.TextField()
     image = models.ImageField(upload_to="image")
+    likers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="missionlikers")
     isPicked = models.BooleanField(default=False)
+
+    def getlikes(self) :
+        return len(self.likers.all())
+
+class Contest(models.Model):
+    image = models.ImageField(upload_to="image")
+    like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='contestlike')
+
+    def getlike(self):
+        return len(self.like.all())
 
 

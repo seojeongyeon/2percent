@@ -1,10 +1,14 @@
 from django.shortcuts import render
-from .models import Comment
-from .models import Mission, MissionComment,Photoshop
-from .forms import PhotoshopForm
+from .models import Mission, MissionComment,Photoshop,Comment,Contest
+from .forms import PhotoshopForm, ContestForm
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.paginator import Paginator
+from django.db.models import Count, F
+from django.db.models import Q, Count
 
+User = get_user_model()
 
 # Create your views here.
 def home(request):
@@ -12,13 +16,19 @@ def home(request):
 
 def photoshop(request):
     photoshops = Photoshop.objects
-    return render(request, 'photoshop.html',{'photoshops':photoshops})
+    photos = Photoshop.objects.all()
+    paginator = Paginator(photos, 2)
+    page = request.GET.get('page')
+    photocut = paginator.get_page(page)
+    return render(request, 'photoshop.html',{'photoshops':photoshops,'photocut':photocut})
 
 def photowrite(request):
     if request.method =='POST':
         form = PhotoshopForm(request.POST,request.FILES)
         if form.is_valid():
-            form.save()
+            content = form.save(commit=False)
+            content.writer = request.user
+            content.save()
             return redirect('home')
     else:
         form = PhotoshopForm()
@@ -26,21 +36,67 @@ def photowrite(request):
 
 def photodetail(request, pk):
     photodetail = get_object_or_404(Photoshop, pk=pk)
-    return render(request, 'photodetail.html', {'photodetail': photodetail})
+    comments = photodetail.comments.all()
+    sort = request.GET.get('sort','') #url의 쿼리스트링을 가져온다. 없는 경우 공백을 리턴한다
+    if sort == 'like':
+        co = comments.annotate(likes=Count(like.all())).order_by('-likes')
+    else:
+        co = comments.order_by('-pub_date')
+    return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments,'co' : co})
+    return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
+
+def photoscrap(request, pk):
+    photodetail = get_object_or_404(Photoshop, pk=pk)
+    comments = photodetail.comments.all()
+    request.user.pscraps.add(photodetail)
+    return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
+
+def photoscrap_del(request, pk):
+    photodetail = get_object_or_404(Photoshop, pk=pk)
+    comments = photodetail.comments.all()
+    request.user.pscraps.remove(photodetail)
+    return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
 
 def contest(request):
-    return render(request, 'contest.html')
+    contests = Contest.objects
+    return render(request, 'contest.html',{'contests':contests})
+
+def contestwrite(request):
+    if request.method == 'POST':
+        form = ContestForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('contest')
+    else:
+        form = ContestForm()
+        return render(request, 'contestwrite.html', {'form':form})
+
+def contest_like(request,contest_id):
+    contest = get_object_or_404(Contest, pk = contest_id)
+    contest.like.add(request.user)
+    contest.save()
+    return redirect('contest', contest.id)
+    
+
 
 def mission(request):
-    missions = Mission.objects.order_by('-pub_date')
+    sort = request.GET.get('sort','')
+    word = request.GET.get('search','')
+    mission_search = Mission.objects.filter(Q(title__icontains=word) | Q(body__icontains=word))
+
+    if sort == 'comment': missions = mission_search.annotate(comment_count=Count('missioncomment')).order_by('-comment_count', '-pub_date')
+    elif sort == 'enddate': missions = mission_search.order_by('end_date')
+    elif sort == 'point': missions = mission_search.order_by('-point') 
+    else: missions = mission_search.order_by('-pub_date')
     return render(request, 'mission.html', {'missions':missions})
+
 
 def mission_create(request):
     if request.method == 'POST' :
         mission = Mission()
         mission.title = request.POST['title']
         mission.pub_date = timezone.datetime.now()
-        mission.writer = 'anonymous'
+        mission.writer = request.user
         mission.body = request.POST['body']
         mission.image = request.FILES['image']
         mission.point = request.POST['point']
@@ -58,16 +114,43 @@ def mission_detail(request, mission_id):
         'comments' : comments,
         })
 
+def mission_scrap(request, mission_id):
+    mission = get_object_or_404(Mission, pk=mission_id)
+    comments = mission.missioncomment_set.all()
+    request.user.mscraps.add(mission)
+    return render(request, 'mission_detail.html', {
+        'mission': mission,
+        'comments' : comments,
+        })
+
+def mission_scrap_del(request, mission_id):
+    mission = get_object_or_404(Mission, pk=mission_id)
+    comments = mission.missioncomment_set.all()
+    request.user.mscraps.remove(mission)
+    return render(request, 'mission_detail.html', {
+        'mission': mission,
+        'comments' : comments,
+        })
+
 def mission_delete(request, mission_id):
     mission = get_object_or_404(Mission, pk=mission_id)
     mission.delete()
     return redirect('mission')
 
+def mission_comment_like(request, comment_id):
+    comment = get_object_or_404(MissionComment, pk=comment_id)
+    if request.user in comment.likers.all():
+        comment.likers.set(comment.likers.exclude(username=request.user))
+    else : 
+        comment.likers.add(request.user)
+    comment.save()
+    return redirect('mission_detail', comment.mission.id)
+
 def mission_comment_create(request, mission_id):
     comment = MissionComment()
     mission = get_object_or_404(Mission, pk=mission_id)
     comment.mission = mission
-    comment.writer = 'anonymous'
+    comment.writer = request.user
     comment.pub_date = timezone.datetime.now()
     comment.body = request.POST['body']
     comment.image = request.FILES['image']
@@ -81,43 +164,33 @@ def mission_comment_delete(request, comment_id):
     comment.delete()
     return redirect('mission_detail', mission_id)
 
-def commenting(request, photoshop_id):
+def commenting(request, pk):
     new_comment = Comment()
-    new_comment.photoshop = get_object_or_404(Blog, pk = photoshop_id)
+    new_comment.photoshop = get_object_or_404(Photoshop, pk = pk)
     new_comment.author = request.user
     new_comment.body = request.POST.get('body')
     new_comment.save()
+    return redirect('photodetail', pk)
 
-    return redirect('/photoshop/' + str(photoshop_id))
-
-def comment_update(request, comment_id):
-
-    comment = get_object_or_404(Comment, pk=comment_id)
-    document = get_object_or_404(Photoshop, pk=comment.photoshop.id)
-
-    if request.user != comment.author:
-        messages.warning(request, "권한 없음")
-        return redirect(photoshop)
-
-    if request.method == "POST":
-        form = CommentForm(request.POST, instance=comment)
-        if form.is_valid():
-            form.save()
-            return redirect(photoshop)
-    else:
-        form = CommentForm(instance=comment)
-    return render(request,'photodetail/comment/comment_update.html',{'form':form})
-
+def comment_like(request, pk):
+    comment = get_object_or_404(Comment, pk= pk)
+    comment.like.add(request.user)
+    comment.save()
+    return redirect('photodetail', comment.photoshop.id)
 
 def comment_delete(request, comment_id):
+    comment_delete = get_object_or_404(Comment, pk = comment_id)
+    id = comment_delete.photoshop.id
+    comment_delete.delete()
+    return redirect('photodetail', id)
+    
 
-    comment = get_object_or_404(Comment, pk=comment_id)
-    photoshop = get_object_or_404(Photoshop, pk=comment.photoshop.id)
+def photo_search(request):
+    photos = Photoshop.objects.all()
+    query = request.GET['query']
+    if query:
+        photo = Photoshop.objects.filter(title__icontains=query)
 
-    if request.user != comment.author and request.user != photoshop.author:
-        messages.warning(request, '권한 없음')
-        return redirect(photodetail)
+    return render(request, 'photo_search.html', {'photos':photos,'photo':photo})
 
-    else:
-        delete_photoshop_comment.delete()
-        return redirect(photodetail)
+    
