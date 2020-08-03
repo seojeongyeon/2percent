@@ -1,4 +1,4 @@
-<!-- 콘테스트 -->
+<!-- 콘테스트
 <!DOCTYPE html>
 <html>
 <head>
@@ -34,4 +34,27 @@
     <hr>
     <div class="full">img full</div>
 </body>
-</html>
+</html> -->
+
+<!-- 콘테스트 -->
+<h1>CONTEST</h1>
+<a href="{% url 'contestwrite'%}">콘테스트 지원하기</a>
+<br>
+<br>
+<hr>
+
+{% for contest in contests.all %}
+    <div class="container">
+        </p><img src="{{ contest.image.url }}" ><p>
+        
+        
+        <form action="/contest_like/{{contest.id}}" method="get">
+            <button type="submit">추천하기</button>
+        </form> 추천수 : {{contest.getlike}}
+        
+
+
+    <hr>
+    </div>
+
+{% endfor %}

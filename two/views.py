@@ -1,7 +1,12 @@
 from django.shortcuts import render
+<<<<<<< HEAD
+from .models import Mission, MissionComment,Photoshop,Comment,Contest
+from .forms import PhotoshopForm, ContestForm
+=======
 from django.contrib.auth import get_user_model
 from .models import Mission, MissionComment,Photoshop,Comment
 from .forms import PhotoshopForm
+>>>>>>> 08158e19491ff21394a970d456a23434f50de829
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -45,7 +50,26 @@ def photoscrap_del(request, pk):
     return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
 
 def contest(request):
-    return render(request, 'contest.html')
+    contests = Contest.objects
+    return render(request, 'contest.html',{'contests':contests})
+
+def contestwrite(request):
+    if request.method == 'POST':
+        form = ContestForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('contest')
+    else:
+        form = ContestForm()
+        return render(request, 'contestwrite.html', {'form':form})
+
+def contest_like(request,contest_id):
+    contest = get_object_or_404(Contest, pk = contest_id)
+    contest.like.add(request.user)
+    contest.save()
+    return redirect('contest', contest.id)
+    
+
 
 def mission(request):
     if request.method == 'POST':
@@ -148,6 +172,7 @@ def comment_delete(request, comment_id):
     id = comment_delete.photoshop.id
     comment_delete.delete()
     return redirect('photodetail', id)
+    
 
 def photo_search(request):
     photos = Photoshop.objects.all()
