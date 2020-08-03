@@ -1,9 +1,11 @@
 from django.shortcuts import render
+from django.contrib.auth import get_user_model
 from .models import Mission, MissionComment,Photoshop,Comment
 from .forms import PhotoshopForm
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 
+User = get_user_model()
 
 # Create your views here.
 def home(request):
@@ -30,6 +32,17 @@ def photodetail(request, pk):
     comments = photodetail.comments.all()
     return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
 
+def photoscrap(request, pk):
+    photodetail = get_object_or_404(Photoshop, pk=pk)
+    comments = photodetail.comments.all()
+    request.user.pscraps.add(photodetail)
+    return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
+
+def photoscrap_del(request, pk):
+    photodetail = get_object_or_404(Photoshop, pk=pk)
+    comments = photodetail.comments.all()
+    request.user.pscraps.remove(photodetail)
+    return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
 
 def contest(request):
     return render(request, 'contest.html')
@@ -61,6 +74,24 @@ def mission_create(request):
 def mission_detail(request, mission_id):
     mission = get_object_or_404(Mission, pk=mission_id)
     comments = mission.missioncomment_set.all()
+    return render(request, 'mission_detail.html', {
+        'mission': mission,
+        'comments' : comments,
+        })
+
+def mission_scrap(request, mission_id):
+    mission = get_object_or_404(Mission, pk=mission_id)
+    comments = mission.missioncomment_set.all()
+    request.user.mscraps.add(mission)
+    return render(request, 'mission_detail.html', {
+        'mission': mission,
+        'comments' : comments,
+        })
+
+def mission_scrap_del(request, mission_id):
+    mission = get_object_or_404(Mission, pk=mission_id)
+    comments = mission.missioncomment_set.all()
+    request.user.mscraps.remove(mission)
     return render(request, 'mission_detail.html', {
         'mission': mission,
         'comments' : comments,
