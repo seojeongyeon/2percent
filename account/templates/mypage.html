@@ -17,10 +17,10 @@
 
 <!-- 유저 팔로우/팔로잉 수 노출 -->
 <div role="followers">
-    <a href="{% url 'follower' request.user.id %}">{{ request.user.followers.count }} followers</a>
+    <a href="{% url 'follower' request.user.username %}">{{ request.user.followers.count }} followers</a>
 </div>
 <div role="followings">
-    <a href="{% url 'following' request.user.id %}">{{ request.user.followings.count }} followings</a>
+    <a href="{% url 'following' request.user.username %}">{{ request.user.followings.count }} followings</a>
 </div>
 
 
