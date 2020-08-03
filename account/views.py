@@ -45,8 +45,8 @@ def mypage(request):
     return render(request, 'mypage.html')
 
 # 유저 페이지 노출
-def user(request, user_id):
-    d_user = get_object_or_404(User, pk=user_id)
+def user(request, username):
+    d_user = get_object_or_404(User, username = username)
     return render(request, 'user.html', { 'd_user': d_user })
 
 # 팔로잉 리스트 노출

@@ -6,7 +6,8 @@ urlpatterns = [
     path('signup/', views.signup, name='signup'),
     path('signout/', views.signout, name='signout'),
 
-    path('user/<int:user_id>', views.user, name="user"),
+    #path('user/<int:user_id>', views.user, name="user"),
+    path('user/<slug:username>', views.user, name="user"),
     path('mypage/', views.mypage, name="mypage"),
     path('follower/<int:user_id>', views.follower, name="follower"),
     path('following/<int:user_id>', views.following, name="following"),
