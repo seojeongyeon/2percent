@@ -5,6 +5,7 @@ from pytz import timezone
 # Create your models here.
 class Photoshop(models.Model):
     title = models.CharField(max_length=70, null=True)
+    writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="photoshop")
     date = models.DateTimeField(auto_now_add=True)
     device_CHOICES = (('핸드폰', 'phone'), ('카메라', 'camera'),('필름카메라','filmcamera'))
     device = models.CharField(max_length=7, choices=device_CHOICES)
@@ -41,12 +42,12 @@ class Comment(models.Model):
 class Mission(models.Model):
     title = models.CharField(max_length=100)
     pub_date = models.DateTimeField(auto_now_add=True)
-    writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="mission")
     body = models.TextField()
     image = models.ImageField(upload_to="image")
     point = models.IntegerField(default=0)
     end_date = models.DateTimeField()
-    
+
 class MissionComment(models.Model):
     mission = models.ForeignKey(Mission, on_delete=models.CASCADE)
     writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="missionwriter")
