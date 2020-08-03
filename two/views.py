@@ -1,12 +1,7 @@
 from django.shortcuts import render
-<<<<<<< HEAD
 from .models import Mission, MissionComment,Photoshop,Comment,Contest
 from .forms import PhotoshopForm, ContestForm
-=======
 from django.contrib.auth import get_user_model
-from .models import Mission, MissionComment,Photoshop,Comment
-from .forms import PhotoshopForm
->>>>>>> 08158e19491ff21394a970d456a23434f50de829
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q, Count
