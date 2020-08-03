@@ -1,10 +1,11 @@
 <!--요청글 디테일-->
 <h1>{{mission.title}}</h1>
-<p>pub_date:{{mission.pub_date}}</p>
 <p>writer:{{mission.writer}}</p>
+<p>pub_date:{{mission.pub_date}}</p>
+<p>end_date:{{mission.end_date}}</p>
+<p>point:{{mission.point}}</p>
 <p>body:{{mission.body}}</p>
 <img src="{{mission.image.url}}">
-<p>end_date:{{mission.end_date}}</p>
 
 <a href="{% url 'mission_delete' mission.id %}">삭제</a>
 

@@ -4,8 +4,12 @@ from .forms import PhotoshopForm, ContestForm
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
+<<<<<<< HEAD
 from django.core.paginator import Paginator
 from django.db.models import Count, F
+=======
+from django.db.models import Q, Count
+>>>>>>> 356d6ed5e621e9490e31a71a8aadcc79637ee0b8
 
 User = get_user_model()
 
@@ -79,13 +83,16 @@ def contest_like(request,contest_id):
 
 
 def mission(request):
-    if request.method == 'POST':
-        word = request.POST['search']
-        missions = Mission.objects.filter(Q(title__icontains=word) | Q(writer__icontains=word) | Q(body__icontains=word))
-        return render(request, 'mission.html', {'missions':missions})
-    else :
-        missions = Mission.objects.order_by('-pub_date')
-        return render(request, 'mission.html', {'missions':missions})
+    sort = request.GET.get('sort','')
+    word = request.GET.get('search','')
+    mission_search = Mission.objects.filter(Q(title__icontains=word) | Q(body__icontains=word))
+
+    if sort == 'comment': missions = mission_search.annotate(comment_count=Count('missioncomment')).order_by('-comment_count', '-pub_date')
+    elif sort == 'enddate': missions = mission_search.order_by('end_date')
+    elif sort == 'point': missions = mission_search.order_by('-point') 
+    else: missions = mission_search.order_by('-pub_date')
+    return render(request, 'mission.html', {'missions':missions})
+
 
 def mission_create(request):
     if request.method == 'POST' :
