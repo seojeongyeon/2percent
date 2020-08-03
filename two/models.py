@@ -59,3 +59,11 @@ class MissionComment(models.Model):
     def getlikes(self) :
         return len(self.likers.all())
 
+class Contest(models.Model):
+    image = models.ImageField(upload_to="image")
+    like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='contestlike')
+
+    def getlike(self):
+        return len(self.like.all())
+
+

@@ -39,5 +39,7 @@ urlpatterns = [
     path('comment_like/<int:pk>', views.comment_like, name='like'),
     path('mission_comment_like/<int:comment_id>', views.mission_comment_like, name='mission_comment_like'),
     path('photowrite/', views.photowrite, name='photowrite'),
+    path('contestwrite/', views.contestwrite, name='contestwrite'),
+    path('contest_like/<int:contest_id>', views.contest_like, name='contest_like'),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

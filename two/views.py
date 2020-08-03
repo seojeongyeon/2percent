@@ -1,6 +1,6 @@
 from django.shortcuts import render
-from .models import Mission, MissionComment,Photoshop,Comment
-from .forms import PhotoshopForm
+from .models import Mission, MissionComment,Photoshop,Comment,Contest
+from .forms import PhotoshopForm, ContestForm
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 
@@ -30,7 +30,26 @@ def photodetail(request, pk):
 
 
 def contest(request):
-    return render(request, 'contest.html')
+    contests = Contest.objects
+    return render(request, 'contest.html',{'contests':contests})
+
+def contestwrite(request):
+    if request.method == 'POST':
+        form = ContestForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('contest')
+    else:
+        form = ContestForm()
+        return render(request, 'contestwrite.html', {'form':form})
+
+def contest_like(request,contest_id):
+    contest = get_object_or_404(Contest, pk = contest_id)
+    contest.like.add(request.user)
+    contest.save()
+    return redirect('contest', contest.id)
+    
+
 
 def mission(request):
     if request.method == 'POST':
