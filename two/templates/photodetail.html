@@ -16,16 +16,36 @@
 </div>
 
 
+
+
+
+<!-- 보정게시글의 댓글 -->
+
 {% for comment in comments %}
 
     작성자:{{comment.author}}
 
     <p>내용: {{comment.body}}</p>
-     
+
+    {{comment.pub_date}}
+
+    
+    
+    <form action="/comment_like/{{comment.id}}" method="get">
+
+        <button type="submit" >♥</button>
+    </form> {{comment.getlike}}
+
+    {% if request.user == comment.author %}
+       
+        <br>
+        <a href="{% url 'comment_delete' comment.id%}">댓글 삭제하기</a>
+    {% endif %}
+
 
 {% endfor %}
 
-<form action="/photoshop/commenting/{{.id}}" method="POST">
+<form action="/commenting/{{photodetail.id}}" method="POST">
     {% csrf_token %}
     <input type="text" name="body">
     <button type="submit">작성</button>

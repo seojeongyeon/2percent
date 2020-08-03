@@ -30,16 +30,14 @@ class Comment(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='comments')
     body = models.TextField()
     pub_date = models.DateField(auto_now_add = True)
-
+    like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like')
+    
     def __str__(self):
         return f"{self.author}님이 {self.photoshop}에 단 댓글"
 
-class ask(models.Model):
-    title = models.CharField(max_length=100)
-    profile_pic = models.ImageField(upload_to="ask/profile_pic")
-    photo = models.ImageField(blank=True, upload_to="ask")
-    body = models.TextField()
-    pub_date = models.DateField(auto_now_add=True)
+    def getlike(self):
+        return len(self.like.all())
+
 
 class Mission(models.Model):
     title = models.CharField(max_length=100)
@@ -49,13 +47,16 @@ class Mission(models.Model):
     image = models.ImageField(upload_to="image")
     point = models.IntegerField(default=0)
     end_date = models.DateTimeField()
-    
+
 class MissionComment(models.Model):
     mission = models.ForeignKey(Mission, on_delete=models.CASCADE)
-    writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="mission_comment")
+    writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="missionwriter")
     pub_date = models.DateTimeField(auto_now_add=True)
     body = models.TextField()
     image = models.ImageField(upload_to="image")
+    likers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="missionlikers")
     isPicked = models.BooleanField(default=False)
 
+    def getlikes(self) :
+        return len(self.likers.all())
 

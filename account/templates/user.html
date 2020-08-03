@@ -65,7 +65,7 @@
 <!-- 작성한 답변글 -->
 <h3># 작성한 답변글</h3>
 <div role="missionComment">
-{% for mc in d_user.mission_comment.all %}
+{% for mc in d_user.missionwriter.all %}
     <a href="{% url 'mission_detail' mc.mission.id %}">
         {% if mc.image %}<img src="{{ mc.image.url }}">{% endif %}
         <p>{{ mc.pub_date }}</p>
