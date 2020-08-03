@@ -4,12 +4,9 @@ from .forms import PhotoshopForm, ContestForm
 from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
-<<<<<<< HEAD
 from django.core.paginator import Paginator
 from django.db.models import Count, F
-=======
 from django.db.models import Q, Count
->>>>>>> 356d6ed5e621e9490e31a71a8aadcc79637ee0b8
 
 User = get_user_model()
 
