@@ -1,7 +1,7 @@
 from django.shortcuts import render
+from django.contrib.auth import get_user_model
 from .models import Mission, MissionComment,Photoshop,Comment,Contest
 from .forms import PhotoshopForm, ContestForm
-from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
@@ -39,7 +39,7 @@ def photodetail(request, pk):
     comments = photodetail.comments.all()
     sort = request.GET.get('sort','') #url의 쿼리스트링을 가져온다. 없는 경우 공백을 리턴한다
     if sort == 'like':
-        co = comments.annotate(likes=Count(like.all())).order_by('-likes')
+        co = comments.annotate(likes=Count('like')).order_by('-likes')
     else:
         co = comments.order_by('-pub_date')
     return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments,'co' : co})
@@ -77,7 +77,6 @@ def contest_like(request,contest_id):
     contest.save()
     return redirect('contest', contest.id)
     
-
 
 def mission(request):
     sort = request.GET.get('sort','')
@@ -160,9 +159,25 @@ def mission_comment_create(request, mission_id):
 
 def mission_comment_delete(request, comment_id):
     comment = get_object_or_404(MissionComment, pk=comment_id)
-    mission_id = comment.mission.id
+    mission = comment.mission
     comment.delete()
-    return redirect('mission_detail', mission_id)
+    return redirect('mission_detail', mission.id)
+
+def mission_pick(request, comment_id):
+    comment = get_object_or_404(MissionComment, pk=comment_id)
+    comment.isPicked = True
+    comment.save()
+
+    mission = comment.mission
+    mission.pick = comment.id
+    mission.save()
+
+    writer = comment.writer
+    writer.point += mission.point
+    writer.save()
+    
+    return redirect('mission_detail', mission.id)
+
 
 def commenting(request, pk):
     new_comment = Comment()

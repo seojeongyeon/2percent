@@ -1,6 +1,7 @@
 from django.db import models
 from django.conf import settings
-from pytz import timezone
+from django.utils import timezone
+from datetime import datetime
 
 # Create your models here.
 class Photoshop(models.Model):
@@ -47,7 +48,11 @@ class Mission(models.Model):
     image = models.ImageField(upload_to="image")
     point = models.IntegerField(default=0)
     end_date = models.DateTimeField()
+    pick = models.IntegerField(default=None, blank=True, null=True)
 
+    def end(self):
+        return self.end_date < timezone.now()
+            
 class MissionComment(models.Model):
     mission = models.ForeignKey(Mission, on_delete=models.CASCADE)
     writer = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="missionwriter")

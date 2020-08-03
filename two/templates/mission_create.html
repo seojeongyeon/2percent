@@ -5,6 +5,17 @@
     <p>body: <textarea name="body"></textarea></p>
     <p>image: <input type="file" name="image"></p>
     <p>point: <input type="text" name="point"></p>
-    <p>end_date: <input type="date" name="end_date"></p>
+    <p>end_date: <input type="date" name="end_date" id='enddate'></p>
     <p><input type="submit" value="SUBMIT"></p>
 </form>
+
+<script>
+    var today = new Date();
+    var dd = today.getDate()+1;
+    var mm = today.getMonth()+1; //January is 0!
+    var yyyy = today.getFullYear();
+    if(dd<10){dd='0'+dd} 
+    if(mm<10){mm='0'+mm} 
+    today = yyyy+'-'+mm+'-'+dd;
+    document.getElementById("enddate").setAttribute("min", today);
+</script>
