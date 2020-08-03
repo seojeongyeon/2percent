@@ -17,12 +17,18 @@
 </div>
 
 
+<!-- 보정 댓글 정렬 -->
+<select id="sort-select" onchange="location = this.value;">
+    <option value="/">최신순</option>
+    <option value="?sort=like">좋아요순</option>
+</select>
 
+<br><hr>
 
 
 <!-- 보정게시글의 댓글 -->
 
-{% for comment in comments %}
+{% for comment in co %}
 
     작성자:{{comment.author}}
 
@@ -36,7 +42,7 @@
 
         <button type="submit" >♥</button>
     </form> {{comment.getlike}}
-
+    <hr><br>
     {% if request.user == comment.author %}
        
         <br>

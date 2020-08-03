@@ -3,6 +3,8 @@ from .models import Mission, MissionComment,Photoshop,Comment
 from .forms import PhotoshopForm
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
+from django.core.paginator import Paginator
+from django.db.models import Count, F
 
 
 # Create your views here.
@@ -11,7 +13,11 @@ def home(request):
 
 def photoshop(request):
     photoshops = Photoshop.objects
-    return render(request, 'photoshop.html',{'photoshops':photoshops})
+    photos = Photoshop.objects.all()
+    paginator = Paginator(photos, 2)
+    page = request.GET.get('page')
+    photocut = paginator.get_page(page)
+    return render(request, 'photoshop.html',{'photoshops':photoshops,'photocut':photocut})
 
 def photowrite(request):
     if request.method =='POST':
@@ -28,8 +34,12 @@ def photowrite(request):
 def photodetail(request, pk):
     photodetail = get_object_or_404(Photoshop, pk=pk)
     comments = photodetail.comments.all()
-    return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
-
+    sort = request.GET.get('sort','') #url의 쿼리스트링을 가져온다. 없는 경우 공백을 리턴한다
+    if sort == 'like':
+        co = comments.annotate(likes=Count(like.all())).order_by('-likes')
+    else:
+        co = comments.order_by('-pub_date')
+    return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments,'co' : co})
 
 def contest(request):
     return render(request, 'contest.html')
@@ -125,3 +135,5 @@ def photo_search(request):
         photo = Photoshop.objects.filter(title__icontains=query)
 
     return render(request, 'photo_search.html', {'photos':photos,'photo':photo})
+
+    
