@@ -45,39 +45,39 @@ def mypage(request):
     return render(request, 'mypage.html')
 
 # 유저 페이지 노출
-def user(request, user_id):
-    d_user = get_object_or_404(User, pk=user_id)
+def user(request, username):
+    d_user = get_object_or_404(User, username=username)
     return render(request, 'user.html', { 'd_user': d_user })
 
 # 팔로잉 리스트 노출
-def following(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
+def following(request, username):
+    user = get_object_or_404(User, username=username)
     fusers = user.followings.all()
     return render(request, 'flist.html', { 'fusers': fusers })
 
 # 팔로워 리스트 노출
-def follower(request, user_id):
-    user = get_object_or_404(User, pk=user_id)
+def follower(request, username):
+    user = get_object_or_404(User, username=username)
     fusers = user.followers.all()
     return render(request, 'flist.html', { 'fusers': fusers })
 
 # 유저 팔로우 기능
-def follow(request, user_id):
-    # request.user -> user(pk=user_id) 팔로우(request.user following 리스트에 user를 추가)
-    user = get_object_or_404(User, pk=user_id)
+def follow(request, username):
+    # request.user -> user(username=username) 팔로우(request.user following 리스트에 user를 추가)
+    user = get_object_or_404(User, username=username)
     if request.user != user:
         user.followers.add(request.user)
         user.save()
-    return redirect('user', user_id)
+    return redirect('user', username=username)
 
 # 유저 언팔 기능
-def unfollow(request, user_id):
-    # request.user -> user(pk=user_id) 팔로우(request.user following 리스트에 user를 추가)
-    user = get_object_or_404(User, pk=user_id)
+def unfollow(request, username):
+    # request.user -> user(username=usernam) 팔로우(request.user following 리스트에 user를 추가)
+    user = get_object_or_404(User, username=username)
     if request.user != user:
         user.followers.remove(request.user)
         user.save()
-    return redirect('user', user_id)
+    return redirect('user', username=username)
 
 def info_setting(request): 
     if request.method == "GET":

@@ -3,7 +3,12 @@
 <br>
 <br>
 <hr>
-
+<!-- 검색기능 -->
+<form action="{% url 'photo_search' %}" method="GET">
+    <input type='search' name='query'>
+    <input type='submit' value='검색'>
+</form>
+<!-- 게시글 전체 -->
 {% for p in photoshops.all %}
     <div class="container">
         <p>{{ p.title }}</p>

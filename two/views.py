@@ -1,9 +1,16 @@
 from django.shortcuts import render
+<<<<<<< HEAD
 from .models import Mission, MissionComment,Photoshop,Comment,Contest
 from .forms import PhotoshopForm, ContestForm
+=======
+from django.contrib.auth import get_user_model
+from .models import Mission, MissionComment,Photoshop,Comment
+from .forms import PhotoshopForm
+>>>>>>> 08158e19491ff21394a970d456a23434f50de829
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 
+User = get_user_model()
 
 # Create your views here.
 def home(request):
@@ -17,7 +24,9 @@ def photowrite(request):
     if request.method =='POST':
         form = PhotoshopForm(request.POST,request.FILES)
         if form.is_valid():
-            form.save()
+            content = form.save(commit=False)
+            content.writer = request.user
+            content.save()
             return redirect('home')
     else:
         form = PhotoshopForm()
@@ -28,6 +37,17 @@ def photodetail(request, pk):
     comments = photodetail.comments.all()
     return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
 
+def photoscrap(request, pk):
+    photodetail = get_object_or_404(Photoshop, pk=pk)
+    comments = photodetail.comments.all()
+    request.user.pscraps.add(photodetail)
+    return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
+
+def photoscrap_del(request, pk):
+    photodetail = get_object_or_404(Photoshop, pk=pk)
+    comments = photodetail.comments.all()
+    request.user.pscraps.remove(photodetail)
+    return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
 
 def contest(request):
     contests = Contest.objects
@@ -78,6 +98,24 @@ def mission_create(request):
 def mission_detail(request, mission_id):
     mission = get_object_or_404(Mission, pk=mission_id)
     comments = mission.missioncomment_set.all()
+    return render(request, 'mission_detail.html', {
+        'mission': mission,
+        'comments' : comments,
+        })
+
+def mission_scrap(request, mission_id):
+    mission = get_object_or_404(Mission, pk=mission_id)
+    comments = mission.missioncomment_set.all()
+    request.user.mscraps.add(mission)
+    return render(request, 'mission_detail.html', {
+        'mission': mission,
+        'comments' : comments,
+        })
+
+def mission_scrap_del(request, mission_id):
+    mission = get_object_or_404(Mission, pk=mission_id)
+    comments = mission.missioncomment_set.all()
+    request.user.mscraps.remove(mission)
     return render(request, 'mission_detail.html', {
         'mission': mission,
         'comments' : comments,
@@ -135,3 +173,11 @@ def comment_delete(request, comment_id):
     comment_delete.delete()
     return redirect('photodetail', id)
     
+
+def photo_search(request):
+    photos = Photoshop.objects.all()
+    query = request.GET['query']
+    if query:
+        photo = Photoshop.objects.filter(title__icontains=query)
+
+    return render(request, 'photo_search.html', {'photos':photos,'photo':photo})

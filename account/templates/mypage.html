@@ -2,9 +2,9 @@
 
 <!-- 유저 프로필 이미지 -->
 {% if request.user.profile %}
-    <img src="{{ request.user.profile.url}}">
+    <a href="{% url 'user' request.user.username %}"><img src="{{ request.user.profile.url}}"></a>
 {% else %}
-    <img src="{% static 'default_profile.jpg' %}">
+    <a href="{% url 'user' request.user.username %}"><img src="{% static 'default_profile.jpg' %}"></a>
 {% endif %}
 
 
@@ -15,16 +15,34 @@
 <p>소개: {{ request.user.info }}</p>
 
 
-<!-- 유저 팔로우/팔로잉 수 노출 -->
-<div role="followers">
-    <a href="{% url 'follower' request.user.id %}">{{ request.user.followers.count }} followers</a>
-</div>
-<div role="followings">
-    <a href="{% url 'following' request.user.id %}">{{ request.user.followings.count }} followings</a>
+<!-- 스크랩한 글 -->
+<div role="scraps">
+    <div role="photoshop_scraps">
+        <h3>스크랩한 글 : 보정법</h3>
+        {% for p in request.user.pscraps.all %}
+        <div>
+            <a href="{% url 'photodetail' p.id %}">
+                <p>{% if p.photoafter %}<img src = "{{ p.photoafter.url }}">{% endif %}</p>
+                <p>{{ p.title }}</p>
+                <p>{{ p.date }}</p>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    <div role="mission_scraps">
+        <h3>스크랩한 글 : 의뢰</h3>
+        {% for m in request.user.mscraps.all %}
+        <div>
+            <a href="{% url 'mission_detail' m.id %}">
+                <p>{{ m.title }}</p>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
 </div>
 
 
-<!-- 포인트 내역 노출 --> 
+<!-- 포인트 내역 노출 -->
 
 
 
@@ -33,4 +51,8 @@
 <div role="link_to_settings">
     <a href="{% url 'info_setting' %}">EDIT PROFILE</a>
     <a href="{% url 'pw_setting' %}">Change Password</a>
+</div>
+
+<div>
+    <a href="{% url 'home' %}">HOME</a>
 </div>

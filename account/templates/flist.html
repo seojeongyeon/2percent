@@ -3,14 +3,14 @@
     {% for fuser in fusers %}
     <tr>
         <td>
-            <a href="{% url 'user' fuser.id %}">
+            <a href="{% url 'user' fuser.username %}">
             {% if fuser.profile %} <img src="{{ fuser.profile.url }}">
             {% else %} <img src="{% static 'default_profile.jpg' %}">
             {% endif %}
             </a>
         </td>
         <td>
-            <a href="{% url 'user' fuser.id %}" style="text-decoration: none;">
+            <a href="{% url 'user' fuser.username %}" style="text-decoration: none;">
                 <h2>{{ fuser.nickname }}</h2>
                 <h4>{{ fuser.email }}</h4>
             </a>

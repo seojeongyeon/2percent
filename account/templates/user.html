@@ -18,9 +18,9 @@
     {% if request.user != d_user %}
         <!-- 언팔로우 노출 : 이미 팔로우한 유저일 때 -->
         {% if request.user in d_user.followers.all %}
-            <a href="{% url 'unfollow' d_user.id %}">UNFOLLOW</a>
+            <a href="{% url 'unfollow' d_user.username %}">UNFOLLOW</a>
         {% else %} <!-- 팔로우 노출 : 팔로우 하지 않는 유저일 때 -->
-            <a href="{% url 'follow' d_user.id %}">FOLLOW</a>
+            <a href="{% url 'follow' d_user.username %}">FOLLOW</a>
         {% endif %}
     {% else %} <!-- 자신의 유저 페이지이면 -->
           <a href="{% url 'mypage' %}"></a>
@@ -32,17 +32,43 @@
 
 <!-- 유저 팔로우/팔로잉 수 노출 -->
 <div role="followers">
-    <a href="{% url 'follower' d_user.id %}">{{ d_user.followers.count }} followers</a>
+    <a href="{% url 'follower' d_user.username %}">{{ d_user.followers.count }} followers</a>
 </div>
 <div role="followings">
-    <a href="{% url 'following' d_user.id %}">{{ d_user.followings.count }} followings</a>
+    <a href="{% url 'following' d_user.username %}">{{ d_user.followings.count }} followings</a>
 </div>
 
 
 <!-- 작성한 글 -->
-
+<h3># 작성한 보정법 글</h3>
+<div role="photoshops">
+{% for p in d_user.photoshop.all %}
+    <a href="{% url 'photodetail' p.id %}">
+    <p>{% if p.photoafter %}<img src = "{{ p.photoafter.url }}">{% endif %}</p>
+    <p>{{ p.title }}</p>
+    <p>{{ p.date }}</p>
+    </a>
+{% endfor %}
+</div>
 
 <!-- 작성한 의뢰글 -->
-
+<h3># 작성한 의뢰글</h3>
+<div role="mission">
+{% for mission in d_user.mission.all %}
+    <a href="{% url 'mission_detail' mission.id %}">
+        <p>{{ mission.title }}</p>
+        <p>{{ mission.pub_date }}</p>
+    </a>
+{% endfor %}
+</div>
 
 <!-- 작성한 답변글 -->
+<h3># 작성한 답변글</h3>
+<div role="missionComment">
+{% for mc in d_user.missionwriter.all %}
+    <a href="{% url 'mission_detail' mc.mission.id %}">
+        {% if mc.image %}<img src="{{ mc.image.url }}">{% endif %}
+        <p>{{ mc.pub_date }}</p>
+    </a>
+{% endfor %}
+</div>
