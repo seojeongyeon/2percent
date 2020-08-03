@@ -1,0 +1,15 @@
+<a href="{% url 'photoshop' %}">돌아가기</a>
+<br>
+<br>
+
+{% for photo in photo %}
+    <div class="container">
+        <p>{{ photo.title }}</p>
+        <p>{{ photo.date }}</p>
+        <a href="{% url 'photodetail' photo.pk %}">more</a>
+        <hr>
+    </div>
+{% empty %}
+    <h4>검색 결과 없음</h4>
+{%endfor %}
+

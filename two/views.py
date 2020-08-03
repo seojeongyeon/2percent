@@ -115,4 +115,11 @@ def comment_delete(request, comment_id):
     id = comment_delete.photoshop.id
     comment_delete.delete()
     return redirect('photodetail', id)
-    
+
+def photo_search(request):
+    photos = Photoshop.objects.all()
+    query = request.GET['query']
+    if query:
+        photo = Photoshop.objects.filter(title__icontains=query)
+
+    return render(request, 'photo_search.html', {'photos':photos,'photo':photo})
