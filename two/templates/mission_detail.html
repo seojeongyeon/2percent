@@ -20,8 +20,8 @@
     {% endif %}
 {% endif %}
 
-
 <br><br><hr>
+{% if not mission.end %}
 <h2>comments</h2>
 <form method="POST" action="{% url 'mission_comment_create' mission.id %}" enctype="multipart/form-data">
     {% csrf_token %}
@@ -30,6 +30,7 @@
     <p><input type="submit" value="SUBMIT"></p>
 </form>
 <hr>
+{% endif %}
 {% for comment in comments %}
     <img src="{{comment.image.url}}">
     <p>writer:{{comment.writer}}</p>
@@ -47,7 +48,7 @@
         </p>
     </form>
     {% endif %}
-    {% if not mission.pick %}
+    {% if not mission.pick and user == mission.writer %}
     <button onclick = "location.href =`{% url 'mission_pick' comment.id %}` ">채택하기</button>
     {% endif %}
     <a href="{% url 'mission_comment_delete' comment.id %}">삭제</a>

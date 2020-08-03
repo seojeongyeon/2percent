@@ -155,9 +155,15 @@ def mission_pick(request, comment_id):
     comment = get_object_or_404(MissionComment, pk=comment_id)
     comment.isPicked = True
     comment.save()
+
     mission = comment.mission
     mission.pick = comment.id
     mission.save()
+
+    writer = comment.writer
+    writer.point += mission.point
+    writer.save()
+    
     return redirect('mission_detail', mission.id)
 
 
