@@ -40,9 +40,35 @@
 
 
 <!-- 작성한 글 -->
-
+<h3># 작성한 보정법 글</h3>
+<div role="photoshops">
+{% for p in d_user.photoshop.all %}
+    <a href="{% url 'photodetail' p.id %}">
+    <p>{% if p.photoafter %}<img src = "{{ p.photoafter.url }}">{% endif %}</p>
+    <p>{{ p.title }}</p>
+    <p>{{ p.date }}</p>
+    </a>
+{% endfor %}
+</div>
 
 <!-- 작성한 의뢰글 -->
-
+<h3># 작성한 의뢰글</h3>
+<div role="mission">
+{% for mission in d_user.mission.all %}
+    <a href="{% url 'mission_detail' mission.id %}">
+        <p>{{ mission.title }}</p>
+        <p>{{ mission.pub_date }}</p>
+    </a>
+{% endfor %}
+</div>
 
 <!-- 작성한 답변글 -->
+<h3># 작성한 답변글</h3>
+<div role="missionComment">
+{% for mc in d_user.mission_comment.all %}
+    <a href="{% url 'mission_detail' mc.mission.id %}">
+        {% if mc.image %}<img src="{{ mc.image.url }}">{% endif %}
+        <p>{{ mc.pub_date }}</p>
+    </a>
+{% endfor %}
+</div>

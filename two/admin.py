@@ -1,5 +1,9 @@
 from django.contrib import admin
-from .models import Photoshop
+from .models import *
 # Register your models here.
 
 admin.site.register(Photoshop)
+admin.site.register(Comment)
+admin.site.register(ask)
+admin.site.register(Mission)
+admin.site.register(MissionComment)
