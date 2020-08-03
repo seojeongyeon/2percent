@@ -1,11 +1,13 @@
 from django.shortcuts import render
-from .models import Mission, MissionComment,Photoshop,Comment
-from .forms import PhotoshopForm
+from .models import Mission, MissionComment,Photoshop,Comment,Contest
+from .forms import PhotoshopForm, ContestForm
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
 from django.db.models import Count, F
 
+User = get_user_model()
 
 # Create your views here.
 def home(request):
@@ -40,9 +42,41 @@ def photodetail(request, pk):
     else:
         co = comments.order_by('-pub_date')
     return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments,'co' : co})
+    return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
+
+def photoscrap(request, pk):
+    photodetail = get_object_or_404(Photoshop, pk=pk)
+    comments = photodetail.comments.all()
+    request.user.pscraps.add(photodetail)
+    return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
+
+def photoscrap_del(request, pk):
+    photodetail = get_object_or_404(Photoshop, pk=pk)
+    comments = photodetail.comments.all()
+    request.user.pscraps.remove(photodetail)
+    return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
 
 def contest(request):
-    return render(request, 'contest.html')
+    contests = Contest.objects
+    return render(request, 'contest.html',{'contests':contests})
+
+def contestwrite(request):
+    if request.method == 'POST':
+        form = ContestForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('contest')
+    else:
+        form = ContestForm()
+        return render(request, 'contestwrite.html', {'form':form})
+
+def contest_like(request,contest_id):
+    contest = get_object_or_404(Contest, pk = contest_id)
+    contest.like.add(request.user)
+    contest.save()
+    return redirect('contest', contest.id)
+    
+
 
 def mission(request):
     if request.method == 'POST':
@@ -71,6 +105,24 @@ def mission_create(request):
 def mission_detail(request, mission_id):
     mission = get_object_or_404(Mission, pk=mission_id)
     comments = mission.missioncomment_set.all()
+    return render(request, 'mission_detail.html', {
+        'mission': mission,
+        'comments' : comments,
+        })
+
+def mission_scrap(request, mission_id):
+    mission = get_object_or_404(Mission, pk=mission_id)
+    comments = mission.missioncomment_set.all()
+    request.user.mscraps.add(mission)
+    return render(request, 'mission_detail.html', {
+        'mission': mission,
+        'comments' : comments,
+        })
+
+def mission_scrap_del(request, mission_id):
+    mission = get_object_or_404(Mission, pk=mission_id)
+    comments = mission.missioncomment_set.all()
+    request.user.mscraps.remove(mission)
     return render(request, 'mission_detail.html', {
         'mission': mission,
         'comments' : comments,
@@ -127,6 +179,7 @@ def comment_delete(request, comment_id):
     id = comment_delete.photoshop.id
     comment_delete.delete()
     return redirect('photodetail', id)
+    
 
 def photo_search(request):
     photos = Photoshop.objects.all()

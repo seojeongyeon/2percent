@@ -13,6 +13,14 @@
     {{photodetail.app}}<br>
     {{photodetail.explain}}<br>
 
+    <!-- 게시글 스크랩 -->
+    {% if user.is_authenticated %}
+        {% if photodetail not in request.user.pscraps.all %}
+            <a href="{% url 'photoscrap' photodetail.id %}">스크랩</a>
+        {% else %}
+            <a href="{% url 'photoscrap_del' photodetail.id %}">스크랩 취소</a>
+        {% endif %}
+    {% endif %}
 
 </div>
 
