@@ -47,6 +47,9 @@
         </p>
     </form>
     {% endif %}
+    {% if not mission.pick %}
+    <button onclick = "location.href =`{% url 'mission_pick' comment.id %}` ">채택하기</button>
+    {% endif %}
     <a href="{% url 'mission_comment_delete' comment.id %}">삭제</a>
     <hr>
 {% endfor %}

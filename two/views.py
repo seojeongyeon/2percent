@@ -66,7 +66,6 @@ def contest_like(request,contest_id):
     return redirect('contest', contest.id)
     
 
-
 def mission(request):
     sort = request.GET.get('sort','')
     word = request.GET.get('search','')
@@ -148,9 +147,19 @@ def mission_comment_create(request, mission_id):
 
 def mission_comment_delete(request, comment_id):
     comment = get_object_or_404(MissionComment, pk=comment_id)
-    mission_id = comment.mission.id
+    mission = comment.mission
     comment.delete()
-    return redirect('mission_detail', mission_id)
+    return redirect('mission_detail', mission.id)
+
+def mission_pick(request, comment_id):
+    comment = get_object_or_404(MissionComment, pk=comment_id)
+    comment.isPicked = True
+    comment.save()
+    mission = comment.mission
+    mission.pick = comment.id
+    mission.save()
+    return redirect('mission_detail', mission.id)
+
 
 def commenting(request, pk):
     new_comment = Comment()

@@ -47,6 +47,7 @@ class Mission(models.Model):
     image = models.ImageField(upload_to="image")
     point = models.IntegerField(default=0)
     end_date = models.DateTimeField()
+    pick = models.IntegerField(default=None, blank=True, null=True)
 
 class MissionComment(models.Model):
     mission = models.ForeignKey(Mission, on_delete=models.CASCADE)

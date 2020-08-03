@@ -8,11 +8,11 @@
 <a href="{% url 'mission_create' %}">글 등록</a>
 {% endif %}
 <hr>
-<select id="sort-select" onchange="location = this.value;">
-    <option value=".">최신순</option>
-    <option value="?sort=comment">댓글많은순</option>
-    <option value="?sort=enddate">마감일순</option>
-    <option value="?sort=point">포인트순</option>
+<select id="sort-select" name="links" onchange="goLink(this.value)">
+    <option value="sort=">최신순</option>
+    <option value="sort=comment">댓글많은순</option>
+    <option value="sort=enddate">마감일순</option>
+    <option value="sort=point">포인트순</option>
 </select>
 <div>
 {% for mission in missions %}
@@ -40,6 +40,12 @@
 
     var sort = getUrlParameter('sort');
     var sel = document.getElementById("sort-select");
+    function goLink(value) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+            searchquery = sPageURL.split('&')[0];    
+        location.href = '?'+ searchquery + '&'+ value;
+    }
+
     if(sort == 'comment'){
         sel[1].selected = true
     }else if(sort == 'enddate'){
