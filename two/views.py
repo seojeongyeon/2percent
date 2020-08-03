@@ -1,13 +1,7 @@
 from django.shortcuts import render
-<<<<<<< HEAD
 from django.contrib.auth import get_user_model
 from .models import Mission, MissionComment,Photoshop,Comment,Contest
 from .forms import PhotoshopForm, ContestForm
-=======
-from .models import Mission, MissionComment,Photoshop,Comment,Contest
-from .forms import PhotoshopForm, ContestForm
-from django.contrib.auth import get_user_model
->>>>>>> c91dd3bd9f6b3d426651dbf01b405895cf9ceabe
 from django.utils import timezone
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator
@@ -45,7 +39,7 @@ def photodetail(request, pk):
     comments = photodetail.comments.all()
     sort = request.GET.get('sort','') #url의 쿼리스트링을 가져온다. 없는 경우 공백을 리턴한다
     if sort == 'like':
-        co = comments.annotate(likes=Count(like.all())).order_by('-likes')
+        co = comments.annotate(likes=Count('like')).order_by('-likes')
     else:
         co = comments.order_by('-pub_date')
     return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments,'co' : co})
