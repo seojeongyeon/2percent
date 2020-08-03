@@ -17,7 +17,9 @@ def photowrite(request):
     if request.method =='POST':
         form = PhotoshopForm(request.POST,request.FILES)
         if form.is_valid():
-            form.save()
+            content = form.save(commit=False)
+            content.writer = request.user
+            content.save()
             return redirect('home')
     else:
         form = PhotoshopForm()

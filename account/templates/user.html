@@ -18,9 +18,9 @@
     {% if request.user != d_user %}
         <!-- 언팔로우 노출 : 이미 팔로우한 유저일 때 -->
         {% if request.user in d_user.followers.all %}
-            <a href="{% url 'unfollow' d_user.id %}">UNFOLLOW</a>
+            <a href="{% url 'unfollow' d_user.username %}">UNFOLLOW</a>
         {% else %} <!-- 팔로우 노출 : 팔로우 하지 않는 유저일 때 -->
-            <a href="{% url 'follow' d_user.id %}">FOLLOW</a>
+            <a href="{% url 'follow' d_user.username %}">FOLLOW</a>
         {% endif %}
     {% else %} <!-- 자신의 유저 페이지이면 -->
           <a href="{% url 'mypage' %}"></a>
@@ -32,10 +32,10 @@
 
 <!-- 유저 팔로우/팔로잉 수 노출 -->
 <div role="followers">
-    <a href="{% url 'follower' d_user.id %}">{{ d_user.followers.count }} followers</a>
+    <a href="{% url 'follower' d_user.username %}">{{ d_user.followers.count }} followers</a>
 </div>
 <div role="followings">
-    <a href="{% url 'following' d_user.id %}">{{ d_user.followings.count }} followings</a>
+    <a href="{% url 'following' d_user.username %}">{{ d_user.followings.count }} followings</a>
 </div>
 
 
