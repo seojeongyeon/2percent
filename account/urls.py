@@ -14,4 +14,5 @@ urlpatterns = [
     path('unfollow/<slug:username>', views.unfollow, name="unfollow"),
     path('info_setting/', views.info_setting, name="info_setting"),
     path('pw_setting/', views.pw_setting, name="pw_setting"),
+    path('activate/<str:uid64>/<str:token>/', views.activate, name='activate'),
 ]

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+from . import smtp_settings
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'two',
     'account',
+    'six', # 이메일 인증
 ]
 
 MIDDLEWARE = [
@@ -133,3 +135,13 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DATE_INPUT_FORMATS = ['%Y-%m-%d'] #1997-5-12
+
+
+
+### 이메일 인증을 위한 setting
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = '587'
+EMAIL_HOST_USER = 'two.percent.plz@gmail.com'
+EMAIL_HOST_PASSWORD = '2percentplz'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

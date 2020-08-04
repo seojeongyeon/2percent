@@ -15,3 +15,9 @@ class User(AbstractUser):
     
     pscraps = models.ManyToManyField(Photoshop, related_name="pscrap_users")
     mscraps = models.ManyToManyField(Mission, related_name="mscrap_users")
+
+    ## 이메일 인증 시 true 값
+    is_active = models.BooleanField(default=False)
+
+    class Meta(object):
+        unique_together = ('email',)
