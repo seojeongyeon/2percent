@@ -18,4 +18,4 @@ class UserEditForm(UserChangeForm):
     birthday = forms.DateField(input_formats=settings.DATE_INPUT_FORMATS)
     class Meta:
         model = User
-        fields = ['profile', 'nickname', 'email', 'info', 'birthday' ]
+        fields = ['profile', 'nickname', 'info', 'birthday' ]
