@@ -59,7 +59,22 @@ def photoscrap_del(request, pk):
 
 def contest(request):
     contests = Contest.objects
-    return render(request, 'contest.html',{'contests':contests})
+# top4 Contest를 위함
+    best_contests = Contest.objects.all().order_by('-contest_like')
+
+    best_list = []
+    if len(best_contests) >= 5:
+        for i in range(4):
+            best_like = best_contests[i].contest_like
+            best_contests[i].like = best_like
+            best_list.append(best_contests[i])
+
+
+    return render(request, 'contest.html',{'contests':contests, 'best_contests':best_list, 'contests':best_contests})
+
+
+def contestway(request):
+    return render(request, 'contestway.html')
 
 def contestwrite(request):
     if request.method == 'POST':
