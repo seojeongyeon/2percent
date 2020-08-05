@@ -12,7 +12,9 @@ User = get_user_model()
 
 # Create your views here.
 def home(request):
-    return render(request, 'home.html')
+    p = Photoshop.objects.all().annotate(likes=Count('photo_like')).order_by('-photo_like')
+    c = Contest.objects.all().annotate(likes=Count('contest_like')).order_by('-contest_like')
+    return render(request, 'home.html', {'p':p,'c':c})
 
 def photoshop(request):
     photoshops = Photoshop.objects
@@ -42,8 +44,13 @@ def photodetail(request, pk):
         co = comments.annotate(likes=Count('like')).order_by('-likes')
     else:
         co = comments.order_by('-pub_date')
+    if request.user in photodetail.photo_like.all():
+        photodetail.photo_like.remove(request.user)
+    else:
+        photodetail.photo_like.add(request.user)
+    photodetail.save()
     return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments,'co' : co})
-    return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
+    # return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
 
 def photoscrap(request, pk):
     photodetail = get_object_or_404(Photoshop, pk=pk)
