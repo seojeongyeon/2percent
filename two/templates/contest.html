@@ -43,18 +43,16 @@
 <br>
 <hr>
 
+
 {% for contest in contests.all %}
-    <div class="container">
-        </p><img src="{{ contest.image.url }}" ><p>
-        
-        
-        <form action="/contest_like/{{contest.id}}" method="get">
-            <button type="submit">추천하기</button>
-        </form> 추천수 : {{contest.getlike}}
-        
-
-
-    <hr>
-    </div>
-
+    </p><img src="{{ contest.image.url }}" ><p>
+    <form action="{% url 'contestlike' contest.id %}" method="get">
+        {% if user in contest.contest_like.all %}
+        <button type="submit">좋아요 취소</button>
+        {% else %}
+        <button type="submit">좋아요</button>
+        {% endif %}
+        {{ contest.contest_like.count }}
+        </p>
+</form>
 {% endfor %}
