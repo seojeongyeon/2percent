@@ -71,12 +71,16 @@ def contestwrite(request):
         form = ContestForm()
         return render(request, 'contestwrite.html', {'form':form})
 
-def contest_like(request,contest_id):
+def contestlike(request,contest_id):
     contest = get_object_or_404(Contest, pk = contest_id)
-    contest.like.add(request.user)
+    if request.user in contest.contest_like.all():
+        #좋아요 취소
+        contest.contest_like.remove(request.user)
+    else:
+        contest.contest_like.add(request.user)
     contest.save()
-    return redirect('contest', contest.id)
-    
+    return redirect('contest')
+
 
 def mission(request):
     sort = request.GET.get('sort','')
