@@ -29,6 +29,7 @@ urlpatterns = [
     path('photodetail/<int:pk>/photoscrap', views.photoscrap, name='photoscrap'),
     path('photodetail/<int:pk>/photoscrap_del', views.photoscrap_del, name='photoscrap_del'),
     path('contest/', views.contest, name='contest'),
+    path('contestway/',views.contestway, name='contestway'),
     path('mission/', views.mission, name='mission'),
     path('account/', include(account.urls)),
     path('comment_delete/<int:comment_id>', views.comment_delete, name="comment_delete"),
