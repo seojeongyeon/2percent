@@ -1,0 +1,237 @@
+<head>
+    <style>
+        /* canvas{
+            border : black 1px solid;
+            border-radius: 5px;
+        } */
+    </style>
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://unpkg.com/konva@7.0.4/konva.min.js"></script>
+    
+</head>
+
+    <input id="loadButton" type="file" accept="image/*">
+    <div id="container"></div>
+    <div id="controls">
+        hue:
+        <input id="hue" type="range" min="0" max="259" step="1" value="0" />
+        saturation:
+        <input
+            id="saturation"
+            type="range"
+            min="-2"
+            max="2"
+            step="0.5"
+            value="0"
+        />
+        value:
+        <input id="value" type="range" min="-2" max="2" step="0.1" value="0" />
+    </div>
+<script>
+    var image = new Image();
+    image.width = 500;
+    $('#loadButton').on('change', function (e) {
+        var file = e.target.files[0];
+        var fileReader = new FileReader();
+
+        fileReader.onload = function (e) {
+            image.src = e.target.result;
+            
+            image.onload = function () {
+                start(image)
+            }
+        }
+        fileReader.readAsDataURL(file);
+
+    });
+
+    function start(image){
+        console.log(image.src)
+        Konva.Image.fromURL( image.src, function (lion) {
+        var stage = new Konva.Stage({
+            container: 'container',
+            width: window.innerWidth,
+            height: window.innerHeight,
+        });
+
+        var layer = new Konva.Layer();
+
+        lion.position({
+            x: 0,
+            y: 0,
+        });
+        lion.cache();
+        lion.filters([Konva.Filters.HSV]);
+        layer.add(lion);
+        stage.add(layer);
+
+        var sliders = ['hue', 'saturation', 'value'];
+        sliders.forEach(function (attr) {
+            var slider = document.getElementById(attr);
+            function update() {
+                lion[attr](parseFloat(slider.value));
+                layer.batchDraw();
+            }
+            slider.oninput = update;
+            update();
+        });
+    });
+    }
+    
+</script>
+
+
+<!-- 
+<input id="loadButton" type="file" accept="image/*">
+<div>
+<canvas id="canvas" width="500" height="700"></canvas>
+</div>
+<input id="inverter" type="button">
+<input type="checkbox" id="checkh" checked>
+<input id="h" type="range" value="0" min="0" max="360">
+<input type="checkbox" id="checks" checked>
+<input id="s" type="range" value="0" min="-100" max="100">
+<input type="checkbox" id="checkl" checked>
+<input id="l" type="range" value="0" min="-100" max="100">
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+    var canvas = $('#canvas')[0];
+    var ctx = canvas.getContext('2d');
+    var image = new Image(), image_ori = new Image(); 
+
+    function drawImageData(image) {
+        image.height *= canvas.offsetWidth / image.width;
+        image.width = canvas.offsetWidth;
+
+        if(image.height > canvas.offsetHeight){
+            image.width *= canvas.offsetHeight / image.height;
+            image.height = canvas.offsetHeight;
+        }
+
+        ctx.drawImage(image, 0, 0, image.width, image.height);
+    }
+    
+    $('#loadButton').on('change', function (e) {
+        var file = e.target.files[0];
+        var fileReader = new FileReader();
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        fileReader.onload = function (e) {
+            image.src = e.target.result;
+            image_ori.src = image.src
+            image.onload = function () {
+                drawImageData(image);
+            }
+        };
+        fileReader.readAsDataURL(file);
+
+    });
+
+    $('#checkh').on('change', function(e){
+        var sliderh = document.getElementById("h")
+        if($('#checkh').is(":checked")){
+            sliderh.disabled = false;
+
+        } else{
+            sliderh.value = hsl["h"];
+            sliderh.disabled = true;
+            h = hsl["h"]
+            ctx.globalCompositeOperation = "hue";
+            ctx.fillStyle = "hsl("+h+","+s+"%,"+l+"%)";  // saturation at 100%
+            ctx.fillRect(0,0,image.width,image.height);  // apply the comp filter
+            ctx.globalCompositeOperation = "source-over";
+        }
+    })
+
+    $('#checks').on('change', function(e){
+        var sliders = document.getElementById("s")
+        if($('#checks').is(":checked")){
+            sliders.disabled = false;
+
+        } else{
+            sliders.value = hsl["s"];
+            sliders.disabled = true;
+            s = hsl["s"]
+            ctx.globalCompositeOperation = "saturation";
+            ctx.fillStyle = "hsl("+h+","+s+"%,"+l+"%)";  // saturation at 100%
+            ctx.fillRect(0,0,image.width,image.height);  // apply the comp filter
+            ctx.globalCompositeOperation = "source-over";
+   
+        }
+    })
+
+    $('#checkl').on('change', function(e){
+        var sliderl = document.getElementById("l")
+        if($('#checkl').is(":checked")){
+            sliderl.disabled = false;
+
+        } else{
+            sliderl.value = hsl["l"];
+            sliderl.disabled = true;
+            l = hsl["l"]
+            ctx.globalCompositeOperation = "luminosity";
+            ctx.fillStyle = "hsl("+h+"%,"+s+"%,"+l+"%)";  // saturation at 100%
+            ctx.fillRect(0,0,image.width,image.height);  // apply the comp filter
+            ctx.globalCompositeOperation = "source-over";
+    
+        }
+    })
+     /////////////////////////////
+    //색상
+    $('#h').on('change', function(){
+        console.log(this.value)
+        h = this.value
+        ctx.globalCompositeOperation = "hue";
+        ctx.fillStyle = "hsl("+h+","+s+"%,"+l+"%)";  // saturation at 100%
+        ctx.fillRect(0,0,image.width,image.height);  // apply the comp filter
+        ctx.globalCompositeOperation = "source-over";
+    })
+
+    /////////////////////////////
+    //채도
+    $('#s').on('change', function(){
+        console.log(this.value)
+        s = this.value
+        ctx.globalCompositeOperation = "saturation";
+        ctx.fillStyle = "red";
+        ctx.globalAlpha =0;  // saturation at 100%  // saturation at 100%
+        ctx.fillRect(0,0,image.width,image.height);  // apply the comp filter
+        ctx.globalCompositeOperation = "source-over";
+    })
+
+
+    /////////////////////////////
+    //밝기
+    var lastvalue_l = 100
+    $('#l').on('change', function(){
+        // imageData를 가져온다.
+        var pixels = ctx.getImageData(0,0, canvas.width, canvas.height);
+
+        //value
+        var value = parseInt(this.value)
+        var currentvalue = value+100
+        value = currentvalue - lastvalue_l;
+        console.log(lastvalue_l, currentvalue)
+        console.log(value)
+        lastvalue_l = currentvalue;
+
+
+        // image processing
+        function brightnessFilter(pixels, value) {
+            var d = pixels.data;
+            for(var i =0; i< d.length; i+=4){
+                d[i] += value/2;
+                d[i+1] += value/2;
+                d[i+2] += value/2;
+            }
+            return pixels;
+        }
+
+        var filteredData = brightnessFilter(pixels, value);
+
+        // Canvas에 다시 그린다.
+        ctx.putImageData(filteredData, 0 , 0);
+    });
+
+</script> -->

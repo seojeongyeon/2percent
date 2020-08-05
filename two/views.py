@@ -209,3 +209,5 @@ def photo_search(request):
     return render(request, 'photo_search.html', {'photos':photos,'photo':photo})
 
     
+def filter(request):
+    return render(request, 'filter.html')
