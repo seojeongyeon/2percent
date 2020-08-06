@@ -29,6 +29,7 @@ urlpatterns = [
     path('photodetail/<int:pk>/photoscrap', views.photoscrap, name='photoscrap'),
     path('photodetail/<int:pk>/photoscrap_del', views.photoscrap_del, name='photoscrap_del'),
     path('contest/', views.contest, name='contest'),
+    path('contestway/',views.contestway, name='contestway'),
     path('mission/', views.mission, name='mission'),
     path('account/', include(account.urls)),
     path('comment_delete/<int:comment_id>', views.comment_delete, name="comment_delete"),
@@ -45,7 +46,7 @@ urlpatterns = [
     path('mission_comment_like/<int:comment_id>', views.mission_comment_like, name='mission_comment_like'),
     path('photowrite/', views.photowrite, name='photowrite'),
     path('contestwrite/', views.contestwrite, name='contestwrite'),
-    path('contest_like/<int:contest_id>', views.contest_like, name='contest_like'),
+    path('contest/<int:contest_id>', views.contestlike, name='contestlike'),
     path('photo_search/', views.photo_search, name='photo_search'),
     path('filter/', views.filter, name="filter"),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

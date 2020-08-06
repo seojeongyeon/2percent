@@ -9,6 +9,7 @@
 
 
 <!-- 유저 정보 -->
+<h2># 유저 정보</h2>
 <p>닉네임: {{ request.user.nickname }}</p>
 <p>생일: {{ request.user.birthday|linebreaks }}</p>
 <p>이메일: {{ request.user.email }}</p>
@@ -16,9 +17,10 @@
 
 
 <!-- 스크랩한 글 -->
+<h2># 스크랩한 글</h2>
 <div role="scraps">
     <div role="photoshop_scraps">
-        <h3>스크랩한 글 : 보정법</h3>
+        <h3>- 보정법</h3>
         {% for p in request.user.pscraps.all %}
         <div>
             <a href="{% url 'photodetail' p.id %}">
@@ -30,7 +32,7 @@
         {% endfor %}
     </div>
     <div role="mission_scraps">
-        <h3>스크랩한 글 : 의뢰</h3>
+        <h3>- 의뢰</h3>
         {% for m in request.user.mscraps.all %}
         <div>
             <a href="{% url 'mission_detail' m.id %}">
@@ -43,7 +45,7 @@
 
 
 <!-- 포인트 내역 노출 -->
-
+<h2># 포인트 내역</h2>
 
 
 

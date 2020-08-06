@@ -12,7 +12,9 @@ User = get_user_model()
 
 # Create your views here.
 def home(request):
-    return render(request, 'home.html')
+    p = Photoshop.objects.all().annotate(likes=Count('photo_like')).order_by('-photo_like')
+    c = Contest.objects.all().annotate(likes=Count('contest_like')).order_by('-contest_like')
+    return render(request, 'home.html', {'p':p,'c':c})
 
 def photoshop(request):
     photoshops = Photoshop.objects
@@ -42,8 +44,13 @@ def photodetail(request, pk):
         co = comments.annotate(likes=Count('like')).order_by('-likes')
     else:
         co = comments.order_by('-pub_date')
+    if request.user in photodetail.photo_like.all():
+        photodetail.photo_like.remove(request.user)
+    else:
+        photodetail.photo_like.add(request.user)
+    photodetail.save()
     return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments,'co' : co})
-    return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
+    # return render(request, 'photodetail.html', {'photodetail': photodetail,'comments':comments})
 
 def photoscrap(request, pk):
     photodetail = get_object_or_404(Photoshop, pk=pk)
@@ -59,7 +66,22 @@ def photoscrap_del(request, pk):
 
 def contest(request):
     contests = Contest.objects
-    return render(request, 'contest.html',{'contests':contests})
+# top4 Contest를 위함
+    best_contests = Contest.objects.all().order_by('-contest_like')
+
+    best_list = []
+    if len(best_contests) >= 5:
+        for i in range(4):
+            best_like = best_contests[i].contest_like
+            best_contests[i].like = best_like
+            best_list.append(best_contests[i])
+
+
+    return render(request, 'contest.html',{'contests':contests, 'best_contests':best_list, 'contests':best_contests})
+
+
+def contestway(request):
+    return render(request, 'contestway.html')
 
 def contestwrite(request):
     if request.method == 'POST':
@@ -71,12 +93,16 @@ def contestwrite(request):
         form = ContestForm()
         return render(request, 'contestwrite.html', {'form':form})
 
-def contest_like(request,contest_id):
+def contestlike(request,contest_id):
     contest = get_object_or_404(Contest, pk = contest_id)
-    contest.like.add(request.user)
+    if request.user in contest.contest_like.all():
+        #좋아요 취소
+        contest.contest_like.remove(request.user)
+    else:
+        contest.contest_like.add(request.user)
     contest.save()
-    return redirect('contest', contest.id)
-    
+    return redirect('contest')
+
 
 def mission(request):
     sort = request.GET.get('sort','')
