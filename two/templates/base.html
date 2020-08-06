@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="static/main/css/home.css">
+        <link rel="stylesheet" href="/static/main/css/home.css">
         
         <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400;700&display=swap" rel="stylesheet">
         <style>
@@ -16,7 +16,8 @@
 
         {% block title %}
         {% endblock %}
-        
+        <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+        <script src="https://unpkg.com/konva@7.0.4/konva.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     </head>
@@ -27,7 +28,7 @@
         <!-- Navbar (sit on top) -->
         <div class="w3-top">
           <div class="w3-bar w3-white w3-padding w3-card" style="letter-spacing:0.5px;">
-            <a href="{% url 'home' %}" class="w3-bar-item w3-button">2%를 부탁해 <img src="static/main/images/logo.png" width="24px;" height="auto"></a>
+            <a href="{% url 'home' %}" class="w3-bar-item w3-button">2%를 부탁해 <img src="/static/main/images/logo.png" width="24px;" height="auto"></a>
             <div class="w3-center2" style="text-align:center;">
                 <a class="w3-bar-item">  |   </a>
                 <a href="{% url 'mission' %}" class="w3-bar-item w3-button">의뢰</a>
