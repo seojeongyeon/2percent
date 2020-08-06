@@ -32,6 +32,7 @@ def photowrite(request):
             content.writer = request.user
             content.save()
             return redirect('home')
+        return render(request, 'photowrite.html', {'form':form})
     else:
         form = PhotoshopForm()
         return render(request, 'photowrite.html', {'form':form})
