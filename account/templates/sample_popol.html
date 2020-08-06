@@ -9,28 +9,6 @@
 body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 .w3-third img{margin-bottom: -6px; opacity: 0.8; cursor: pointer}
 .w3-third img:hover{opacity: 1}
-  
-  .thumbnail {
-    position: relative;
-    padding-top: 100%;
-    overflow: hidden;
-  }
-  
-  .thumbnail-centered {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    transform: translate(50%, 50%);
-  }
-  
-  .thumbnail-img {
-  /*   max-width: 100%; */
-  /*   height: 박스의 height와 같아야 한다. */
-    transform: translate(-50%, -50%);
-  }
-  
 </style>
 <body class="w3-light-grey w3-content" style="max-width:1600px">
 
@@ -39,58 +17,44 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
 
     <!-- 유저 프로필 이미지 -->
-    <div id="profile_img" class="w3-padding-16">
-        {% if d_user.profile %}
-            <img src="{{ d_user.profile.url}}" style="max-width: 75%; height: auto;">
-        {% else %}
-            <div>
-                <i class="zmdi zmdi-account-circle"></i>
-            </div>
-        {% endif %}
-    </div>
-    
+    {% if d_user.profile %}
+        <img src="{{ d_user.profile.url}}">
+    {%else%}
+        <img src="{% static 'default_profile.jpg' %}">
+    {%endif%}
 
-    <h2 class="w3-padding-16 w3-center">{{ d_user.username }}</h2>
-    <h6 class="w3-center">{{ d_user.info }}</h6>
+    <h3 class="w3-padding-64 w3-center">{{ d_user.username }}</h3>
+    <h6 class="w3-padding-64 w3-center">{{ d_user.info }}</h6>
 
     <!-- 유저 팔로우 기능 -->
-    <div id="follow_relationship" class="w3-padding-16">
     {% if user.is_authenticated %}
-        <!-- 자기 자신이 아니면: 로그인한 유저와 유저 페이지의 유저가 일치하지 않을 때 -->
-        {% if request.user != d_user %}
-            <!-- 언팔로우 노출 : 이미 팔로우한 유저일 때 -->
-            {% if request.user in d_user.followers.all %}
-                <a href="{% url 'unfollow' d_user.username %}">UNFOLLOW</a>
-            {% else %} <!-- 팔로우 노출 : 팔로우 하지 않는 유저일 때 -->
-                <a href="{% url 'follow' d_user.username %}">FOLLOW</a>
-            {% endif %}
-        {% else %} <!-- 자신의 유저 페이지이면 -->
-            <a href="{% url 'mypage' %}">My Page</a>
+    <!-- 자기 자신이 아니면: 로그인한 유저와 유저 페이지의 유저가 일치하지 않을 때 -->
+    {% if request.user != d_user %}
+        <!-- 언팔로우 노출 : 이미 팔로우한 유저일 때 -->
+        {% if request.user in d_user.followers.all %}
+            <a href="{% url 'unfollow' d_user.username %}">UNFOLLOW</a>
+        {% else %} <!-- 팔로우 노출 : 팔로우 하지 않는 유저일 때 -->
+            <a href="{% url 'follow' d_user.username %}">FOLLOW</a>
         {% endif %}
+    {% else %} <!-- 자신의 유저 페이지이면 -->
+        <a href="{% url 'mypage' %}"></a>
+    {% endif %}
     {% else %} <!-- 로그인 안 했으면 -->
         <!-- 팔로우인 척 하면서 로그인 페이지로 이동 -->
         <a href="{% url 'signin' %}">FOLLOW</a>
     {% endif %}
-    </div>
 
     <!-- 유저 팔로우/팔로잉 수 노출 -->
-    <div id="follow_count">
-        <div role="followers">
-            <a href="{% url 'follower' d_user.username %}">{{ d_user.followers.count }} followers</a>
-        </div>
-        <div role="followings">
-            <a href="{% url 'following' d_user.username %}">{{ d_user.followings.count }} followings</a>
-        </div>
+    <div role="followers">
+    <a href="{% url 'follower' d_user.username %}">{{ d_user.followers.count }} followers</a>
+    </div>
+    <div role="followings">
+    <a href="{% url 'following' d_user.username %}">{{ d_user.followings.count }} followings</a>
     </div>
 
-    <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-padding w3-hide-large">CLOSE</a>
-
-    <!-- 작성한 글 카테고리 -->
-    <div id="user_category" class="w3-padding-64">
-        <a href="#PHOTOSHOP" onclick="w3_close()" class="w3-bar-item w3-button">PHOTOSHOP</a> 
-        <a href="#mission" onclick="w3_close()" class="w3-bar-item w3-button">MISSION</a> 
-    </div>
-</div>
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-padding w3-hide-large">CLOSE</a>
+  <a href="#PHOTOSHOP" onclick="w3_close()" class="w3-bar-item w3-button">PHOTOSHOP</a> 
+  <a href="#mission" onclick="w3_close()" class="w3-bar-item w3-button">MISSION</a> 
 </nav>
 
 <!-- Top menu on small screens -->
@@ -112,22 +76,23 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
     *               작성한 보정법              *
     ------------------------------------------->
     <div role="photoshop" class="w3-row">
-        <div class="container">
+        <div class="w3-third">
             {% for p in d_user.photoshop.all %}
-            <div class="thumbnail  col-sm-4 col-m-6 col-l-8">
-                <div class="thumbnail-centered">
-                    <div class="w3-third">
+                <div class="container"> <!-- ???? -->
+                    <div class="col-md-3 px-0">
                         <a href="{% url 'photodetail' p.id %}" style="display: none;">{{ p.date }}</a>
-                        <img src="{{ p.photoafter.url }}" class="thumbnail-img img-responsive" alt="{{ p.title }}" onclick="onClick(this)" style="width:100%;">
+                        <img src="{{ p.photoafter.url }}" alt="{{ p.title }}" style="object-fit: contain;
+                        max-width: 100%;
+                        max-height: 100%;
+                        width: auto;
+                        height: auto;">
                         <span style="display: none;">{{ p.getlike }}</span>
                     </div>
                 </div>
-            </div>
                 <!-- if last column in row -->
-                {% if forloop.counter|divisibleby:"3" and not forloop.last %}
-                    </div><div class="container">
+                {% if forloop.counter | divisibleby:"3" and not forloop.last %}
+                    </div><div class="w3-third">
                 {% endif %}
-                
             {% endfor %}
         </div>
         
@@ -147,7 +112,6 @@ body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
       <img src="/w3images/girl_train.jpg" style="width:100%" onclick="onClick(this)" alt="A girl, and a train passing">
       <img src="/w3images/closegirl.jpg" style="width:100%" onclick="onClick(this)" alt="What a beautiful day!">
     </div>
-  </div>
 
   <!-- 작성한 의뢰글 -->
 <h3># 작성한 의뢰글</h3>

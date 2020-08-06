@@ -114,6 +114,33 @@
     </div>
   </div>
 
+
+  <!-- 오늘의 보정법 추천 -->
+  <hr>
+  <h4>좋아요를 가장 많이 받은 보정법</h4>
+  <div class="carousel slide" data-ride="carousel" data-interval="2000">
+      <div class="carousel-inner">
+        {% for photo in p %}
+        <div class="carousel-item {% if forloop.counter == 1 %} active {% endif %}">
+          <img src="{{ photo.photobefore.url }}" class="d-block w-50" >
+        </div>
+        {% endfor %}
+      </div>
+  </div>
+  <br><br>
+  <h4>콘테스트 현재 순위</h4>
+  <div class="carousel slide" data-ride="carousel" data-interval="1500">
+      <div class="carousel-inner">
+        {% for c in c %}
+        <div class="carousel-item {% if forloop.counter == 1 %} active {% endif %}">
+          <img src="{{ c.image.url }}" class="d-block w-50" >
+        </div>
+        {% endfor %}
+      </div>
+  </div>
+
+  
+
 </div>
 
 

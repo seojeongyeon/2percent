@@ -28,7 +28,7 @@ class Photoshop(models.Model):
         return self.title
 
     def getlike(self):
-        return len(self.like.all())
+        return len(self.photo_like.all())
 
 class Comment(models.Model):
     photoshop = models.ForeignKey(Photoshop, on_delete=models.CASCADE, related_name='comments')
