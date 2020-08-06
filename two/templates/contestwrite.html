@@ -1,10 +1,35 @@
 <h2>콘테스트 등록하기</h2>
 
-<form method ='POST' action ='' enctype="multipart/form-data">
-    {% csrf_token %}
-    <table>
-        {{form.as_table}}
-    </table>
-    
-    <input class= "btn btn=dark" type="submit" value="제출하기">
-</form>
+
+<a href="{% url 'home' %}">홈으로</a>
+<br>
+<a href="{% url 'contest' %}">콘테스트로 돌아가기</a>
+<br><br>
+<div class="jumbotron">
+    <h1 class="display-4">콘테스트 등록하기</h1>
+    <p class="lead">자신의 뛰어난 보정법을 자랑하세요. 이번주의 TOP4안에 도전해보세요 !!</p>
+    <hr class="my-4">
+    <p>
+        <form method ='POST' action ='' enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            {{form.as_table}}
+            
+        </table>
+        <div class="input-group">
+                
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="submit" id="inputGroupFileAddon04">제출하기</button>
+            </div>
+          </div>
+        <!-- <input class= "btn btn=dark" type="submit" value="제출하기"> -->
+        </form>
+    </p>
+  </div>
+
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js" integrity="sha384-XEerZL0cuoUbHE4nZReLT7nx9gQrQreJekYhJD9WNWhH8nEW+0c5qq7aIo2Wl30J" crossorigin="anonymous"></script>
