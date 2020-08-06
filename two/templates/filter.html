@@ -1,16 +1,10 @@
 
-{% extends 'base.html' %}
-{% block title%}
-
-<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
-<script src="https://unpkg.com/konva@7.0.4/konva.min.js"></script>
-{% endblock title%}
-
-{% block content %}
-<br>
-<br>
+<head>
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://unpkg.com/konva@7.0.4/konva.min.js"></script>
+</head>
 <input id="loadButton" type="file" accept="image/*">
-<div id="container" style="width: 1000px;height: 500px; background-color: gray;"></div>
+<div id="container" style="width: 700px;height: 500px; background-color: gray;"></div>
 <div id="controls">
     <button id="set">초기화</button>
     색상:
@@ -58,7 +52,7 @@
             var container = document.getElementById('container');
             var stage = new Konva.Stage({
                 container: 'container',
-                width: 1000,
+                width: 700,
                 height: 500,
             });
 
@@ -114,5 +108,3 @@
         }
 
 </script>
-
-{% endblock content %}
