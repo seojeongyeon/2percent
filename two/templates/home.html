@@ -1,51 +1,120 @@
-<head>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-</head>
+{% extends 'base.html' %}
 
-<!-- 메인페이지 -->
-<body>
-    <h1>main</h1>
-    <a href="{% url 'mission' %}">의뢰</a>
-    <a href="{% url 'photoshop'%}">보정법</a>
-    <a href="{% url 'contestway'%}">콘테스트</a>
-    
-    <div role="account">
-        {% if user.is_authenticated %}
-            <a href="{% url 'user' user.username %}">{{ user.username }}</a>
-            <a href="{% url 'mypage' %}">마이페이지</a>
-            <a href="{% url 'signout' %}">로그아웃</a>
-        {% else %}
-            <a href="{% url 'signin' %}">로그인</a>
-            <a href="{% url 'signup' %}">회원가입</a>
-        {% endif %}
-    </div>
-    
-    <!-- 오늘의 보정법 추천 -->
-    <hr>
-    <h4>좋아요를 가장 많이 받은 보정법</h4>
-    <div class="carousel slide" data-ride="carousel" data-interval="2000">
-        <div class="carousel-inner">
-          {% for photo in p %}
-          <div class="carousel-item {% if forloop.counter == 1 %} active {% endif %}">
-            <img src="{{ photo.photobefore.url }}" class="d-block w-50" >
-          </div>
-          {% endfor %}
-        </div>
-    </div>
-    <br><br>
-    <h4>콘테스트 현재 순위</h4>
-    <div class="carousel slide" data-ride="carousel" data-interval="1500">
-        <div class="carousel-inner">
-          {% for c in c %}
-          <div class="carousel-item {% if forloop.counter == 1 %} active {% endif %}">
-            <img src="{{ c.image.url }}" class="d-block w-50" >
-          </div>
-          {% endfor %}
-        </div>
-    </div>
-    
-</body>
 
+{% block title %}
+
+<title>2%를 부탁해</title>
+
+{% endblock %}
+
+
+
+
+{% block content %}
+<!--<header>-->
+
+<div id="slide">
+  <input type="radio" name="pos" id="pos1" checked>
+  <input type="radio" name="pos" id="pos2">
+  <input type="radio" name="pos" id="pos3">
+ 
+  <ul>
+    <li><img src="https://images.unsplash.com/photo-1596376243159-de037756cc86?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2550&q=80" width="100%" height="auto">
+    <div class="w3-display-bottomleft w3-padding-large">
+        <h4 style="color: white">2%를 부탁해 제 3회 콘테스트 수상작</h4>
+</div></li>
+   
+    <li><img src="static/main/images/02.jpg" width="100%" height="auto"></li>
+    <li><img src="static/main/images/04.jpg" width="100%" height="auto"></li>
+    
+    
+  </ul>
+  <p class="pos">
+    <label for="pos1"></label>
+    
+    <label for="pos2"></label>
+    <label for="pos3"></label>
+    
+  </p>
+</div>
+
+<!--</header>-->
+
+
+<!-- Page content -->
+<div class="w3-content" style="max-width:1100px">
+
+
+
+<div class="w3-row w3-padding-64">
+   <br>
+    <h1 class="w3-center">About Us</h1><br><br><br>
+    <div class="w3-col m6 w3-padding-large w3-hide-small">
+     <img src="static/main/images/03.jpg" class="w3-round w3-image w3-opacity-min" width="600" height="750">
+    </div>
+
+    <div class="w3-col m6 w3-padding-large">
+      <br><br><br><br><h2 class="w3-center">사진 의뢰하기</h2>
+      <p class="w3-large">전문가의 도움이 필요할 땐 쌓아둔 포인트를 사용한 <span class="w3-tag w3-pink">의뢰</span> 서비스.</p>
+    </div>
+  </div>
+
+  
+  <div class="w3-row">
+    <div class="w3-col m6 w3-padding-large">
+      <br><br><br><br><h2 class="w3-center">나만의 보정법 공유하고 구독하기</h2>
+        <p class="w3-large">나만의 <span class="w3-tag w3-pink">보정 방법</span>을 상세하게 작성하고 공유하기.<br>내 마음에 드는 보정 방법만 <span class="w3-tag w3-pink">구독</span>하기.</p>
+    </div>
+    <div class="w3-col m6 w3-padding-large w3-hide-small">
+     <img src="static/main/images/02.jpg" class="w3-round w3-image w3-opacity-min" width="600" height="750">
+    </div>
+  </div>
+<br>
+
+   <div class="w3-row w3-padding-64">
+    <div class="w3-col m6 w3-padding-large w3-hide-small">
+     <img src="static/main/images/04.jpg" class="w3-round w3-image w3-opacity-min" width="600" height="750">
+    </div>
+
+    <div class="w3-col m6 w3-padding-large">
+      <br><br><br><br><h2 class="w3-center">인생샷으로 콘테스트 참여</h2>
+      <p class="w3-large"> <span class="w3-tag w3-pink">포인트</span> 받아가기.</p>
+    </div>
+    </div>
+  
+
+  
+  <div class="w3-row">
+    <div class="w3-col m6 w3-padding-large">
+      <br><br><br><br><h2 class="w3-center">해시태그 추천으로 색다른 사진 만나보기</h2>
+        <p class="w3-large">지금 가장 인기있는 <span class="w3-tag w3-pink">해시태그 추천</span> 받기.<br>내 마음에 드는 해시태그만 <span class="w3-tag w3-pink">팔로잉</span>하기.</p>
+    </div>
+    <div class="w3-col m6 w3-padding-large w3-hide-small">
+     <img src="static/main/images/05.jpg" class="w3-round w3-image w3-opacity-min" width="600" height="750">
+    </div>
+  </div>
+  
+  <br><br><br><br>
+  
+
+  
+  
+  
+
+  <div class="w3-row w3-padding-32" id="about">
+   
+    <div class="w3-col m6 w3-padding-small w3-hide-small">
+    <a>ㅤㅤ의뢰</a><br>
+    <img src="static/main/images/box.png" class="w3-round w3-image w3-opacity-min" width="500" height="750">
+    </div>
+  
+  <div class="w3-col m6 w3-padding-small w3-hide-small">
+    <a>ㅤㅤ보정법</a><br>
+    <img src="static/main/images/box.png" class="w3-round w3-image w3-opacity-min" width="500" height="750">
+    </div>
+  </div>
+
+</div>
+
+
+{% endblock %}

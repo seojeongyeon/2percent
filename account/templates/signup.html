@@ -1,12 +1,94 @@
 {% extends 'account.html' %}
 
-{% block content %}
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    
-    {{ form.as_p }} 
+{% block head %}
+<title>Sign Up</title>
+{% endblock %}
 
-    <input type="submit" value="submit">
-    <input type="reset" value="reset">
-</form>
+{% block content %}
+<div class="limiter">
+    <div class="container-login100" style="background-color: white">
+        <div class="wrap-login100" style="width: 900px;">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <!-- ['username', "nickname", "profile", "email", "info", "password1", "password2", "birthday"] -->
+                <table>
+                    <tr>
+                        <td role="left" class="p-l-50 p-r-130">
+                            <span class="login100-form-logo">
+                                <i class="zmdi zmdi-account-o"></i>
+                            </span>
+                            <span class="login100-form-title p-b-34 p-t-27">
+                                Sign Up
+                            </span>
+
+                            <div class="container-login100-form-btn">
+                                <button class="login100-form-btn m-r-10" type="submit">
+                                    Sign up
+                                </button>
+                                <button class="login100-form-btn" type="reset">
+                                    Reset
+                                </button>
+                            </div>
+
+                            <div class="text-center p-t-25">
+                                <a class="txt1" href="{% url 'home' %}">
+                                    Home
+                                </a>
+                            </div>
+                        </td>
+                        <td role="right">
+                            <div class="wrap-input100 validate-input" data-validate = "Enter username">
+                                <input class="input100" type="text" name="username" placeholder="Username">
+                                <span class="focus-input100" data-placeholder="&#xf207;"></span>
+                            </div>
+                        
+                            <div class="wrap-input100 validate-input" data-validate="Enter email address">
+                                <input class="input100" type="email" name="email" placeholder="Email">
+                                <span class="focus-input100" data-placeholder="&#xf15a;"></span>
+                            </div>
+                        
+                            <div class="wrap-input100 validate-input" data-validate="Enter password">
+                                <input class="input100" type="password" name="password1" placeholder="Password">
+                                <span class="focus-input100" data-placeholder="&#xf191;"></span>
+                            </div>
+                        
+                            <div class="wrap-input100 validate-input" data-validate="Enter password">
+                                <input class="input100" type="password" name="password2" placeholder="Re-enter Password">
+                                <span class="focus-input100" data-placeholder="&#xf191;"></span>
+                            </div>
+                        
+                            <div class="wrap-input100 validate-input" data-validate = "Enter nickname">
+                                <input class="input100" type="text" name="nickname" placeholder="Nickname">
+                                <span class="focus-input100" data-placeholder="&#xf203;"></span>
+                            </div>
+                        
+                            <div class="wrap-input100 validate-input" data-validate="Enter profile image">
+                                <span class="input100">
+                                    <span class="pr-5" id="profile-label">Profile Image</span>
+                                    <label class="btn btn-sm btn-outline-warning text-warning">
+                                        Upload
+                                        <input type="file" name="profile" placeholder="Profile Image" style="display: none;" id="profile-input">
+                                    </label>
+                                </span>
+                                <span class="focus-input100" data-placeholder="&#xf140;"></span>
+                            </div>
+                        
+                            <div class="wrap-input100 validate-input" data-validate="Enter your information">
+                                <input class="input100" type="text" name="info" placeholder="Short Information">
+                                <span class="focus-input100" data-placeholder="&#xf25b;"></span>
+                            </div>
+                        
+                            <div class="wrap-input100 validate-input" data-validate="Enter birthday">
+                                <input class="input100" type="date" name="birthday" placeholder="Birthday" value="2001-01-01">
+                                <span class="focus-input100" data-placeholder="&#xf150;"></span>
+                            </div>
+                        </td>
+                    </tr>
+                </table>    
+            </form>
+        </div> 
+    </div>
+</div>  
+<div id="dropDownSelect1"></div>
 {% endblock %}
