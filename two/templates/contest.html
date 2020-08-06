@@ -38,9 +38,43 @@
 
 <!-- 콘테스트 -->
 <h1>CONTEST</h1>
+<br>
+
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" data-whatever="@fat">Open modal for @fat</button>
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Recipient:</label>
+            <input type="text" class="form-control" id="recipient-name">
+          </div>
+          
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">제출하기</button>
+      </div>
+    </div>
+  </div>
+</div>
+<br>
 <a href="{% url 'contestwrite'%}">콘테스트 지원하기</a>
+
 <br>
+<a href="{% url 'home' %}">홈으로</a>
 <br>
+<a href="{% url 'contestway' %}">콘테스트 리스트</a>
 <hr>
 
 <!DOCTYPE html>
@@ -74,15 +108,23 @@
 {% for contest in contests.all %}
 <div class="card" style="width: 18rem;">
     <img src="{{ contest.image.url }}" class="card-img-top" alt="...">
-    <div class="card-body">
+    <div class="card-footer">
       <p class="card-text"></p>
         <form action="{% url 'contestlike' contest.id %}" method="get">
             {% if user in contest.contest_like.all %}
-            <button type="submit" class="btn btn-link">좋아요 취소</button>
+            <button type="submit" class="btn btn-primary">
+                좋아요 취소 <span class="badge badge-light">{{ contest.contest_like.count }}</span>
+              </button>
+            
             {% else %}
-            <button type="submit" class="btn btn-primary">좋아요</button>
+            <button type="submit" class="btn btn-outline-primary">
+                좋아요 <span class="badge badge-light">{{ contest.contest_like.count }}</span>
+              </button>
+
+              
+            
             {% endif %}
-            {{ contest.contest_like.count }}
+            
             </p>
         </form>
       </a>
