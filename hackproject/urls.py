@@ -48,5 +48,6 @@ urlpatterns = [
     path('contestwrite/', views.contestwrite, name='contestwrite'),
     path('contest/<int:contest_id>', views.contestlike, name='contestlike'),
     path('photo_search/', views.photo_search, name='photo_search'),
+    path('filter/', views.filter, name="filter"),
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

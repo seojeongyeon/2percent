@@ -77,8 +77,16 @@ def contest(request):
             best_contests[i].like = best_like
             best_list.append(best_contests[i])
 
+    if request.method == 'POST':
+        form = ContestForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('contest')
+    else:
+        form = ContestForm()
 
-    return render(request, 'contest.html',{'contests':contests, 'best_contests':best_list, 'contests':best_contests})
+
+    return render(request, 'contest.html',{'contests':contests, 'best_contests':best_list, 'contests':best_contests, 'form':form})
 
 
 def contestway(request):
@@ -236,3 +244,5 @@ def photo_search(request):
     return render(request, 'photo_search.html', {'photos':photos,'photo':photo})
 
     
+def filter(request):
+    return render(request, 'filter.html')
