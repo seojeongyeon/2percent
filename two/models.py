@@ -21,10 +21,14 @@ class Photoshop(models.Model):
     app = models.CharField(max_length=10)
     photobefore = models.ImageField(upload_to="image/")
     photoafter = models.ImageField(upload_to="image/")
-    explain = models.TextField()
+    explain = models.TextField(help_text='사진에 적용된 보정법들을 모두 써주세요!')
+    photo_like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='photo_like')
 
     def __str__(self):
         return self.title
+
+    def getlike(self):
+        return len(self.like.all())
 
 class Comment(models.Model):
     photoshop = models.ForeignKey(Photoshop, on_delete=models.CASCADE, related_name='comments')

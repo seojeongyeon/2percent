@@ -43,16 +43,60 @@
 <br>
 <hr>
 
+<!DOCTYPE html>
+
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/contest.css' %}">
+    <title>Document</title>
+</head>
+<body>
+    <div class="container">
+        {% for contest in best_contests %}
+        <div class="box">
+            <img src="{{ contest.image.url }}">
+          <span>    
+            
+            </span>
+        </div>
+        {% endfor %}
+    
+      </div>
+</body>
+</html>
+
+
+
 
 {% for contest in contests.all %}
-    </p><img src="{{ contest.image.url }}" ><p>
-    <form action="{% url 'contestlike' contest.id %}" method="get">
-        {% if user in contest.contest_like.all %}
-        <button type="submit">좋아요 취소</button>
-        {% else %}
-        <button type="submit">좋아요</button>
-        {% endif %}
-        {{ contest.contest_like.count }}
-        </p>
-</form>
+<div class="card" style="width: 18rem;">
+    <img src="{{ contest.image.url }}" class="card-img-top" alt="...">
+    <div class="card-body">
+      <p class="card-text"></p>
+        <form action="{% url 'contestlike' contest.id %}" method="get">
+            {% if user in contest.contest_like.all %}
+            <button type="submit" class="btn btn-link">좋아요 취소</button>
+            {% else %}
+            <button type="submit" class="btn btn-primary">좋아요</button>
+            {% endif %}
+            {{ contest.contest_like.count }}
+            </p>
+        </form>
+      </a>
+    </div>
+  </div>
+  <br>
 {% endfor %}
+
+
+
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/css/bootstrap.min.css" integrity="sha384-VCmXjywReHh4PwowAiWNagnWcLhlEJLA5buUprzK8rxFgeH0kww/aWY76TfkUoSX" crossorigin="anonymous">
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js" integrity="sha384-XEerZL0cuoUbHE4nZReLT7nx9gQrQreJekYhJD9WNWhH8nEW+0c5qq7aIo2Wl30J" crossorigin="anonymous"></script>
+
+

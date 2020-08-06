@@ -311,7 +311,7 @@ iframe {
 }
 
 .input100:focus {
-  padding-left: 10px;
+  padding-left: 5px;
 }
 
 .input100:focus + .focus-input100::after {
