@@ -243,5 +243,6 @@ def photo_search(request):
     return render(request, 'photo_search.html', {'photos':photos,'photo':photo})
 
     
-def filter(request):
-    return render(request, 'filter.html')
+def filter(request, pk):
+    photo = get_object_or_404(Photoshop, pk=pk)
+    return render(request, 'filter.html', {'photo': photo})

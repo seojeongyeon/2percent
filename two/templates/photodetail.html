@@ -39,7 +39,7 @@
     {{photodetail.app}}<br>
     {{photodetail.explain}}<br>
     
-    <button onclick = "window.open(`{% url 'filter' %}`, 'filter','width=720,height=580,location=no,status=no,scrollbars=no')"></button>
+    <button onclick = "window.open(`{% url 'filter' photodetail.id %}`, 'filter','width=791,height=410,location=no,status=no,scrollbars=no')"></button>
     <!-- 게시글 스크랩 -->
     {% if user.is_authenticated %}
         {% if photodetail not in request.user.pscraps.all %}
