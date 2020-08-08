@@ -19,7 +19,7 @@ def home(request):
 def photoshop(request):
     photoshops = Photoshop.objects
     photos = Photoshop.objects.all()
-    paginator = Paginator(photos, 2)
+    paginator = Paginator(photos, 16)
     page = request.GET.get('page')
     photocut = paginator.get_page(page)
     return render(request, 'photoshop.html',{'photoshops':photoshops,'photocut':photocut})
