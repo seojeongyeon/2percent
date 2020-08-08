@@ -7,53 +7,19 @@
     <form method='POST' enctype="multipart/form-data">
         {% csrf_token %}
         <div class="w3-container w3-padding-64" id="contact">
-    
-            <p><input class="w3-input w3-padding-16" type="text" placeholder="제목" required name="title"></p><br><br>
-            
-            
-             <select name = “device” class="w3-input w3-padding-16">
-                <!-- <option value=“none” selected>( DEVICE )</option> -->
-                <option value="핸드폰">phone</option>
-                <option value=“카메라”>camera</option>
-                <option value=“필름카메라”>film camera</option>
-             </select>
-             
-             <select name = “color” class="w3-input w3-padding-16">
-                <!-- <option value=“none” selected>( COLOR )</option> -->
-                <option value=“비비드한”>vivid</option>
-                <option value=“모노톤”>mono</option>
-                <option value=“빈티지한”>vintage</option>
-             </select>
-             
-             <select name = “kind” class="w3-input w3-padding-16">
-                <!-- <option value=“none” selected>( KIND )</option> -->
-                <option value=“셀카”>selfic</option>
-                <option value=“풍경”>scenery</option>
-                <option value=“음식”>food</option>
-                <option value=“코디”>style</option>
-             </select>
-             
-             <select name = “method” class="w3-input w3-padding-16">
-                <option value=“none” selected>( METHOD )</option>
-                <option value=“어플”>apps</option>
-                <option value=“기본카메라”>basic</option>
-             </select>
-             
-              <select name = “fix” class="w3-input w3-padding-16">
-                <!-- <option value=“none” selected>( FIX )</option> -->
-                <option value=“얼굴”>face</option>
-                <option value=“색감”>color</option>
-             </select>
-             
-            <p><input class="w3-input w3-padding-16" type="text" placeholder="APP" name="app"></p>
-             
-            <p> 🖼 before<input name="photobefore" class="w3-input w3-padding-16" type="file"></p>
-            <p> 🖼 after<input name="photoafter" class="w3-input w3-padding-16" type="file"></p>
-             
+            <p class="w3-input w3-padding-16">{{form.title}}</p>
+            <p class="w3-input w3-padding-16">{{form.device}}</p>
+            <p class="w3-input w3-padding-16">{{form.color}} </p>
+            <p class="w3-input w3-padding-16">{{form.kind}} </p>
+            <p class="w3-input w3-padding-16">{{form.method}}</p>
+            <p class="w3-input w3-padding-16">{{form.fix}}</p>
+            <p class="w3-input w3-padding-16">{{form.app}}</p>
+            <p class="w3-input w3-padding-16">🖼 before   {{form.photobefore}}</p>
+            <p class="w3-input w3-padding-16">🖼 after    {{form.photoafter}}</p>
               <br>
-              <br><br><br>
+              <br>
             <p class="w3-large">❃ 다른 사용자들에게 나만의 보정법을 자세하게 설명해주세요! ❃</p>
-              <p><input name="explain" class="w3-input w3-padding-16" type="text" placeholder="자세한 보정법" style="height: 250px;"></p>
+            <p class="w3-input w3-padding-16">{{form.explain}}</p>
               <p><button class="w3-button w3-light-grey w3-section" type="submit">올리기</button></p>
             
           </div>

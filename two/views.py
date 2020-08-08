@@ -26,13 +26,12 @@ def photoshop(request):
 
 def photowrite(request):
     if request.method =='POST':
-        form = PhotoshopForm(request.POST,request.FILES)
+        form = PhotoshopForm(request.POST, request.FILES)
         if form.is_valid():
             content = form.save(commit=False)
             content.writer = request.user
             content.save()
-            return redirect('home')
-        return render(request, 'photowrite.html', {'form':form})
+            return redirect('photoshop')
     else:
         form = PhotoshopForm()
         return render(request, 'photowrite.html', {'form':form})
