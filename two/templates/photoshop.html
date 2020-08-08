@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 {% endblock %}
 
 {% block content %}
@@ -13,15 +13,12 @@
 <br>
 
 <!-- 검색기능 -->
-
 <div class="w3-container w3-padding-20 w3-center">  
-
-<form action="{% url 'photo_search' %}" method="GET">
-    <input type='search' name='query'>
-    <input type='submit' value='검색'>
-
-<box style="width:30px; height:30px; padding: 5px; background-color:#DBC7DE; border:2px solid #DBC7DE; border-radius: 10px;></box><a href="{% url 'photowrite'%}">보정법 올리기</a>
-</form>
+    <form action="{% url 'photo_search' %}" method="GET">
+        <input type='search' name='query'>
+        <input type='submit' value='검색'>
+    <box style="width:30px; height:30px; padding: 5px; background-color:#DBC7DE; border:2px solid #DBC7DE; border-radius: 10px;"><a href="{% url 'photowrite'%}">보정법 올리기</a></box>
+    </form>
 </div>
 
 <!-- 게시글 전체 -->
@@ -41,7 +38,7 @@
           
           <box style="width:30px; height:30px; padding: 5px; border:2px solid #DBC7DE; border-radius: 10px;">{{p.fix}}</box>
           <box style="width:30px; height:30px; padding: 5px; border:2px solid #DBC7DE; border-radius: 10px;">{{p.app}}</box>
-          
+          <br>
           <a href="{% url 'photodetail' p.pk %}">more</a>
           
         <hr>
