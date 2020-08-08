@@ -2,6 +2,9 @@ from django.db import models
 from django.conf import settings
 from django.utils import timezone
 from datetime import datetime
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFill
+
 
 # Create your models here.
 class Photoshop(models.Model):
@@ -70,10 +73,20 @@ class MissionComment(models.Model):
         return len(self.likers.all())
 
 class Contest(models.Model):
-    image = models.ImageField(upload_to="image")
+    # image = models.ImageField(upload_to="image")
+    image = ProcessedImageField(
+               upload_to='contest_image_path', # 저장 위치
+               processors=[ResizeToFill(600,600)], # 처리할 작업 목록
+               format='JPEG', # 저장 포맷(확장자)
+               options= {'quality': 90 }, # 저장 포맷 관련 옵션 (JPEG 압축률 설정)
+        )
     contest_like = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='contest_like')
 
     def getlike(self):
         return len(self.like.all())
+
+    #이미지 크기 수정
+    def contest_image_path(instance, filename): 
+        return f'contests/{instance.contest}/{instance.contest}.jpg'
 
 

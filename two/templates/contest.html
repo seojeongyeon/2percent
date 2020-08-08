@@ -37,11 +37,74 @@
 </html> -->
 
 <!-- 콘테스트 -->
-<h1>CONTEST</h1>
-<a href="{% url 'contestwrite'%}">콘테스트 지원하기</a>
+
+{% extends 'base.html' %}
+
+{% block title %}
+<title>CONTEST</title>
+
+{% endblock %}
+
+{% block content %}
+<br><br><br>
+
+
+<div class="w3-opacity">
+    <span class="w3-button w3-xxlarge w3-white w3-right" onclick="w3_open()"><i class="fa fa-bars"></i></span> 
+    <div class="w3-clear"></div>
+    <header class="w3-center w3-margin-bottom">
+      <h1><b>CONTEST</b></h1>
+      <p>
+          <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#exampleModal">
+        콘테스트 지원하기
+        </button>
+    </p>
+     
+    </header>
+    </div>
+
+
+
+<!-- Button trigger modal -->
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">콘테스트 지원하기</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form method ='POST' action ='' enctype="multipart/form-data">
+                {% csrf_token %}
+                <table>
+                    {{form.as_table}}
+                    
+                </table>
+            
+            
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">제출하기</button>
+                </div>
+            </form>
+      </div>
+    </div>
+  </div>
+
+
+
+
 <br>
+
+
 <br>
-<hr>
+
 
 <!DOCTYPE html>
 
@@ -58,9 +121,7 @@
         {% for contest in best_contests %}
         <div class="box">
             <img src="{{ contest.image.url }}">
-          <span>    
-            
-            </span>
+          
         </div>
         {% endfor %}
     
@@ -71,25 +132,122 @@
 
 
 
-{% for contest in contests.all %}
-<div class="card" style="width: 18rem;">
-    <img src="{{ contest.image.url }}" class="card-img-top" alt="...">
-    <div class="card-body">
-      <p class="card-text"></p>
+<!-- {% for contest in contests.all %}
+    
+      
         <form action="{% url 'contestlike' contest.id %}" method="get">
             {% if user in contest.contest_like.all %}
-            <button type="submit" class="btn btn-link">좋아요 취소</button>
+            <button type="submit" class="btn btn-outline-primary" >
+                <img src="{{ contest.image.url }}" alt="..." style="padding:6px 6px 6px 6px;"> <span class="badge badge-light">{{ contest.contest_like.count }}</span>
+              </button>
+            
             {% else %}
-            <button type="submit" class="btn btn-primary">좋아요</button>
+            <button type="submit" class="btn btn-outline-secondary">
+                <img src="{{ contest.image.url }}" alt="..." style="padding:6px 6px 6px 6px;"> <span class="badge badge-light">{{ contest.contest_like.count }}</span>
+              </button>
+            
             {% endif %}
-            {{ contest.contest_like.count }}
-            </p>
         </form>
-      </a>
-    </div>
-  </div>
   <br>
-{% endfor %}
+
+{% endfor %} -->
+
+
+
+
+<!-- 좋아요 없는데 사진 크기 같음 
+  <div class="card" style="width: 100%;">
+  <div class ="row">
+  {% for contest in contests.all %}
+  
+    <div class="col-md-3 col-xs-2 mb-2">
+      <div class="card card_hover h-100">
+        <img class="card-img-top" src="{{ contest.image.url }}" style="height: 100%; display: flex; justify-content:center; align-items:center;">
+      </div>
+    </div> 
+  
+
+  {% endfor %}
+
+</div>
+</div> -->
+
+
+
+
+ 
+  <div class="card" style="width: 100%;">
+  <div class ="row">
+  {% for contest in contests.all %}
+  
+    <div class="col-md-3 col-xs-2 mb-2">
+      <div class="card card_hover h-100">
+
+        <form action="{% url 'contestlike' contest.id %}" method="get">
+          {% if user in contest.contest_like.all %}
+          <button type="submit" class="btn btn-outline-primary card-img-top" >
+            <img class="card-img-top" src="{{ contest.image.url }}" style="height: 100%; display: flex; justify-content:center; align-items:center;"> <span class="badge badge-light">{{ contest.contest_like.count }}</span>
+            </button>
+          
+          {% else %}
+          <button  type="submit" class="btn btn-outline-secondary card-img-top" >
+            <img class="card-img-top" src="{{ contest.image.url }}" style="height: 100%; display: flex; justify-content:center; align-items:center;"> <span class="badge badge-light">{{ contest.contest_like.count }}</span>
+            </button>
+          
+          {% endif %}
+      </form>
+      </div>
+    </div> 
+  
+
+  {% endfor %}
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- 좋아요 있는데, 사진 크기가 같진 않음 
+<div class="card" style="width: 100%;">
+  <div class ="row">
+  {% for contest in contests.all %}
+  
+    <div class="col-md-3 col-xs-2 mb-2">
+      <div class="card card_hover h-100">
+        <form action="{% url 'contestlike' contest.id %}" method="get">
+          {% if user in contest.contest_like.all %}
+          <button type="submit" class="btn btn-outline-primary" >
+              <img class="card-img-top" src="{{ contest.image.url }}" alt="..." style="height: 100%; display: flex; justify-content:center; align-items:center;"> <span class="badge badge-light">{{ contest.contest_like.count }}</span>
+            </button>
+          
+          {% else %}
+          <button type="submit" class="btn btn-outline-secondary">
+            <img class="card-img-top" src="{{ contest.image.url }}" alt="..." style="height: 100%; display: flex; justify-content:center; align-items:center;"> <span class="badge badge-light">{{ contest.contest_like.count }}</span>
+            </button>
+          
+          {% endif %}
+      </form>
+      </div>
+    </div> 
+  
+
+  {% endfor %}
+
+</div>
+</div> -->
+
+
+
+
+
+
+
 
 
 
@@ -98,5 +256,7 @@
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.1/js/bootstrap.min.js" integrity="sha384-XEerZL0cuoUbHE4nZReLT7nx9gQrQreJekYhJD9WNWhH8nEW+0c5qq7aIo2Wl30J" crossorigin="anonymous"></script>
+
+{% endblock %}
 
 

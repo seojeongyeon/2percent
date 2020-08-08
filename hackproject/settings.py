@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'two',
     'account',
     'six', # 이메일 인증
+    'imagekit', #사진 크기 조정 
 ]
 
 MIDDLEWARE = [
