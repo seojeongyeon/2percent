@@ -1,56 +1,74 @@
-<!--요청글 디테일-->
-<h1>{{mission.title}}</h1>
-<p>writer:{{mission.writer}}</p>
-<p>pub_date:{{mission.pub_date}}</p>
-<p>end_date:{{mission.end_date}}</p>
-<p>point:{{mission.point}}</p>
-<p>body:{{mission.body}}</p>
-<img src="{{mission.image.url}}">
+{% extends 'base.html' %}
+{% block title %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock title %}
+{% block content %}
 
-<a href="{% url 'mission_delete' mission.id %}">삭제</a>
+<div class="w3-main w3-content w3-padding" style="max-width:1200px;">
+    <div class="w3-container w3-center">  
+        <h2 style="margin-bottom: 30px;"><b>{{mission.title}}</b></h2><br>
+        <img src="{{mission.image.url}}" alt="Me" class="w3-image" style="display:block;margin:auto;max-height: 533px;">
+        <div class="w3-padding-32">
+            <h4>{{mission.writer}}</h4>
+            <h4>{{mission.point}}point</h4>
+            <h6><i>{{mission.pub_date}} ~ {{mission.end_date}}</i></h6>
+            <p class="w3-border w3-padding-32" style="margin-top: 50px;">{{mission.body}}</p>
+        </div>
+        
+        <div class="w3-bar">
+            <a href="{% url 'mission_delete' mission.id %}" class="w3-bar-item w3-button w3-hover-black">삭제</a>
+            <a href="{% url 'mission' %}" class="w3-bar-item w3-button w3-hover-black">home</a>
+            <!-- 게시글 스크랩 -->
+            {% if user.is_authenticated %}
+                {% if mission not in request.user.mscraps.all %}
+                    <a href="{% url 'mission_scrap' mission.id %}" class="w3-bar-item w3-button w3-hover-black">스크랩</a>
+                {% else %}
+                    <a href="{% url 'mission_scrap_del' mission.id %}" class="w3-bar-item w3-button w3-hover-black">스크랩 취소</a>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
 
-<a href="{% url 'mission' %}">home</a>
 
-<!-- 게시글 스크랩 -->
-{% if user.is_authenticated %}
-    {% if mission not in request.user.mscraps.all %}
-        <a href="{% url 'mission_scrap' mission.id %}">스크랩</a>
-    {% else %}
-        <a href="{% url 'mission_scrap_del' mission.id %}">스크랩 취소</a>
-    {% endif %}
-{% endif %}
+    
 
-<br><br><hr>
-{% if not mission.end %}
-<h2>comments</h2>
-<form method="POST" action="{% url 'mission_comment_create' mission.id %}" enctype="multipart/form-data">
-    {% csrf_token %}
-    <p>image: <input type="file" name="image"></p>
-    <p>body: <textarea name="body"></textarea></p>
-    <p><input type="submit" value="SUBMIT"></p>
-</form>
-<hr>
-{% endif %}
-{% for comment in comments %}
-    <img src="{{comment.image.url}}">
-    <p>writer:{{comment.writer}}</p>
-    <p>pub_date:{{comment.pub_date}}</p>
-    <p>body:{{comment.body}}</p>
-    <p>pick:{{comment.isPicked}}</p>
-    <p>like : {{comment.getlikes}}</p>
-    {% if user.is_authenticated %}
-    <form action="{% url 'mission_comment_like' comment.id %}" method="get">
-        {% if user in comment.likers.all %}
-        <button type="submit">취소</button>
-        {% else %}
-        <button type="submit">따봉</button>
-        {% endif %}
-        </p>
-    </form>
-    {% endif %}
-    {% if not mission.pick and user == mission.writer %}
-    <button onclick = "location.href =`{% url 'mission_pick' comment.id %}` ">채택하기</button>
-    {% endif %}
-    <a href="{% url 'mission_comment_delete' comment.id %}">삭제</a>
     <hr>
-{% endfor %}
+    {% if not mission.end %}
+    <form method="POST" class="w3-container w3-light-grey" action="{% url 'mission_comment_create' mission.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <h3>Comment</h3>
+        <p><input type="file"name="image"></p>
+        <p><textarea class="w3-input" name="body" style="height: 100px;"></textarea></p>
+        <p><button class="w3-button w3-light-grey w3-border" type="submit">SUBMIT</button></p>
+    </form>
+    <hr>
+    {% endif %}
+    <div class="w3-container">
+        {% for comment in comments %}
+            <img src="{{comment.image.url}}" style="max-height: 200px;"><br>
+        <i class="fa fa-map-marker" style="width:30px"></i> {{comment.writer}}<br>
+        <i class="fa fa-phone" style="width:30px"></i> {{comment.pub_date}}<br>
+        <i class="fa fa-envelope" style="width:30px"> </i> {{comment.isPicked}}<br>
+        
+        <p>{{comment.body}}</p>
+        
+        <form action="{% url 'mission_comment_like' comment.id %}" method="get">
+            <i class="fa fa-envelope" style="width:30px"> </i> {{comment.getlikes}}
+            {% if user.is_authenticated %}
+                {% if user in comment.likers.all %}
+                <button type="submit">취소</button>
+                {% else %}
+                <button type="submit">따봉</button>
+                {% endif %}
+            {% endif %}
+        </form>
+        {% if not mission.pick and user == mission.writer %}
+            <button onclick = "location.href =`{% url 'mission_pick' comment.id %}` ">채택하기</button>
+            {% endif %}
+            <a href="{% url 'mission_comment_delete' comment.id %}">삭제</a>
+            <hr>
+        {% endfor %}
+        
+    </div>
+</div>
+{% endblock content %}
