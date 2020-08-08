@@ -1,27 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock title %}
+{% block content %}
+
 <!-- 요청 -->
-<h1>Mission</h1>
-<form method="GET">
-    <input type="text" name="search">
-    <input type="submit" value="search">
-</form>
-{% if user.is_authenticated %}
-<a href="{% url 'mission_create' %}">글 등록</a>
-{% endif %}
-<hr>
-<select id="sort-select" name="links" onchange="goLink(this.value)">
-    <option value="sort=">최신순</option>
-    <option value="sort=comment">댓글많은순</option>
-    <option value="sort=enddate">마감일순</option>
-    <option value="sort=point">포인트순</option>
-</select>
-<div>
-{% for mission in missions %}
-    <a href="{% url 'mission_detail' mission.id %}" style="float:left">
-        <img src="{{mission.image.url}}" style="max-height: 200px;">
-    </a>
-{% endfor %}
+
+    
+<div class="w3-main w3-content w3-padding" style="max-width:1200px;">
+<div class="w3-bar w3-white w3-border w3-large " >
+    <input class="w3-bar-item" type="text" style="width: 95%;" name="search">
+    <a class="w3-bar-item w3-button w3-right w3-hover-black w3-text-grey" id="sbutton"><i class="fa fa-search"></i></a>
 </div>
 
+<hr>
+
+
+
+    <div class="w3-bar w3-white w3-small" >
+        <select id="sort-select" class="w3-bar-item w3-border" name="links" onchange="goLink(this.value)">
+            <option value="sort=">최신순</option>
+            <option value="sort=comment">댓글많은순</option>
+            <option value="sort=enddate">마감일순</option>
+            <option value="sort=point">포인트순</option>
+        </select>
+        {% if user.is_authenticated %}
+        <a href="{% url 'mission_create' %}" class="w3-button w3-right w3-border">글 등록</a>
+        {% endif %}
+    
+    </div>
+    <div class="w3-row-padding w3-padding-16 w3-center" id="food">
+    {% for mission in missions %}
+        <div class="w3-quarter">
+            <a href="{% url 'mission_detail' mission.id %}" style="width:100%;float:left">
+                <div style="overflow:hidden;">
+                    <img src="{{mission.image.url}}" style="max-height: 300px;">
+                    <h4>{{mission.title}}</h4>
+                    <p>{{mission.point}}point</p>
+                </div>
+            </a>
+        </div>
+    {% endfor %}
+    </div>
+</div>
 <script>
     var getUrlParameter = function getUrlParameter(sParam) {
         var sPageURL = decodeURIComponent(window.location.search.substring(1)),
@@ -37,7 +58,11 @@
             }
         }
     };
-
+    var sbut = document.getElementById('sbutton')
+    sbut.onclick = function(){
+        var text = document.getElementById('search').value
+        sbut.href = '/search='+text
+    };
     var sort = getUrlParameter('sort');
     var sel = document.getElementById("sort-select");
     function goLink(value) {
@@ -57,3 +82,5 @@
     };
 
 </script>
+
+{% endblock content %}
