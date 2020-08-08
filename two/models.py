@@ -33,6 +33,10 @@ class Photoshop(models.Model):
     def getlike(self):
         return len(self.like.all())
 
+    def summary(self): 
+        return self.explain[:100]
+
+
 class Comment(models.Model):
     photoshop = models.ForeignKey(Photoshop, on_delete=models.CASCADE, related_name='comments')
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name='comments')

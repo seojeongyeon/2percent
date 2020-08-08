@@ -1,27 +1,61 @@
+{% extends 'base.html' %}
+{% block title %}
+
+{% endblock %}
+
+{% block content %}
+<br>
+<br>
+<br>
 <!-- 보정게시글(종합) -->
-<a href="{% url 'photowrite'%}">보정법 올리기</a>
+
 <br>
 <br>
-<hr>
+
 <!-- 검색기능 -->
+
+<div class="w3-container w3-padding-20 w3-center">  
+
 <form action="{% url 'photo_search' %}" method="GET">
     <input type='search' name='query'>
     <input type='submit' value='검색'>
-</form>
 
+<box style="width:30px; height:30px; padding: 5px; background-color:#DBC7DE; border:2px solid #DBC7DE; border-radius: 10px;></box><a href="{% url 'photowrite'%}">보정법 올리기</a>
+</form>
+</div>
 
 <!-- 게시글 전체 -->
-{% for p in photocut %}
-    <div class="container">
-        <p>{{ p.title }}</p>
-        <p>{{ p.date }}</p>
-        <a href="{% url 'photodetail' p.pk %}">more</a>
+
+<div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px">
+    <div class="w3-row-padding w3-padding-16 w3-center" id="food">
+        {% for p in photocut %}
+        <div class="w3-quarter">
+          <img src="{{ p.photobefore.url }}" alt="Sandwich" style="width:250px; height: 250px;">
+          <h3>{{p.title}}</h3>
+          <div style="margin-bottom: 15px; margin-top: 8px;">
+          <box style="width:30px; height:30px; padding: 5px; border:2px solid #DBC7DE; border-radius: 10px;">{{p.device}}</box>
+          <box style="width:30px; height:30px; padding: 5px; border:2px solid #DBC7DE; border-radius: 10px;">{{p.color}}</box>
+          <box style="width:30px; height:30px; padding: 5px; border:2px solid #DBC7DE; border-radius: 10px;">{{p.kind}}</box>
+          <box style="width:30px; height:30px; padding: 5px; border:2px solid #DBC7DE; border-radius: 10px;">{{p.method}}</box><br>    
+          </div>
+          
+          <box style="width:30px; height:30px; padding: 5px; border:2px solid #DBC7DE; border-radius: 10px;">{{p.fix}}</box>
+          <box style="width:30px; height:30px; padding: 5px; border:2px solid #DBC7DE; border-radius: 10px;">{{p.app}}</box>
+          
+          <a href="{% url 'photodetail' p.pk %}">more</a>
+          
         <hr>
+        </div>
+        {% endfor %}
     </div>
-{% endfor %}
+</div>
 
 
 
+
+
+
+<div class="w3-container w3-padding-20 w3-center">  
 <!-- 페이지네이션 -->
 {%if photocut.has_previous%}
 
@@ -39,3 +73,6 @@
 {%if photocut.has_next%}
 <a href="?page={{photocut.next_page_number}}">다음으로</a>
 {%endif%}
+
+{% endblock %}
+</div>
