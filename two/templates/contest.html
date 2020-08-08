@@ -132,7 +132,7 @@
 
 
 
-{% for contest in contests.all %}
+<!-- {% for contest in contests.all %}
     
       
         <form action="{% url 'contestlike' contest.id %}" method="get">
@@ -150,7 +150,103 @@
         </form>
   <br>
 
-{% endfor %}
+{% endfor %} -->
+
+
+
+
+<!-- 좋아요 없는데 사진 크기 같음 
+  <div class="card" style="width: 100%;">
+  <div class ="row">
+  {% for contest in contests.all %}
+  
+    <div class="col-md-3 col-xs-2 mb-2">
+      <div class="card card_hover h-100">
+        <img class="card-img-top" src="{{ contest.image.url }}" style="height: 100%; display: flex; justify-content:center; align-items:center;">
+      </div>
+    </div> 
+  
+
+  {% endfor %}
+
+</div>
+</div> -->
+
+
+
+
+ 
+  <div class="card" style="width: 100%;">
+  <div class ="row">
+  {% for contest in contests.all %}
+  
+    <div class="col-md-3 col-xs-2 mb-2">
+      <div class="card card_hover h-100">
+
+        <form action="{% url 'contestlike' contest.id %}" method="get">
+          {% if user in contest.contest_like.all %}
+          <button type="submit" class="btn btn-outline-primary card-img-top" >
+            <img class="card-img-top" src="{{ contest.image.url }}" style="height: 100%; display: flex; justify-content:center; align-items:center;"> <span class="badge badge-light">{{ contest.contest_like.count }}</span>
+            </button>
+          
+          {% else %}
+          <button  type="submit" class="btn btn-outline-secondary card-img-top" >
+            <img class="card-img-top" src="{{ contest.image.url }}" style="height: 100%; display: flex; justify-content:center; align-items:center;"> <span class="badge badge-light">{{ contest.contest_like.count }}</span>
+            </button>
+          
+          {% endif %}
+      </form>
+      </div>
+    </div> 
+  
+
+  {% endfor %}
+
+</div>
+</div>
+
+
+
+
+
+
+
+
+
+<!-- 좋아요 있는데, 사진 크기가 같진 않음 
+<div class="card" style="width: 100%;">
+  <div class ="row">
+  {% for contest in contests.all %}
+  
+    <div class="col-md-3 col-xs-2 mb-2">
+      <div class="card card_hover h-100">
+        <form action="{% url 'contestlike' contest.id %}" method="get">
+          {% if user in contest.contest_like.all %}
+          <button type="submit" class="btn btn-outline-primary" >
+              <img class="card-img-top" src="{{ contest.image.url }}" alt="..." style="height: 100%; display: flex; justify-content:center; align-items:center;"> <span class="badge badge-light">{{ contest.contest_like.count }}</span>
+            </button>
+          
+          {% else %}
+          <button type="submit" class="btn btn-outline-secondary">
+            <img class="card-img-top" src="{{ contest.image.url }}" alt="..." style="height: 100%; display: flex; justify-content:center; align-items:center;"> <span class="badge badge-light">{{ contest.contest_like.count }}</span>
+            </button>
+          
+          {% endif %}
+      </form>
+      </div>
+    </div> 
+  
+
+  {% endfor %}
+
+</div>
+</div> -->
+
+
+
+
+
+
 
 
 
