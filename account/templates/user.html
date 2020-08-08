@@ -1,76 +1,253 @@
-<!-- user page -->
+{% extends 'base.html' %}
 
-{% load static %}
+{% block title %}
+<title>{{ d_user.username }} </title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
+<style>
+    body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+    .thumbnail-img{margin-bottom: -6px; opacity: 1; cursor: pointer}
+    .thumbnail-img:hover{opacity: 0.7; }
 
-<!-- 유저 프로필 이미지 -->
-{% if d_user.profile %}
-    <img src="{{ d_user.profile.url}}">
-{%else%}
-    <img src="{% static 'default_profile.jpg' %}">
-{%endif%}
+  #img_link {
+      text-decoration: none;
+  }
+
+  .column {
+      padding: 0;
+  }
+
+  .thumbnail-wrapper {
+      background-color: black;
+  }
+  .thumbnail {
+    position: relative;
+    padding-top: 100%;
+    overflow: hidden;
+    border: 0;
+  }
+  
+  .thumbnail-centered {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    transform: translate(50%, 50%);
+  }
+  
+  .thumbnail-img {
+  /*   height: 박스의 height와 같아야 한다. */
+    transform: translate(-50%, -50%);
+    visibility: hidden;
+  }
+  
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="w3-light-grey w3-content" style="max-width:1600px">
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-bar-block w3-white w3-animate-left w3-text-grey w3-collapse w3-top w3-center" style="width:300px;font-weight:bold; overflow: hidden;" id="mySidebar"><br>
 
 
-<!-- 유저 이름 -->
-{{ d_user.nickname }}
-
-
-<!-- 유저 팔로우 기능 -->
-{% if user.is_authenticated %}
-    <!-- 자기 자신이 아니면: 로그인한 유저와 유저 페이지의 유저가 일치하지 않을 때 -->
-    {% if request.user != d_user %}
-        <!-- 언팔로우 노출 : 이미 팔로우한 유저일 때 -->
-        {% if request.user in d_user.followers.all %}
-            <a href="{% url 'unfollow' d_user.username %}">UNFOLLOW</a>
-        {% else %} <!-- 팔로우 노출 : 팔로우 하지 않는 유저일 때 -->
-            <a href="{% url 'follow' d_user.username %}">FOLLOW</a>
+    <!-- 유저 프로필 이미지 -->
+    <div id="profile_img" class="m-t-250">
+        {% if d_user.profile %}
+            <img class="p-t-200" src="{{ d_user.profile.url}}" style="max-width: 75%; height: auto;">
+        {% else %}
+            <div>
+                <i class="zmdi zmdi-account-circle"></i>
+            </div>
         {% endif %}
-    {% else %} <!-- 자신의 유저 페이지이면 -->
-          <a href="{% url 'mypage' %}"></a>
+    </div>
+    
+
+    <h2 class="w3-padding-16 w3-center">{{ d_user.username }}</h2>
+    <div class="w3-center h6 pr-3 pl-3" style="padding-left: 2rem; padding-right: 2rem;">{{ d_user.info }}</div>
+
+    <!-- 유저 팔로우 기능 -->
+    <div id="follow_relationship" class="w3-padding-16">
+    {% if user.is_authenticated %}
+        <!-- 자기 자신이 아니면: 로그인한 유저와 유저 페이지의 유저가 일치하지 않을 때 -->
+        {% if request.user != d_user %}
+            <!-- 언팔로우 노출 : 이미 팔로우한 유저일 때 -->
+            {% if request.user in d_user.followers.all %}
+                <a href="{% url 'unfollow' d_user.username %}">UNFOLLOW</a>
+            {% else %} <!-- 팔로우 노출 : 팔로우 하지 않는 유저일 때 -->
+                <a href="{% url 'follow' d_user.username %}">FOLLOW</a>
+            {% endif %}
+        {% else %} <!-- 자신의 유저 페이지이면 -->
+            <a href="{% url 'mypage' %}">My Page</a>
+        {% endif %}
+    {% else %} <!-- 로그인 안 했으면 -->
+        <!-- 팔로우인 척 하면서 로그인 페이지로 이동 -->
+        <a href="{% url 'signin' %}">FOLLOW</a>
     {% endif %}
-{% else %} <!-- 로그인 안 했으면 -->
-    <!-- 팔로우인 척 하면서 로그인 페이지로 이동 -->
-    <a href="{% url 'signin' %}">FOLLOW</a>
-{% endif %}
+    </div>
 
-<!-- 유저 팔로우/팔로잉 수 노출 -->
-<div role="followers">
-    <a href="{% url 'follower' d_user.username %}">{{ d_user.followers.count }} followers</a>
+    <!-- 유저 팔로우/팔로잉 수 노출 -->
+    <div id="follow_count">
+        <div role="followers">
+            <a class="text-black" href="{% url 'follower' d_user.username %}">{{ d_user.followers.count }} followers</a>
+        </div>
+        <div role="followings">
+            <a  class="text-black" href="{% url 'following' d_user.username %}">{{ d_user.followings.count }} followings</a>
+        </div>
+    </div>
+
+    <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-padding w3-hide-large p-t-50">CLOSE</a>
+
+    <!-- 작성한 글 카테고리 -->
+    <div id="user_category" class="w3-padding-64">
+        <a href="#photoshop" onclick="w3_close()" class="w3-bar-item w3-button">PHOTOSHOP</a> 
+        <a href="#mission_comment" onclick="w3_close()" class="w3-bar-item w3-button">MISSION COMMENT</a> 
+        <a href="#mission" onclick="w3_close()" class="w3-bar-item w3-button">MISSION</a> 
+    </div>
 </div>
-<div role="followings">
-    <a href="{% url 'following' d_user.username %}">{{ d_user.followings.count }} followings</a>
-</div>
+</nav>
+
+<!-- Top menu on small screens -->
+<header class="w3-container w3-hide-large w3-top w3-white w3-xlarge w3-padding-16">
+  <span class="w3-left w3-padding">{{ d_user.username }}</span>
+  <a href="javascript:void(0)" class="w3-right w3-button w3-white" onclick="w3_open()">☰</a>
+</header>
 
 
-<!-- 작성한 글 -->
-<h3># 작성한 보정법 글</h3>
-<div role="photoshops">
-{% for p in d_user.photoshop.all %}
-    <a href="{% url 'photodetail' p.id %}">
-    <p>{% if p.photoafter %}<img src = "{{ p.photoafter.url }}">{% endif %}</p>
-    <p>{{ p.title }}</p>
-    <p>{{ p.date }}</p>
-    </a>
-{% endfor %}
+<a class="w3-right w3-button w3-white" onclick="w3_open()">☰</a>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px">
+
+    <!-- Push down content on small screens --> 
+    <div class="w3-hide-large" style="margin-top:83px"></div>
+  
+    <!--------------------------------------------
+    *               작성한 보정법              *
+    ------------------------------------------->
+    <h3 class="h3 category_head">작성한 보정법</h3>
+    <div id="photoshop" class="row">
+        {% for p in d_user.photoshop.all %}
+            <div class="col-sm-3 col-md-3 col-lg-3 column" style="border: 0;">
+                <div class="thumbnail-wrapper">
+                    <div class="thumbnail">
+                        <div class="thumbnail-centered">
+                            <a href="{% url 'photodetail' p.id %}" style="display: none;">{{ p.date }}</a>
+                            <img src="{{ p.photoafter.url }}" class="thumbnail-img img-responsive" alt="{{ p.title }}">
+                            <span style="display: none;">{{ p.getlike }}</span>
+                        </div>
+                    </div>               
+                </div>
+            </div>
+            <!-- if last column in row -->
+            {% if forloop.counter|divisibleby:"4" and not forloop.last %}
+                </div><div class="row">
+            {% endif %}
+        {% endfor %}
+    </div>        
+    
+
+    <!-------------------------------------
+    *               답변글                *
+    -------------------------------------->
+    <div id="mission_comment" class="row">
+        {% for mc in d_user.missionwriter.all %}
+            <div class="col-sm-3 col-md-3 col-lg-3 column" style="border: 0;">
+                <div class="thumbnail-wrapper">
+                    <div class="thumbnail">
+                        <div class="thumbnail-centered">
+                            <a href="{% url 'mission_detail' mc.mission.id %}" style="display: none;">{{ mc.pub_date }}</a>
+                            {% if mc.image %}<img src="{{ mc.image.url }}" class="thumbnail-img img-responsive" alt="{{ mc.body }}">{% endif %}
+                            <span style="display: none;">{{ mc.getlikes }}</span>
+                        </div>
+                    </div>               
+                </div>
+            </div>
+            <!-- if last column in row -->
+            {% if forloop.counter|divisibleby:"4" and not forloop.last %}
+                </div><div class="row">
+            {% endif %}
+        {% endfor %}
+    </div>   
+
+
+    <!-------------------------------------
+    *               의뢰글                *
+    -------------------------------------->
+     <!-- 작성한 의뢰글 -->
+    <div role="mission">
+    {% for mission in d_user.mission.all %}
+        <a href="{% url 'mission_detail' mission.id %}">
+            <p>{{ mission.title }}</p>
+            <p>{{ mission.pub_date }}</p>
+        </a>
+    {% endfor %}
+    </div>
+
+
+  <!-- Pagination -->
+  <div class="w3-center w3-padding-32">
+    <div class="w3-bar">
+      <a href="#" class="w3-bar-item w3-button w3-hover-black">«</a>
+      <a href="#" class="w3-bar-item w3-black w3-button">1</a>
+      <a href="#" class="w3-bar-item w3-button w3-hover-black">2</a>
+      <a href="#" class="w3-bar-item w3-button w3-hover-black">3</a>
+      <a href="#" class="w3-bar-item w3-button w3-hover-black">4</a>
+      <a href="#" class="w3-bar-item w3-button w3-hover-black">»</a>
+    </div>
+  </div>
+  
+  <!-- Modal for full size images on click-->
+  <div id="modal01" class="w3-modal w3-black" style="padding-top:0" onclick="this.style.display='none'">
+    <span class="w3-button w3-black w3-xlarge w3-display-topright">×</span>
+    <div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
+      <a id="img_link" class="text-white w3-hover-text-blue" href="#">
+          <img id="img01" class="w3-image">
+          <div id="caption" class="h3 m-3"></div>
+          <div id="caption_date" class="w3-text-white h6 p-0"></div>
+          <div id="caption_like" class="w3-text-red"></div>
+        </a>
+    </div>
+  </div>
+
+<!-- End page content -->
+</div>
 </div>
 
-<!-- 작성한 의뢰글 -->
-<h3># 작성한 의뢰글</h3>
-<div role="mission">
-{% for mission in d_user.mission.all %}
-    <a href="{% url 'mission_detail' mission.id %}">
-        <p>{{ mission.title }}</p>
-        <p>{{ mission.pub_date }}</p>
-    </a>
-{% endfor %}
-</div>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+    $(document).ready(function(e) {
+        $(".thumbnail-img").each(function() {
+            var w = $('.thumbnail-wrapper').first();
+            if ($(this).width() > $(this).height()) $(this).css("height", w.height());
+            else $(this).css("width", w.width());
+            $(this).css('visibility', 'visible');
+        });
 
-<!-- 작성한 답변글 -->
-<h3># 작성한 답변글</h3>
-<div role="missionComment">
-{% for mc in d_user.missionwriter.all %}
-    <a href="{% url 'mission_detail' mc.mission.id %}">
-        {% if mc.image %}<img src="{{ mc.image.url }}">{% endif %}
-        <p>{{ mc.pub_date }}</p>
-    </a>
-{% endfor %}
-</div>
+        $(".thumbnail-img").click( function(e) {
+            $('#img01').attr('src', $(this).attr('src'));
+            $("#modal01").css('display', 'block');
+            $('#caption').text($(this).attr('alt')); // 모달창 내용
+            $('#caption_date').text($(this).prev().text()); // 모달창 날짜
+            $('#caption_like').text("♥ " + $(this).next().text()); // 모달창 좋아요 수
+            $('#img_link').attr('href', $(this).prev().attr('href')); //모달창 링크
+        });
+    });
+
+    // Script to open and close sidebar
+    function w3_open() {
+        document.getElementById("mySidebar").style.display = "block";
+        document.getElementById("myOverlay").style.display = "block";
+    }
+    
+    function w3_close() {
+        document.getElementById("mySidebar").style.display = "none";
+        document.getElementById("myOverlay").style.display = "none";
+    }
+</script>
+
+{% endblock %}

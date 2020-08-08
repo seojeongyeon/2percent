@@ -31,7 +31,7 @@ class Photoshop(models.Model):
         return self.title
 
     def getlike(self):
-        return len(self.like.all())
+        return len(self.photo_like.all())
 
     def summary(self): 
         return self.explain[:100]

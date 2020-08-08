@@ -1,3 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}
+<title>My Page</title>
+{% endblock %}
+
+{% block content %}
+
 {% load static %}
 
 <!-- 유저 프로필 이미지 -->
@@ -58,3 +66,5 @@
 <div>
     <a href="{% url 'home' %}">HOME</a>
 </div>
+
+{% endblock %}
