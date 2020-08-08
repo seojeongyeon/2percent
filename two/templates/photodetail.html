@@ -1,6 +1,32 @@
 <!-- 보정게시글(각자) --> 
+{% extends 'base.html' %}
+{% block title %}
+{% endblock %}
+{% block content %}
+<head>
+    <style>
+        body,h1 {font-family: "Raleway", Arial, sans-serif}
+        h1 {letter-spacing: 6px}
+        .w3-row-padding img {margin-bottom: 12px}
+    </style>
+
+</head>
+
+
+
+<body>
+    <div class="w3-row-padding w3-grayscale" style="margin-bottom:128px">
+        <div class="w3-half">
+            <img src="{{ photodetail.photobefore.url }}">
+        </div>
+        <div class="w3-half">
+            <img src="{{ photodetail.photoafter.url }}">
+        </div>
+    </div>
+
+
 <div class='container'>
-    <img src="{{ photodetail.photobefore.url }}" >
+    <img src="{{ photodetail.photobefore.url }}">
     <img src="{{ photodetail.photoafter.url }}" ><br>
     <h3>{{photodetail.title}}<br></h3>
     {{photodetail.writer}}<br>
@@ -37,7 +63,7 @@
 
 
 </div>
-
+{% endblock %}
 
 
 <!-- 보정 댓글 정렬 -->
@@ -79,3 +105,6 @@
     <input type="text" name="body">
     <button type="submit">작성</button>
 </form>
+
+</div>
+</body>
