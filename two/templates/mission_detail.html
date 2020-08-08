@@ -10,7 +10,7 @@
         <img src="{{mission.image.url}}" alt="Me" class="w3-image" style="display:block;margin:auto;max-height: 533px;">
         <div class="w3-padding-32">
             <h4>{{mission.writer}}</h4>
-            <h4>{{mission.point}}point</h4>
+            <h4>{{mission.point}} point</h4>
             <h6><i>{{mission.pub_date}} ~ {{mission.end_date}}</i></h6>
             <p class="w3-border w3-padding-32" style="margin-top: 50px;">{{mission.body}}</p>
         </div>
@@ -43,16 +43,20 @@
     </form>
     <hr>
     {% endif %}
-    <div class="w3-container">
+
+
+    <div class="w3-row w3-padding-32 w3-section">
+        
         {% for comment in comments %}
+        <div class="w3-col w3-panel">
             <img src="{{comment.image.url}}" style="max-height: 200px;"><br>
-        <i class="fa fa-map-marker" style="width:30px"></i> {{comment.writer}}<br>
-        <i class="fa fa-phone" style="width:30px"></i> {{comment.pub_date}}<br>
-        <i class="fa fa-envelope" style="width:30px"> </i> {{comment.isPicked}}<br>
-        
-        <p>{{comment.body}}</p>
-        
-        <form action="{% url 'mission_comment_like' comment.id %}" method="get">
+            <div class="w3-large w3-margin-bottom">
+            <i class="fa fa-map-marker fa-fw w3-hover-text-black w3-xlarge w3-margin-right"></i> {{comment.writer}}<br>
+            <i class="fa fa-phone fa-fw w3-hover-text-black w3-xlarge w3-margin-right"></i> {{comment.pub_date}}<br>
+            <i class="fa fa-envelope fa-fw w3-hover-text-black w3-xlarge w3-margin-right"></i> {{comment.isPicked}}<br>
+          </div>
+          <p>{{comment.body}}</p>
+          <form action="{% url 'mission_comment_like' comment.id %}" method="get">
             <i class="fa fa-envelope" style="width:30px"> </i> {{comment.getlikes}}
             {% if user.is_authenticated %}
                 {% if user in comment.likers.all %}
@@ -61,14 +65,14 @@
                 <button type="submit">따봉</button>
                 {% endif %}
             {% endif %}
-        </form>
-        {% if not mission.pick and user == mission.writer %}
-            <button onclick = "location.href =`{% url 'mission_pick' comment.id %}` ">채택하기</button>
-            {% endif %}
-            <a href="{% url 'mission_comment_delete' comment.id %}">삭제</a>
-            <hr>
-        {% endfor %}
-        
-    </div>
+            </form>
+            {% if not mission.pick and user == mission.writer %}
+                <button onclick = "location.href =`{% url 'mission_pick' comment.id %}` ">채택하기</button>
+                {% endif %}
+                <a href="{% url 'mission_comment_delete' comment.id %}">삭제</a>
+                <hr>
+            {% endfor %}
+        </div>
+      </div>
 </div>
 {% endblock content %}
