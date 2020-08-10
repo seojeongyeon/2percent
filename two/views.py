@@ -240,7 +240,7 @@ def photo_search(request):
     if query:
         photo = Photoshop.objects.filter(title__icontains=query)
 
-    return render(request, 'photo_search.html', {'photos':photos,'photo':photo})
+    return render(request, 'photo_search.html', {'photos':photos,'photo':photo, 'query':query})
 
     
 def filter(request, pk):

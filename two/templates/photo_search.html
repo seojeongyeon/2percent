@@ -1,15 +1,43 @@
-<a href="{% url 'photoshop' %}">돌아가기</a>
-<br>
-<br>
+{% extends 'base.html' %}
+{% block title %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+{% endblock %}
 
-{% for photo in photo %}
-    <div class="container">
-        <p>{{ photo.title }}</p>
-        <p>{{ photo.date }}</p>
-        <a href="{% url 'photodetail' photo.pk %}">more</a>
+{% block content %}
+
+
+<div class="w3-main w3-content w3-padding" style="max-width:1200px; margin-top: 20px;"> 
+        "{{query}}"에 대한 검색 결과 입니다.
+    <box style="float: right; padding: 5px; background-color:#F5A9A9; color:rgb(252, 250, 250);  border:2px solid:#F5A9A9; border-radius: 10px; ">
+        <a href="{% url 'photoshop' %}" style="float: right; text-decoration:none">돌아가기</a>
+    </box>
+</div>
+<!-- 검색된 게시글 띄우기 -->
+<div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:20px">
+    
+    <div class="w3-row-padding w3-padding-16 w3-center" id="food">
+        {% for p in photo %}
+        <div class="w3-quarter">
+          <img src="{{ p.photobefore.url }}" alt="Sandwich" style="width:250px; height: 250px;">
+          <h3>{{p.title}}</h3>
+          <div style="margin-bottom: 15px; margin-top: 8px;">
+          <box style="width:30px; height:30px; padding: 5px; border:2px solid#F5A9A9; border-radius: 10px;">{{p.device}}</box>
+          <box style="width:30px; height:30px; padding: 5px; border:2px solid #F5A9A9; border-radius: 10px;">{{p.color}}</box>
+          <box style="width:30px; height:30px; padding: 5px; border:2px solid #F5A9A9; border-radius: 10px;">{{p.kind}}</box>
+          <box style="width:30px; height:30px; padding: 5px; border:2px solid #F5A9A9; border-radius: 10px;">{{p.method}}</box><br>    
+          </div>
+          
+          <box style="width:30px; height:30px; padding: 5px; border:2px solid #F5A9A9; border-radius: 10px;">{{p.fix}}</box>
+          <box style="width:30px; height:30px; padding: 5px; border:2px solid#F5A9A9; border-radius: 10px;">{{p.app}}</box>
+          <br>
+          <a href="{% url 'photodetail' p.pk %}">more</a>
+          
         <hr>
+        {% empty %}
+        <h4>검색 결과 없음</h4>
+        </div>
+        {% endfor %}
     </div>
-{% empty %}
-    <h4>검색 결과 없음</h4>
-{%endfor %}
+</div>
 
+{% endblock %}
