@@ -1,81 +1,129 @@
 <!-- 보정게시글(각자) --> 
-<div class='container'>
-    <img src="{{ photodetail.photobefore.url }}" >
-    <img src="{{ photodetail.photoafter.url }}" ><br>
-    <h3>{{photodetail.title}}<br></h3>
-    {{photodetail.writer}}<br>
-    {{photodetail.date}}<br>
-    {{photodetail.device}}<br>
-    {{photodetail.color}}<br>
-    {{photodetail.kind}}<br>
-    {{photodetail.method}}<br>
-    {{photodetail.fix}}<br>
-    {{photodetail.app}}<br>
-    {{photodetail.explain}}<br>
+{% extends 'base.html' %}
+{% block title %}
+{% endblock %}
+{% block content %}
+{% load static %}
+<head>
+    <style>
+        body,h1 {font-family: "Raleway", Arial, sans-serif}
+        h1 {letter-spacing: 6px}
+        .w3-row-padding img {margin-bottom: 12px}
+        
+    </style>
+
+</head>
+
+<body>
+    <div class="w3-main w3-content w3-padding" style="max-width:1200px; margin-top: 20px;"> 
+        <a href="{% url 'user' request.user.username %}"><img src="{{ request.user.profile.url}}" style="width: 50px; height: 50px; border-radius: 1em;"></a>
+        &nbsp; {{photodetail.writer}}
+        <div style="float: right; padding:15px;">{{photodetail.date}}</div>
+    </div>
+    <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:20px;">
+        <img src="{{ photodetail.photobefore.url }}" style="width:50%; height: 550px; float: left;">
+        <img src="{{ photodetail.photoafter.url }}" style="width:50%; height: 550px; float: right;">
+    </div>
+   
+
+    <div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:40px ">
+        <center><h3 style="padding-top: 500px; ">{{photodetail.title}}<br></h3></center>
+    <div>
+        <div style="margin-top:15px; margin-bottom: 15px; border:2px solid#dad7d7; height: 150px;  padding:15px; width: 80%; float: left;">
+            {{photodetail.explain}}
+        </div>
+        <div style="margin-top:15px; border:2px solid#dad7d7; height: 150px;  padding:10px; width: 19%; float: right;">
+            <!-- 게시글 스크랩 -->
+            <div style="margin:7px 0 7px 8px;">
+                {% if user.is_authenticated %}
+                {% if photodetail not in request.user.pscraps.all %}
+                    <img src="{% static 'Share.png' %}" style="width: 27px; height: 27px;">
+                    <a href="{% url 'photoscrap' photodetail.id %}" style="text-decoration:none; color:#636262;">스크랩</a>
+                {% else %}
+                    <img src="{% static 'cancel.png' %}" style="width: 27px; height: 27px;">
+                    <a href="{% url 'photoscrap_del' photodetail.id %}" style="text-decoration:none; color:#636262;">스크랩 취소</a>
+                {% endif %}
+                {% endif %}
+            </div>
+            
+            <!-- 좋아요 -->
+            <div style="margin:7px 0 7px 8px;">
+                <form action="{% url 'photodetail' photodetail.id %}" method="get" style="color:#636262;">
+                    {% if user in photodetail.photo_like.all %}
+                    <img src="{% static 'heart.png' %}" style="width: 27px; height: 27px;">
+                    {{ photodetail.photo_like.count }}&nbsp;&nbsp;
+                    <button type="submit"  style="color:#636262; background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer">좋아요 취소</button>
+                    {% else %}
+                    <img src="{% static 'heart.png' %}" style="width: 27px; height: 27px;">
+                
+                    {{ photodetail.photo_like.count }}&nbsp;&nbsp;
+                    <button type="submit" style="color:#636262; background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer">좋아요</button>
+                    {% endif %}
+                
+            
+                </form>
+            </div>
+
+            <!-- 필터 -->
+            <button style="width: 100%; background-color: #f5d6d6; font-size:15px; padding: 5px; border:2px solid#f5d6d6; border-radius: 10px;" onclick = "window.open(`{% url 'filter' photodetail.id %}`, 'filter','width=791,height=410,location=no,status=no,scrollbars=no')">직접 필터 입혀보기</button>
+        </div> 
+    </div>
+
+        <div style="float:left; width: 100%;">
+            <box style="font-size:15px; width:30px; height:30px; padding: 5px; border:2px solid#f5d6d6; border-radius: 10px;">{{photodetail.device}}</box>&nbsp;
+            <box style="font-size:15px; width:30px; height:30px; padding: 5px; border:2px solid#f5d6d6; border-radius: 10px;">{{photodetail.kind}}</box>&nbsp;
+            <box style="font-size:15px; width:30px; height:30px; padding: 5px; border:2px solid#f5d6d6; border-radius: 10px;">{{photodetail.color}}</box>&nbsp;
+            <box style="font-size:15px; width:30px; height:30px; padding: 5px; border:2px solid #f5d6d6; border-radius: 10px;">{{photodetail.method}}</box>&nbsp;
+            <box style="font-size:15px; width:30px; height:30px; padding: 5px; border:2px solid#f5d6d6; border-radius: 10px;">{{photodetail.fix}}</box>&nbsp;
+            <box style="font-size:15px; width:30px; height:30px; padding: 5px; border:2px solid#f5d6d6; border-radius: 10px;">{{photodetail.app}}</box><br>
+            
+            
+        </div>
+       
+        
+        
     
-    <button onclick = "window.open(`{% url 'filter' photodetail.id %}`, 'filter','width=791,height=410,location=no,status=no,scrollbars=no')"></button>
-    <!-- 게시글 스크랩 -->
-    {% if user.is_authenticated %}
-        {% if photodetail not in request.user.pscraps.all %}
-            <a href="{% url 'photoscrap' photodetail.id %}">스크랩</a>
-        {% else %}
-            <a href="{% url 'photoscrap_del' photodetail.id %}">스크랩 취소</a>
-        {% endif %}
-    {% endif %}
+
+    </div> 
+    <div class="w3-main w3-content w3-padding" style="max-width:1200px; margin-top: 200px;"> 
+        <hr>
+        <!-- 보정 댓글 정렬 -->
+        <select id="sort-select" onchange="location = this.value;" style="float:right; margin:3px">
+            <option value="/">최신순</option>
+            <option value="?sort=like">좋아요순</option>
+        </select>
+        
+    </div>
+    <div class="w3-main w3-content" style="max-width:1200px; padding: 40px 16px!important;"> 
+        <!-- 보정게시글의 댓글 -->
+        {% for comment in co %}
+            <a href="{% url 'user' comment.author.username %}"><img src="{{ comment.author.profile.url}}" style="width: 50px; height: 50px; border-radius: 1em;"></a>
+            &nbsp; {{comment.author}} &nbsp;&nbsp; {{comment.body}}
+            <div style="float: right; padding:15px;">
+                <form action="/comment_like/{{comment.id}}" method="get">
+                <button type="submit" style="background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer" ><img src="{% static 'heart.png' %}" style="width: 15px; height: 15px;"></button>
+                {{comment.getlike}}&nbsp;&nbsp;&nbsp;&nbsp;
+                {{comment.pub_date}}
+                <br>
+                {% if request.user == comment.author %}
+                <a href="{% url 'comment_delete' comment.id%}" style="float: right; margin-top:5px; text-decoration:none;">댓글 삭제하기</a>
+                
+            {% endif %}
+                </form> 
+            </div>
+            <hr>
+        {% endfor %}
+        
+        <form action="/commenting/{{photodetail.id}}" method="POST" style="margin-top: 20px;">
+            {% csrf_token %}
+            
+            <input type="text" name="body">
+            <button type="submit">댓글 작성</button>
+        </form>
+    </div>
+    </div> 
     
-<!-- 좋아요 -->
-    <form action="{% url 'photodetail' photodetail.id %}" method="get">
-        {% if user in photodetail.photo_like.all %}
-        <button type="submit">좋아요 취소</button>
-        {% else %}
-        <button type="submit">좋아요</button>
-        {% endif %}
-        {{ photodetail.photo_like.count }}
-        </p>
-    </form>
+   
 
-
-
-</div>
-
-
-
-<!-- 보정 댓글 정렬 -->
-<select id="sort-select" onchange="location = this.value;">
-    <option value="/">최신순</option>
-    <option value="?sort=like">좋아요순</option>
-</select>
-
-<br><hr>
-
-
-<!-- 보정게시글의 댓글 -->
-
-{% for comment in co %}
-
-    작성자:{{comment.author}}
-
-    <p>내용: {{comment.body}}</p>
-
-    {{comment.pub_date}}
-
-    
-    
-    <form action="/comment_like/{{comment.id}}" method="get">
-
-        <button type="submit" >♥</button>
-    </form> {{comment.getlike}}
-    <br>
-    {% if request.user == comment.author %}
-        <a href="{% url 'comment_delete' comment.id%}">댓글 삭제하기</a>
-        <hr><br>
-    {% endif %}
-
-
-{% endfor %}
-
-<form action="/commenting/{{photodetail.id}}" method="POST">
-    {% csrf_token %}
-    <input type="text" name="body">
-    <button type="submit">작성</button>
-</form>
+    {% endblock %}
+    </body>
