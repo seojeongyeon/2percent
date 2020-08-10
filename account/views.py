@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model, login, authenticate, logout, upd
 from .forms import LoginForm, RegisterForm
 from django.contrib.auth.forms import PasswordChangeForm
 from .forms import UserEditForm
-
+from django.core.paginator import Paginator
 
 # 이메일 인증을 위한 import
 from django.http import HttpResponse
@@ -72,26 +72,58 @@ def signout(request):
     return redirect('home')
 
 
-
 # 마이페이지 노출
 def mypage(request):
-    return render(request, 'mypage.html')
+    if not request.user: return redirect('signin')
+    d_user = request.user
+    # photoshop scraps paginator
+    photoshops = d_user.pscraps.all()
+    p_paginator = Paginator(photoshops, 4)
+    ppage = request.GET.get('page')
+    photoscraps = p_paginator.get_page(ppage)
+    # mission scraps paginator
+    missions = d_user.mscraps.all()
+    m_paginator = Paginator(missions, 4)
+    mpage = request.GET.get('page')
+    missionscraps = m_paginator.get_page(mpage)
+    return render(request, 'mypage.html',{ 'd_user': d_user, 'photoscraps': photoscraps, 'missionscraps': missionscraps })
 
 # 유저 페이지 노출
 def user(request, username):
     d_user = get_object_or_404(User, username=username)
-    return render(request, 'user.html', { 'd_user': d_user })
+    # photoshop paginator
+    photoshops = d_user.photoshop.all()
+    p_paginator = Paginator(photoshops, 8)
+    ppage = request.GET.get('page')
+    photocut = p_paginator.get_page(ppage)
+    # mission paginator
+    missions = d_user.mission.all()
+    m_paginator = Paginator(missions, 8)
+    mpage = request.GET.get('page')
+    missioncut = m_paginator.get_page(mpage)
+    # mission comment paginator
+    mission_comments = d_user.missionwriter.all()
+    mc_paginator = Paginator(mission_comments, 8)
+    mcpage = request.GET.get('page')
+    commentcut = mc_paginator.get_page(mcpage)
+    return render(request, 'user.html',{ 'd_user': d_user, 'photocut':photocut, 'missioncut': missioncut, 'commentcut': commentcut})
 
 # 팔로잉 리스트 노출
 def following(request, username):
     user = get_object_or_404(User, username=username)
-    fusers = user.followings.all()
+    flist = user.followings.all()
+    paginator = Paginator(flist, 5)
+    page = request.GET.get('page')
+    fusers = paginator.get_page(page)
     return render(request, 'flist.html', { 'fusers': fusers })
 
 # 팔로워 리스트 노출
 def follower(request, username):
     user = get_object_or_404(User, username=username)
-    fusers = user.followers.all()
+    flist = user.followers.all()
+    paginator = Paginator(flist, 5)
+    page = request.GET.get('page')
+    fusers = paginator.get_page(page)
     return render(request, 'flist.html', { 'fusers': fusers })
 
 # 유저 팔로우 기능
