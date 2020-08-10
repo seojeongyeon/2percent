@@ -4,40 +4,44 @@
 {% endblock %}
 
 {% block content %}
-<br>
-<br>
-<br>
+{% load static %}
 <!-- 보정게시글(종합) -->
 
-<br>
-<br>
-
 <!-- 검색기능 -->
-<div class="w3-container w3-padding-20 w3-center">  
+<div class="w3-main w3-content w3-padding" style="max-width:1200px; margin-top: 20px;"> 
     <form action="{% url 'photo_search' %}" method="GET">
-        <input type='search' name='query'>
-        <input type='submit' value='검색'>
-    <box style="width:30px; height:30px; padding: 5px; background-color:#DBC7DE; border:2px solid #DBC7DE; border-radius: 10px;"><a href="{% url 'photowrite'%}">보정법 올리기</a></box>
+        <div class="w3-bar w3-white w3-border w3-large " >
+            <input class="w3-bar-item"  type='search' name='query' style="border-color: white;" >
+            <input class="w3-bar-item w3-button w3-right w3-hover-black w3-text-grey" type='submit' value="검색">
+        </div>
     </form>
-</div>
 
+
+<hr>
+    <a href="{% url 'photowrite'%}" class="w3-button w3-right w3-border" style="font-size: 12px;">보정법 올리기</a>
+
+
+</div>
 <!-- 게시글 전체 -->
 
-<div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:100px">
+<div class="w3-main w3-content w3-padding" style="max-width:1200px;margin-top:40px">
     <div class="w3-row-padding w3-padding-16 w3-center" id="food">
         {% for p in photocut %}
         <div class="w3-quarter">
-          <img src="{{ p.photobefore.url }}" alt="Sandwich" style="width:250px; height: 250px;">
-          <h3>{{p.title}}</h3>
+          <img src="{{ p.photoafter.url }}" alt="Sandwich" style="width:250px; height: 250px;">
+          <h3 style="font-size: 19px;">{{p.title}}</h3>
           <div style="margin-bottom: 15px; margin-top: 8px;">
-          <box style="width:30px; height:30px; padding: 5px; border:2px solid #DBC7DE; border-radius: 10px;">{{p.device}}</box>
-          <box style="width:30px; height:30px; padding: 5px; border:2px solid #DBC7DE; border-radius: 10px;">{{p.color}}</box>
-          <box style="width:30px; height:30px; padding: 5px; border:2px solid #DBC7DE; border-radius: 10px;">{{p.kind}}</box>
-          <box style="width:30px; height:30px; padding: 5px; border:2px solid #DBC7DE; border-radius: 10px;">{{p.method}}</box><br>    
+          <box style="font-size:12px; width:30px; height:30px; padding: 5px; border:2px solid#F5A9A9; border-radius: 10px;">{{p.device}}</box>
+          <box style="font-size:12px; width:30px; height:30px; padding: 5px; border:2px solid #F5A9A9; border-radius: 10px;">{{p.color}}</box>
+          <box style="font-size:12px; width:30px; height:30px; padding: 5px; border:2px solid #F5A9A9; border-radius: 10px;">{{p.kind}}</box>
+          <box style="font-size:12px; width:30px; height:30px; padding: 5px; border:2px solid #F5A9A9; border-radius: 10px;">{{p.method}}</box><br>    
           </div>
           
-          <box style="width:30px; height:30px; padding: 5px; border:2px solid #DBC7DE; border-radius: 10px;">{{p.fix}}</box>
-          <box style="width:30px; height:30px; padding: 5px; border:2px solid #DBC7DE; border-radius: 10px;">{{p.app}}</box>
+          <box style="font-size:12px; width:30px; height:30px; padding: 5px; border:2px solid #F5A9A9; border-radius: 10px;">{{p.fix}}</box>
+          <box style="font-size:12px; width:30px; height:30px; padding: 5px; border:2px solid #F5A9A9; border-radius: 10px;">{{p.app}}</box>
+          <br>
+          <br>
+          <img src="{% static 'pink.png' %}" style="width: 15px; height: 15px;">&nbsp;{{ p.photo_like.count }}
           <br>
           <a href="{% url 'photodetail' p.pk %}">more</a>
           
@@ -52,7 +56,7 @@
 
 
 
-<div class="w3-container w3-padding-20 w3-center">  
+<div class="w3-container w3-padding-20 w3-center">
 <!-- 페이지네이션 -->
 {%if photocut.has_previous%}
 
