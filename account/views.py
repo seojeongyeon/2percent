@@ -3,7 +3,8 @@ from django.contrib.auth import get_user_model, login, authenticate, logout, upd
 from .forms import LoginForm, RegisterForm
 from django.contrib.auth.forms import PasswordChangeForm
 from .forms import UserEditForm
-
+from django.core.paginator import Paginator
+from django.contrib import messages
 
 # 이메일 인증을 위한 import
 from django.http import HttpResponse
@@ -28,6 +29,11 @@ def signin(request):
             if user:
                 login(request, user)
                 return redirect('home')
+        else:
+            username = form.data.get('username')
+            if User.objects.filter(username=username):
+                user = User.objects.get(username=username)
+                if user and user.is_active == False: messages.warning(request, "이메일 인증 후 로그인 하세요!")
     else:
         form = LoginForm()
     return render(request, "signin.html", {"form":form})
@@ -36,9 +42,6 @@ def signup(request):
     if request.method == "POST":
         form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
-            # 이메일 중복 검사
-            # if User.objects.filter(email=form.cleaned_data.get('email')).exists():
-            #     return HttpResponse('이미 사용 중인 이메일입니다')
             user = form.save()
             user.is_active = False
             user.save()
@@ -51,47 +54,79 @@ def signup(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)).encode().decode(),
                 'token': account_activation_token.make_token(user),
             })
-            mail_subject = "[2%를 부탁해] 회원가입 인증 메일입니다."
+            mail_subject = "[2%를 부탁해] 회원 가입을 위한 이메일 인증 메일입니다."
             user_email = user.email
             email = EmailMessage(mail_subject, message, to=[user_email])
             email.send()
             return HttpResponse(
                 '<div style="font-size: 40px; width: 100%; height:100%; display:flex; text-align:center; '
                 'justify-content: center; align-items: center;">'
-                '입력하신 이메일<span>로 인증 링크가 전송되었습니다.</span>'
+                '입력한 이메일<span>로 인증 링크가 전송되었습니다.</span>'
                 '</div>'
             )
             return redirect('home')
-        return render(request, "signup.html", {"form":form})
+        print(messages.error(request, form.non_field_errors()))
     else:
         form = RegisterForm()
-        return render(request, "signup.html", {"form":form})
+    return render(request, "signup.html", {"form":form})
 
 def signout(request):
     logout(request)
     return redirect('home')
 
 
-
 # 마이페이지 노출
 def mypage(request):
-    return render(request, 'mypage.html')
+    if not request.user.is_authenticated: return redirect('signin')
+    d_user = request.user
+    # photoshop scraps paginator
+    photoshops = d_user.pscraps.all()
+    p_paginator = Paginator(photoshops, 4)
+    ppage = request.GET.get('page')
+    photoscraps = p_paginator.get_page(ppage)
+    # mission scraps paginator
+    missions = d_user.mscraps.all()
+    m_paginator = Paginator(missions, 4)
+    mpage = request.GET.get('page')
+    missionscraps = m_paginator.get_page(mpage)
+    return render(request, 'mypage.html',{ 'd_user': d_user, 'photoscraps': photoscraps, 'missionscraps': missionscraps })
 
 # 유저 페이지 노출
 def user(request, username):
     d_user = get_object_or_404(User, username=username)
-    return render(request, 'user.html', { 'd_user': d_user })
+    # photoshop paginator
+    photoshops = d_user.photoshop.all()
+    p_paginator = Paginator(photoshops, 8)
+    ppage = request.GET.get('page')
+    photocut = p_paginator.get_page(ppage)
+    # mission paginator
+    missions = d_user.mission.all()
+    m_paginator = Paginator(missions, 8)
+    mpage = request.GET.get('page')
+    missioncut = m_paginator.get_page(mpage)
+    # mission comment paginator
+    mission_comments = d_user.missionwriter.all()
+    mc_paginator = Paginator(mission_comments, 8)
+    mcpage = request.GET.get('page')
+    commentcut = mc_paginator.get_page(mcpage)
+    return render(request, 'user.html',{ 'd_user': d_user, 'photocut':photocut, 'missioncut': missioncut, 'commentcut': commentcut})
 
 # 팔로잉 리스트 노출
 def following(request, username):
     user = get_object_or_404(User, username=username)
-    fusers = user.followings.all()
+    flist = user.followings.all()
+    paginator = Paginator(flist, 5)
+    page = request.GET.get('page')
+    fusers = paginator.get_page(page)
     return render(request, 'flist.html', { 'fusers': fusers })
 
 # 팔로워 리스트 노출
 def follower(request, username):
     user = get_object_or_404(User, username=username)
-    fusers = user.followers.all()
+    flist = user.followers.all()
+    paginator = Paginator(flist, 5)
+    page = request.GET.get('page')
+    fusers = paginator.get_page(page)
     return render(request, 'flist.html', { 'fusers': fusers })
 
 # 유저 팔로우 기능
