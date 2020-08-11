@@ -5,13 +5,18 @@
 {% endblock %}
 
 {% block content %}
+
+{% for error in form.non_field_errors %}
+    <div class="alert alert-danger" style="position:fixed; z-index:100; width:100%;">
+        <strong>{{ error|escape }}</strong>
+    </div>
+{% endfor %}
+
 <div class="limiter">
     <div class="container-login100" style="background-color: white">
         <div class="wrap-login100" style="width: 900px;">
-            <form method="POST" enctype="multipart/form-data">
+            <form method="POST" enctype="multipart/form-data" class="login100-form validate-form">
                 {% csrf_token %}
-
-                <!-- ['username', "nickname", "profile", "email", "info", "password1", "password2", "birthday"] -->
                 <table>
                     <tr>
                         <td role="left" class="p-l-50 p-r-130">
@@ -64,7 +69,7 @@
                                 <span class="focus-input100" data-placeholder="&#xf203;"></span>
                             </div>
                         
-                            <div class="wrap-input100 validate-input" data-validate="Enter profile image">
+                            <div class="wrap-input100">
                                 <span class="input100">
                                     <span class="pr-5" id="profile-label">Profile Image</span>
                                     <label class="btn btn-sm btn-outline-warning text-warning">

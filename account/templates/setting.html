@@ -1,10 +1,58 @@
-<section role="user_settings">
-    <form method="POST" enctype="multipart/form-data">
-        {%csrf_token%}
-        <table class="form_table">{{form.as_table}}</table>
-        <br>
-        <button id="edit-btn" class="btn btn-primary btn-lg" type="submit">내용 변경</button>
-        <a class="btn btn-outline-dark btn-lg" href=" {%url 'mypage' %} ">변경 취소</a>
-        <a class="btn btn-dark btn-lg" href=" {%url 'home' %} ">메인 화면</a>
-    </form>
-</section>
+{% extends 'base.html' %}
+
+{% block title %}
+<title>Profile Settings</title>
+<style>
+    input {
+        width: 100%;
+        padding: 0.5rem;
+    }
+    textarea {
+        width: 100%;
+        padding: 0.5rem;
+    }
+
+    label {
+        margin-right: 1rem;
+        text-align: left;
+    }
+
+    td {
+        width: 100%;
+    }
+
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="w3-container">
+    <div class="w3-content w3-padding-32">
+            <form method="POST" enctype="multipart/form-data">
+                {%csrf_token%}
+                <table class="form_table">{{form.as_table}}</table>
+                <br>
+                <button id="edit-btn" class="w3-button w3-dark-gray" type="submit">프로필 변경</button>
+                <a class="w3-button w3-gray w3-text-white" href=" {%url 'mypage' %} ">변경 취소</a>
+                <a class="w3-button w3-gray w3-text-white" href=" {%url 'home' %} ">메인 화면</a>
+            </form>
+    </div>
+</div>
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+    
+    $(document).ready(function(e) {
+        $('input').each(function(element) {
+            $(element).addClass('w3-input');
+            $(element).addClass('w3-padding-16');
+        });
+        $('textarea').each(function(element) {
+            $(element).addClass('w3-input');
+            $(element).addClass('w3-padding-16');
+        });
+
+        $("#id_birthday").prop("type", "date");
+    });
+</script>
+
+{% endblock %}

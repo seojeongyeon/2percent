@@ -4,6 +4,7 @@ from .forms import LoginForm, RegisterForm
 from django.contrib.auth.forms import PasswordChangeForm
 from .forms import UserEditForm
 from django.core.paginator import Paginator
+from django.contrib import messages
 
 # 이메일 인증을 위한 import
 from django.http import HttpResponse
@@ -28,6 +29,11 @@ def signin(request):
             if user:
                 login(request, user)
                 return redirect('home')
+        else:
+            username = form.data.get('username')
+            if User.objects.filter(username=username):
+                user = User.objects.get(username=username)
+                if user and user.is_active == False: messages.warning(request, "이메일 인증 후 로그인 하세요!")
     else:
         form = LoginForm()
     return render(request, "signin.html", {"form":form})
@@ -36,9 +42,6 @@ def signup(request):
     if request.method == "POST":
         form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
-            # 이메일 중복 검사
-            # if User.objects.filter(email=form.cleaned_data.get('email')).exists():
-            #     return HttpResponse('이미 사용 중인 이메일입니다')
             user = form.save()
             user.is_active = False
             user.save()
@@ -51,21 +54,21 @@ def signup(request):
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)).encode().decode(),
                 'token': account_activation_token.make_token(user),
             })
-            mail_subject = "[2%를 부탁해] 회원가입 인증 메일입니다."
+            mail_subject = "[2%를 부탁해] 회원 가입을 위한 이메일 인증 메일입니다."
             user_email = user.email
             email = EmailMessage(mail_subject, message, to=[user_email])
             email.send()
             return HttpResponse(
                 '<div style="font-size: 40px; width: 100%; height:100%; display:flex; text-align:center; '
                 'justify-content: center; align-items: center;">'
-                '입력하신 이메일<span>로 인증 링크가 전송되었습니다.</span>'
+                '입력한 이메일<span>로 인증 링크가 전송되었습니다.</span>'
                 '</div>'
             )
             return redirect('home')
-        return render(request, "signup.html", {"form":form})
+        print(messages.error(request, form.non_field_errors()))
     else:
         form = RegisterForm()
-        return render(request, "signup.html", {"form":form})
+    return render(request, "signup.html", {"form":form})
 
 def signout(request):
     logout(request)
@@ -74,7 +77,7 @@ def signout(request):
 
 # 마이페이지 노출
 def mypage(request):
-    if not request.user: return redirect('signin')
+    if not request.user.is_authenticated: return redirect('signin')
     d_user = request.user
     # photoshop scraps paginator
     photoshops = d_user.pscraps.all()

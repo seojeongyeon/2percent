@@ -5,10 +5,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
 <style>
-  #img_link {
-      text-decoration: none;
-  }
-  
+    body {
+        background-color: #f1f1f1;
+    }
+
   .box-img {
     opacity: 1;
     cursor: pointer;
@@ -21,8 +21,7 @@
 {% endblock %}
 
 {% block content %}
-
-<div class="w3-light-grey w3-content" style="max-width:1600px">
+<div class="w3-light-grey w3-content" style="max-width:1600px;">
 
 <!-- Sidebar/menu -->
 <nav class="w3-sidebar w3-bar-block w3-white w3-animate-left w3-text-grey w3-collapse w3-top w3-center" style="width:300px;font-weight:bold; " id="mySidebar"><br>
@@ -42,6 +41,9 @@
         <!-- user info -->
         <h2 class="w3-padding-16 w3-center">{{ d_user.username }}</h2>
 
+        <!-- Point -->
+        <div class="w3-center" style="padding-left: 2rem; padding-right: 2rem;"><h6><i class="fa fa-tag"></i>   {{ d_user.point }} point</h6></div>
+
         <!-- birthday -->
         {% if d_user.birthday %}
             <div class="w3-center" style="padding-left: 2rem; padding-right: 2rem;"><h6><i class="fa fa-birthday-cake"></i>　{{d_user.birthday|date:"Y-m-d"}}</h6></div>
@@ -60,7 +62,6 @@
         {% if d_user.info %}
             <div class="w3-center" style="padding-left: 2rem; padding-right: 2rem;"><h6><i class="fa fa-comment"></i>　{{ d_user.info }}</h6></div>
         {% endif %}
-        <!-- <div class="w3-center" style="padding-left: 2rem; padding-right: 2rem;"><h6>&#xf25b;{{ d_user.point }}</h6></div> -->
         <!------------------------------------------------------------ 포인트 연결 필요 ------------------------------------------------------>
 
         <!-- setting page -->
@@ -85,113 +86,115 @@
 <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
 <!-- !PAGE CONTENT! -->
-<div class="w3-main" style="margin-left:300px">
+<div class="w3-main" style="margin-left:300px;">
 
     <!-- Push down content on small screens --> 
     <div class="w3-hide-large" style="margin-top:83px"></div>
 
 
     <div class="w3-container w3-center w3-padding-16">
+        <!-----------------------------------------
+        *                포인트 내역               *
+        ------------------------------------------->
+        <!--
+        <h2>Points</h2>
+        <div class="w3-padding-32">
 
-
-    <!-----------------------------------------
-    *                포인트 내역               *
-    ------------------------------------------->
-    <h2>Points</h2>
-    <div class="w3-padding-32">
-
-    </div>
-  
-    <!------------------------------------------
-    *               스크랩한 글                *
-    ------------------------------------------->
-    <!-- 스크랩한 글 -->
-    <h2>Scraps</h2>
-    <div role="scraps">
-        <!-- 보정법 스크랩 -->
-        <div role="photoshop_scraps">
-            <h4 class="h3 category_head" id="photoshop">Photoshop Scraps</h4>
-            <div class="w3-row w3-padding-16 w3-center">
-                {% for p in photoscraps %}
-                    <div class="w3-quarter" style="height: 295px; width: 295px;">
-                        <div style="overflow: hidden; width: 100%; height: 100%;">
-                            <a href="{% url 'photodetail' p.id %}" style="display: none;">{{ p.date }}</a>
-                            {% if p.photoafter %}<img src="{{ p.photoafter.url }}" alt="{{ p.title }}" class="box-img" style="overflow: hidden;">{% endif %}
-                            <span style="display: none;">{{ p.getlike }}</span>
+        </div>
+        -->
+    
+        <!------------------------------------------
+        *               스크랩한 글                *
+        ------------------------------------------->
+        <!-- 스크랩한 글 -->
+        <h2>Scraps</h2>
+        <div role="scraps">
+            <!-- 보정법 스크랩 -->
+            <div role="photoshop_scraps">
+                <h4 class="h3 category_head" id="photoshop">Photoshop Scraps</h4>
+                <div class="w3-row w3-padding-16 w3-center">
+                    {% for p in photoscraps %}
+                        <div class="w3-quarter" style="height: 295px; width: 295px;">
+                            <div style="overflow: hidden; width: 100%; height: 100%;">
+                                <a href="{% url 'photodetail' p.id %}" style="display: none;">{{ p.date }}</a>
+                                {% if p.photoafter %}<img src="{{ p.photoafter.url }}" alt="{{ p.title }}" class="box-img" style="overflow: hidden;">{% endif %}
+                                <span style="display: none;">{{ p.getlike }}</span>
+                            </div>
                         </div>
-                    </div>
-                {% endfor %}
-            </div>
-            <!-- Pagination -->
-            <div class="w3-container w3-center w3-padding-32">
-                <div class="w3-bar">
-                    {% if photoscraps.has_previous %}
-                        <a href="?page={{photoscraps.previous_page_number}}" class="w3-bar-item w3-button w3-hover-black">«</a>
-                    {% endif %}
-                    <span class="w3-bar-item">{{ photoscraps.number }}</span>
-                    <span class="w3-bar-item">/</span>
-                    <span class="w3-bar-item">{{ photoscraps.paginator.num_pages }}</span>
-                    {%if photoscraps.has_next%}
-                        <span><a href="?page={{photoscraps.next_page_number}}" class="w3-bar-item w3-button w3-hover-black">»</a></span>
-                    {%endif%}
-                </div>
-            </div>
-        <!-- 의뢰글 스크랩 -->
-        <div role="mission_scraps">
-            <h4 class="h3 category_head w3-padding-32" id="mission">Mission Scraps</h4>
-            <div role="mission" class="w3-content">
-                <table>
-                    {% for mission in missionscraps %}
-                        <tr class="w3-row">
-                            <td style="text-align: left;">
-                                <a href="{% url 'mission_detail' mission.id %}" style="text-decoration: none;">
-                                    <span style="font-weight: bolder; font-size: larger">{{ mission.title }}</span>
-                                </a>
-                            </td>
-                            <td style="text-align: right;">
-                                <a href="{% url 'mission_detail' mission.id %}" style="text-decoration: none;">
-                                    <span class="w3-text-dark-gray"><i>{{ mission.pub_date }} ~ {{ mission.end_date }}</i></span>
-                                </a>
-                            </td>
-                        </tr>
                     {% endfor %}
-                </table>
-            </div>
-            <!-- Pagination -->
-            <div class="w3-container w3-center w3-padding-32">
-                <div class="w3-bar">
-                    {% if missionscraps.has_previous %}
-                        <a href="?page={{missionscraps.previous_page_number}}" class="w3-bar-item w3-button w3-hover-black">«</a>
-                    {% endif %}
-                    <span class="w3-bar-item">{{ missionscraps.number }}</span>
-                    <span class="w3-bar-item">/</span>
-                    <span class="w3-bar-item">{{ missionscraps.paginator.num_pages }}</span>
-                    {%if missionscraps.has_next%}
-                        <span><a href="?page={{missionscraps.next_page_number}}" class="w3-bar-item w3-button w3-hover-black">»</a></span>
-                    {%endif%}
+                </div>
+                <!-- Pagination -->
+                <div class="w3-container w3-center w3-padding-32">
+                    <div class="w3-bar">
+                        {% if photoscraps.has_previous %}
+                            <a href="?page={{photoscraps.previous_page_number}}" class="w3-bar-item w3-button w3-hover-black">«</a>
+                        {% endif %}
+                        <span class="w3-bar-item">{{ photoscraps.number }}</span>
+                        <span class="w3-bar-item">/</span>
+                        <span class="w3-bar-item">{{ photoscraps.paginator.num_pages }}</span>
+                        {%if photoscraps.has_next%}
+                            <span><a href="?page={{photoscraps.next_page_number}}" class="w3-bar-item w3-button w3-hover-black">»</a></span>
+                        {%endif%}
+                    </div>
+                </div>
+            <!-- 의뢰글 스크랩 -->
+            <div role="mission_scraps">
+                <h4 class="h3 category_head w3-padding-32" id="mission">Mission Scraps</h4>
+                <div role="mission" class="w3-content">
+                    <table>
+                        {% for mission in missionscraps %}
+                            <tr class="w3-row">
+                                <td style="text-align: left;">
+                                    <a href="{% url 'mission_detail' mission.id %}" style="text-decoration: none;">
+                                        <span style="font-weight: bolder; font-size: larger">{{ mission.title }}</span>
+                                    </a>
+                                </td>
+                                <td style="text-align: right;">
+                                    <a href="{% url 'mission_detail' mission.id %}" style="text-decoration: none;">
+                                        <span class="w3-text-dark-gray"><i>{{ mission.pub_date }} ~ {{ mission.end_date }}</i></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <div class="w3-container w3-center w3-padding-32">
+                    <div class="w3-bar">
+                        {% if missionscraps.has_previous %}
+                            <a href="?page={{missionscraps.previous_page_number}}" class="w3-bar-item w3-button w3-hover-black">«</a>
+                        {% endif %}
+                        <span class="w3-bar-item">{{ missionscraps.number }}</span>
+                        <span class="w3-bar-item">/</span>
+                        <span class="w3-bar-item">{{ missionscraps.paginator.num_pages }}</span>
+                        {%if missionscraps.has_next%}
+                            <span><a href="?page={{missionscraps.next_page_number}}" class="w3-bar-item w3-button w3-hover-black">»</a></span>
+                        {%endif%}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
     </div>
 
   
-  <!-- Modal for full size images on click-->
-  <div id="modal01" class="w3-modal w3-black" style="padding-top:0" onclick="this.style.display='none'">
-    <span class="w3-button w3-black w3-xlarge w3-display-topright">×</span>
-    <div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
-      <a id="img_link" class="text-white w3-hover-text-blue" href="#">
-          <img id="img01" class="w3-image">
-          <div id="caption" class="h3 m-3"></div>
-          <div id="caption_date" class="w3-text-white h6 p-0"></div>
-          <div id="caption_like" class="w3-text-red"></div>
-        </a>
+    <!-- Modal for full size images on click-->
+    <div id="modal01" class="w3-modal w3-black" style="padding-top:0" onclick="this.style.display='none'">
+        <span class="w3-button w3-black w3-xlarge w3-display-topright">×</span>
+        <div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
+            <a id="img_link" class="text-white w3-hover-text-blue" href="#">
+                <img id="img01" class="w3-image">
+                <div id="caption" class="h3 m-3"></div>
+                <div id="caption_date" class="w3-text-white h6 p-0"></div>
+                <div id="caption_like" class="w3-text-red"></div>
+            </a>
+        </div>
     </div>
-  </div>
 
 <!-- End page content -->
 </div>
+</div>
+
 </div>
 
 <script src="http://code.jquery.com/jquery-latest.js"></script>

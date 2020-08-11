@@ -15,6 +15,7 @@ class RegisterForm(UserCreationForm):
         fields = ['username', "nickname", "profile", "email", "info", "password1", "password2", "birthday"]
 
 class UserEditForm(UserChangeForm):
+    password = None
     birthday = forms.DateField(input_formats=settings.DATE_INPUT_FORMATS)
     class Meta:
         model = User

@@ -3,7 +3,18 @@
 {% block title %}
 <title>{{ d_user.username }} </title>
 
+<!-- Remember to include jQuery :) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+
+<!-- jQuery Modal -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
+
 <style>
+    body {
+        background-color: #f1f1f1;
+    }
+
   #img_link {
       text-decoration: none;
   }
@@ -39,7 +50,7 @@
         <!-- 유저 프로필 이미지 -->
         <div id="profile_img" class="m-t-250">
             {% if d_user.profile %}
-                <img class="p-t-200" src="{{ d_user.profile.url}}" style="max-width: 75%; height: auto;">
+                <img class="p-t-200" src="{{ d_user.profile.url }}" style="max-width: 75%; height: auto;">
             {% else %}
                 <div>
                     <i class="zmdi zmdi-account-circle"></i>
@@ -58,16 +69,16 @@
             {% if request.user != d_user %}
                 <!-- 언팔로우 노출 : 이미 팔로우한 유저일 때 -->
                 {% if request.user in d_user.followers.all %}
-                    <a class="w3-button w3-text-red w3-hover-red" href="{% url 'unfollow' d_user.username %}" style="width:100%;">UNFOLLOW</a>
+                    <a class="w3-button w3-text-red w3-hover-red w3-bar-item" href="{% url 'unfollow' d_user.username %}">UNFOLLOW</a>
                 {% else %} <!-- 팔로우 노출 : 팔로우 하지 않는 유저일 때 -->
-                    <a class="w3-button w3-text-blue w3-hover-blue" href="{% url 'follow' d_user.username %}" style="width: 100%;">FOLLOW</a>
+                    <a class="w3-button w3-text-blue w3-hover-blue w3-bar-item" href="{% url 'follow' d_user.username %}">FOLLOW</a>
                 {% endif %}
             {% else %} <!-- 자신의 유저 페이지이면 -->
                 <a id="mypage" class="w3-btn w3-bar-item" href="{% url 'mypage' %}">My Page</a>
             {% endif %}
         {% else %} <!-- 로그인 안 했으면 -->
             <!-- 팔로우인 척 하면서 로그인 페이지로 이동 -->
-            <a class="w3-button" href="{% url 'signin' %}">FOLLOW</a>
+            <a class="w3-button w3-text-blue w3-hover-blue w3-bar-item" href="{% url 'signin' %}">FOLLOW</a>
         {% endif %}
         </div>
 
@@ -75,14 +86,14 @@
         <div id="follow_count">
             <div role="followers">
                 {% if d_user.followers.count > 0 %}
-                    <a class="w3-hover-text-blue" style="text-decoration: none;" href="{% url 'follower' d_user.username %}">{{ d_user.followers.count }} followers</a>
+                    <a class="w3-hover-text-blue" style="text-decoration: none;" href="{% url 'follower' d_user.username %}" rel="modal:open">{{ d_user.followers.count }} followers</a>
                 {% else%}
                     <span  class="w3-hover-text-blue" style="text-decoration: none;">{{ d_user.followers.count }} followers</span>
                 {% endif %}
             </div>
             <div role="followings">
                 {% if d_user.followings.count > 0 %}
-                    <a  class="w3-hover-text-blue" style="text-decoration: none;"  href="{% url 'following' d_user.username %}">{{ d_user.followings.count }} followings</a>
+                    <a  class="w3-hover-text-blue" style="text-decoration: none;"  href="{% url 'following' d_user.username %}" rel="modal:open">{{ d_user.followings.count }} followings</a>
                 {% else %}
                     <span  class="w3-hover-text-blue" style="text-decoration: none;">{{ d_user.followings.count }} followings</span>
                 {% endif %}
@@ -188,13 +199,13 @@
     -------------------------------------->
      <!-- 작성한 의뢰글 -->
     <h3 class="h3 category_head w3-padding-32" id="mission">Mission Requests</h3>
-    <div role="mission" class="w3-content">
+    <div role="mission" class="w3-white" style="padding: 2rem; margin: 0 0.5rem;">
         <table>
             {% for mission in missioncut %}
                 <tr class="w3-row">
                     <td style="text-align: left;">
                         <a href="{% url 'mission_detail' mission.id %}" style="text-decoration: none;">
-                            <span style="font-weight: bolder; font-size: larger">{{ mission.title }}</span>
+                            <span style="font-size: larger">{{ mission.title }}</span>
                         </a>
                     </td>
                     <td style="text-align: right;">
@@ -228,7 +239,7 @@
 
   
   <!-- Modal for full size images on click-->
-  <div id="modal01" class="w3-modal w3-black" style="padding-top:0" onclick="this.style.display='none'">
+  <div id="modal01" class="w3-modal w3-black" style="padding-top:0; z-index: 1000;" onclick="this.style.display='none'">
     <span class="w3-button w3-black w3-xlarge w3-display-topright">×</span>
     <div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
       <a id="img_link" class="text-white w3-hover-text-blue" href="#">
