@@ -2,69 +2,238 @@
 
 {% block title %}
 <title>My Page</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+<style>
+    body {
+        background-color: #f1f1f1;
+    }
+
+  .box-img {
+    opacity: 1;
+    cursor: pointer;
+    visibility: hidden;
+  }
+
+  .box-img:hover{opacity: 0.7; }
+  
+</style>
 {% endblock %}
 
 {% block content %}
+<div class="w3-light-grey w3-content" style="max-width:1600px;">
 
-{% load static %}
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-bar-block w3-white w3-animate-left w3-text-grey w3-collapse w3-top w3-center" style="width:300px;font-weight:bold; " id="mySidebar"><br>
 
-<!-- 유저 프로필 이미지 -->
-{% if request.user.profile %}
-    <a href="{% url 'user' request.user.username %}"><img src="{{ request.user.profile.url}}"></a>
-{% else %}
-    <a href="{% url 'user' request.user.username %}"><img src="{% static 'default_profile.jpg' %}"></a>
-{% endif %}
+    <div class="w3-padding-64">
+        <!-- user profile img -->
+        <div id="profile_img" class="m-t-250">
+            {% if d_user.profile %}
+                <img class="p-t-200" src="{{ d_user.profile.url}}" style="max-width: 75%; height: auto;">
+            {% else %}
+                <div style="width: 80% height: 80%;">
+                    <i class="zmdi zmdi-account-circle" style="font-size: 7rem;"></i>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- user info -->
+        <h2 class="w3-padding-16 w3-center">{{ d_user.username }}</h2>
+
+        <!-- Point -->
+        <div class="w3-center" style="padding-left: 2rem; padding-right: 2rem;"><h6><i class="fa fa-tag"></i>   {{ d_user.point }} point</h6></div>
+
+        <!-- birthday -->
+        {% if d_user.birthday %}
+            <div class="w3-center" style="padding-left: 2rem; padding-right: 2rem;"><h6><i class="fa fa-birthday-cake"></i>　{{d_user.birthday|date:"Y-m-d"}}</h6></div>
+        {% else %}
+            <div class="w3-center" style="padding-left: 2rem; padding-right: 2rem;"><h6><i class="fa fa-birthday-cake"></i>　????-??-??</h6></div>
+        {% endif %}
+
+        <!-- email account -->
+        {% if d_user.email %}
+            <div class="w3-center" style="padding-left: 2rem; padding-right: 2rem;"><h6><i class="fa fa-envelope"></i>　{{ d_user.email }}</h6></div>
+        {% else %}
+            <div class="w3-center" style="padding-left: 2rem; padding-right: 2rem;"><h6><i class="fa fa-envelope"></i>　???????@????.???</h6></div>
+        {% endif %}
+
+        <!-- user information -->
+        {% if d_user.info %}
+            <div class="w3-center" style="padding-left: 2rem; padding-right: 2rem;"><h6><i class="fa fa-comment"></i>　{{ d_user.info }}</h6></div>
+        {% endif %}
+        <!------------------------------------------------------------ 포인트 연결 필요 ------------------------------------------------------>
+
+        <!-- setting page -->
+        <div role="link_to_settings" class="w3-padding-32">
+            <a class="w3-bar-item w3-button" href="{% url 'info_setting' %}">Edit Profile</a>
+            <a class="w3-bar-item w3-button" href="{% url 'pw_setting' %}">Change Password</a>
+        </div>
+
+        <a href="javascript:void(0)" onclick="w3_close()" class="w3-bar-item w3-button w3-padding w3-hide-large p-t-50">CLOSE</a>
+    </div>
+</nav>
+
+<!-- Top menu on small screens -->
+<header class="w3-container w3-hide-large w3-top w3-white w3-xlarge w3-padding-16">
+  <span class="w3-left w3-padding">{{ d_user.username }}</span>
+  <a href="javascript:void(0)" class="w3-right w3-button w3-white" onclick="w3_open()">☰</a>
+</header>
 
 
-<!-- 유저 정보 -->
-<h2># 유저 정보</h2>
-<p>닉네임: {{ request.user.nickname }}</p>
-<p>생일: {{ request.user.birthday|linebreaks }}</p>
-<p>이메일: {{ request.user.email }}</p>
-<p>소개: {{ request.user.info }}</p>
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;">
+
+    <!-- Push down content on small screens --> 
+    <div class="w3-hide-large" style="margin-top:83px"></div>
 
 
-<!-- 스크랩한 글 -->
-<h2># 스크랩한 글</h2>
-<div role="scraps">
-    <div role="photoshop_scraps">
-        <h3>- 보정법</h3>
-        {% for p in request.user.pscraps.all %}
-        <div>
-            <a href="{% url 'photodetail' p.id %}">
-                <p>{% if p.photoafter %}<img src = "{{ p.photoafter.url }}">{% endif %}</p>
-                <p>{{ p.title }}</p>
-                <p>{{ p.date }}</p>
+    <div class="w3-container w3-center w3-padding-16">
+        <!-----------------------------------------
+        *                포인트 내역               *
+        ------------------------------------------->
+        <!--
+        <h2>Points</h2>
+        <div class="w3-padding-32">
+
+        </div>
+        -->
+    
+        <!------------------------------------------
+        *               스크랩한 글                *
+        ------------------------------------------->
+        <!-- 스크랩한 글 -->
+        <h2>Scraps</h2>
+        <div role="scraps">
+            <!-- 보정법 스크랩 -->
+            <div role="photoshop_scraps">
+                <h4 class="h3 category_head" id="photoshop">Photoshop Scraps</h4>
+                <div class="w3-row w3-padding-16 w3-center">
+                    {% for p in photoscraps %}
+                        <div class="w3-quarter" style="height: 295px; width: 295px;">
+                            <div style="overflow: hidden; width: 100%; height: 100%;">
+                                <a href="{% url 'photodetail' p.id %}" style="display: none;">{{ p.date }}</a>
+                                {% if p.photoafter %}<img src="{{ p.photoafter.url }}" alt="{{ p.title }}" class="box-img" style="overflow: hidden;">{% endif %}
+                                <span style="display: none;">{{ p.getlike }}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <!-- Pagination -->
+                <div class="w3-container w3-center w3-padding-32">
+                    <div class="w3-bar">
+                        {% if photoscraps.has_previous %}
+                            <a href="?page={{photoscraps.previous_page_number}}" class="w3-bar-item w3-button w3-hover-black">«</a>
+                        {% endif %}
+                        <span class="w3-bar-item">{{ photoscraps.number }}</span>
+                        <span class="w3-bar-item">/</span>
+                        <span class="w3-bar-item">{{ photoscraps.paginator.num_pages }}</span>
+                        {%if photoscraps.has_next%}
+                            <span><a href="?page={{photoscraps.next_page_number}}" class="w3-bar-item w3-button w3-hover-black">»</a></span>
+                        {%endif%}
+                    </div>
+                </div>
+            <!-- 의뢰글 스크랩 -->
+            <div role="mission_scraps">
+                <h4 class="h3 category_head w3-padding-32" id="mission">Mission Scraps</h4>
+                <div role="mission" class="w3-content">
+                    <table>
+                        {% for mission in missionscraps %}
+                            <tr class="w3-row">
+                                <td style="text-align: left;">
+                                    <a href="{% url 'mission_detail' mission.id %}" style="text-decoration: none;">
+                                        <span style="font-weight: bolder; font-size: larger">{{ mission.title }}</span>
+                                    </a>
+                                </td>
+                                <td style="text-align: right;">
+                                    <a href="{% url 'mission_detail' mission.id %}" style="text-decoration: none;">
+                                        <span class="w3-text-dark-gray"><i>{{ mission.pub_date }} ~ {{ mission.end_date }}</i></span>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+                <!-- Pagination -->
+                <div class="w3-container w3-center w3-padding-32">
+                    <div class="w3-bar">
+                        {% if missionscraps.has_previous %}
+                            <a href="?page={{missionscraps.previous_page_number}}" class="w3-bar-item w3-button w3-hover-black">«</a>
+                        {% endif %}
+                        <span class="w3-bar-item">{{ missionscraps.number }}</span>
+                        <span class="w3-bar-item">/</span>
+                        <span class="w3-bar-item">{{ missionscraps.paginator.num_pages }}</span>
+                        {%if missionscraps.has_next%}
+                            <span><a href="?page={{missionscraps.next_page_number}}" class="w3-bar-item w3-button w3-hover-black">»</a></span>
+                        {%endif%}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+  
+    <!-- Modal for full size images on click-->
+    <div id="modal01" class="w3-modal w3-black" style="padding-top:0" onclick="this.style.display='none'">
+        <span class="w3-button w3-black w3-xlarge w3-display-topright">×</span>
+        <div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
+            <a id="img_link" class="text-white w3-hover-text-blue" href="#">
+                <img id="img01" class="w3-image">
+                <div id="caption" class="h3 m-3"></div>
+                <div id="caption_date" class="w3-text-white h6 p-0"></div>
+                <div id="caption_like" class="w3-text-red"></div>
             </a>
         </div>
-        {% endfor %}
     </div>
-    <div role="mission_scraps">
-        <h3>- 의뢰</h3>
-        {% for m in request.user.mscraps.all %}
-        <div>
-            <a href="{% url 'mission_detail' m.id %}">
-                <p>{{ m.title }}</p>
-            </a>
-        </div>
-        {% endfor %}
-    </div>
+
+<!-- End page content -->
+</div>
 </div>
 
-
-<!-- 포인트 내역 노출 -->
-<h2># 포인트 내역</h2>
-
-
-
-<!-- 설정 페이지로 이동 -->
-<div role="link_to_settings">
-    <a href="{% url 'info_setting' %}">EDIT PROFILE</a>
-    <a href="{% url 'pw_setting' %}">Change Password</a>
 </div>
 
-<div>
-    <a href="{% url 'home' %}">HOME</a>
-</div>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script>
+    $(document).ready(function(e) {
+        $(".box-img").ready(function() {
+            $(".box-img").each(function() {
+                var w = $('.w3-quarter').first();
+                if ($(this).width() > $(this).height()) {
+                    $(this).css("height", w.height());
+
+                }else{
+                    $(this).css("width", w.width());
+                } 
+                $(this).css('visibility', 'visible');
+            });
+        });
+        
+
+        $(".box-img").click( function(e) {
+            $('#img01').attr('src', $(this).attr('src'));
+            $("#modal01").css('display', 'block');
+            $('#caption').text($(this).attr('alt')); // 모달창 내용
+            $('#caption_date').text($(this).prev().text()); // 모달창 날짜
+            $('#caption_like').text("♥ " + $(this).next().text()); // 모달창 좋아요 수
+            $('#img_link').attr('href', $(this).prev().attr('href')); //모달창 링크
+        });
+    });
+
+    // Script to open and close sidebar
+    function w3_open() {
+        document.getElementById("mySidebar").style.display = "block";
+        document.getElementById("myOverlay").style.display = "block";
+    }
+    
+    function w3_close() {
+        document.getElementById("mySidebar").style.display = "none";
+        document.getElementById("myOverlay").style.display = "none";
+    }
+</script>
 
 {% endblock %}

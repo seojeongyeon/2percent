@@ -5,9 +5,16 @@
 {% endblock %}
 
 {% block content %}
+
+{% for message in messages %}
+    <script>alert("{{ message }}")</script>
+
+{% endfor %}
+
+
 <div class="limiter">
     <div class="container-login100" style="background-color: white">
-        <div class="wrap-login100">
+        <div class="wrap-login100 m-t-20">
             <form class="login100-form validate-form" action="{% url 'signin' %}" method="POST">
                 {% csrf_token %}
                 <span class="login100-form-logo">
@@ -29,20 +36,14 @@
                     <span class="focus-input100" data-placeholder="&#xf191;"></span>
                 </div>
 
-                <div class="contact100-form-checkbox">
-                    <input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
-                    <label class="label-checkbox100" for="ckb1">
-                        Remember me
-                    </label>
-                </div>
 
-                <div class="container-login100-form-btn">
+                <div class="container-login100-form-btn p-t-10">
                     <button class="login100-form-btn" type="submit">
                         Login
                     </button>
                 </div>
 
-                <div class="text-center p-t-90">
+                <div class="text-center p-t-60">
                     <a class="txt1" href="{% url 'signup' %}">
                         Sign up
                     </a>
