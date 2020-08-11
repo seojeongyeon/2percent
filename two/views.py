@@ -14,7 +14,24 @@ User = get_user_model()
 def home(request):
     p = Photoshop.objects.all().annotate(likes=Count('photo_like')).order_by('-photo_like')
     c = Contest.objects.all().annotate(likes=Count('contest_like')).order_by('-contest_like')
-    return render(request, 'home.html', {'p':p,'c':c})
+    contests = Contest.objects
+    best_contests = Contest.objects.all().order_by('-contest_like')
+
+    best_list = []
+    if len(best_contests) >= 5:
+        for i in range(4):
+            best_like = best_contests[i].contest_like
+            best_contests[i].like = best_like
+            best_list.append(best_contests[i])
+
+    if request.method == 'POST':
+        form = ContestForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('contest')
+    else:
+        form = ContestForm()
+    return render(request, 'home.html', {'p':p,'c':c, 'contests':contests, 'best_contests':best_list, 'contests':best_contests, 'form':form})
 
 def photoshop(request):
     photoshops = Photoshop.objects
