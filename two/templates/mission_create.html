@@ -1,14 +1,21 @@
 <!--요청글작성-->
+
+{% extends 'base.html' %}
+
+{% block content %}
+<div class='container' style="width: 65%;margin: 0 auto;">
 <form method="POST" enctype="multipart/form-data">
     {% csrf_token %}
-    <p>title: <input type="text" name="title"></p>
-    <p>body: <textarea name="body"></textarea></p>
-    <p>image: <input type="file" name="image"></p>
-    <p>point: <input type="text" name="point"></p>
-    <p>end_date: <input type="date" name="end_date" id='enddate'></p>
-    <p><input type="submit" value="SUBMIT"></p>
-</form>
+    <p>제목: <input type="text" name="title"></p>
+    <p>의뢰 내용: <textarea name="body" class="w3-input w3-padding-16"></textarea></p>
+    <p>의뢰 사진: <input type="file" name="image"></p>
+    <p>포인트 설정하기: <input type="text" name="point"></p>
+    <p>마감기한: <input type="date" name="end_date" id='enddate'></p>
+    <!-- <p><input type="submit" value="SUBMIT"></p> -->
+    <p><button class="w3-button w3-light-grey w3-section" type="submit">올리기</button></p>
 
+</form>
+</div>
 <script>
     var today = new Date();
     var dd = today.getDate()+1;
@@ -19,3 +26,5 @@
     today = yyyy+'-'+mm+'-'+dd;
     document.getElementById("enddate").setAttribute("min", today);
 </script>
+
+{% endblock %}
