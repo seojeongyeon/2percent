@@ -63,6 +63,8 @@ class Mission(models.Model):
 
     def end(self):
         return self.end_date < timezone.now()
+    
+
             
 class MissionComment(models.Model):
     mission = models.ForeignKey(Mission, on_delete=models.CASCADE)
