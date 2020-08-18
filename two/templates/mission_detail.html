@@ -3,6 +3,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 {% endblock title %}
 {% block content %}
+{% load static %}
 
 <div class="w3-main w3-content w3-padding" style="max-width:1200px;">
     <div class="w3-container w3-center">  
@@ -12,6 +13,16 @@
             <h4>{{mission.writer}}</h4>
             <h4>{{mission.point}} point</h4>
             <h6><i>{{mission.pub_date}} ~ {{mission.end_date}}</i></h6>
+            {% if mission.pick %}
+            <p style="color: palevioletred;">pick</p>
+            {% else %}
+            <p style="color: gray;">unpick</p>
+            {% endif %}
+            {% if mission.end or mission.pick %}
+            <p style="color: red;">closed</p>
+            {% else %}
+            <p style="color: rgb(255, 175, 4);">ing</p>
+            {% endif %}
             <p class="w3-border w3-padding-32" style="margin-top: 50px;">{{mission.body}}</p>
         </div>
         
@@ -43,9 +54,77 @@
     </form>
     <hr>
     {% endif %}
+    <div class="w3-bar w3-white w3-small" >
+        <select id="sort-select" class="w3-bar-item w3-border" onchange="location = this.value;" style="float:right; margin:3px">
+            <option value="/">최신순</option>
+            <option value="?sort=like">좋아요순</option>
+        </select>
+    </div>
+    <div class="w3-main w3-content" style="max-width:1200px; padding: 40px 16px!important;"> 
+        
 
+        {% if mission.pick %}
+        <div style="border: solid 3px pink; padding: 10px">
+            <img src="{{picked.image.url}}" style="max-height: 200px;">
+            
+            <div style="float: right; padding:15px;">
+                <p style="text-align: right;"><b style="color: palevioletred;">PICK</b></p>
+                <p style="text-align: right;"><b>{{picked.writer}}</b></p>
+                <p style="text-align: right;">{{picked.body}}</p>
+                <form action="{% url 'mission_comment_like' picked.id %}" method="get">
+                    {% if user.is_authenticated %}
+                        {% if user in comment.likers.all %}
+                            <button type="submit" style="background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer" ><img src="{% static 'heart.png' %}" style="width: 15px; height: 15px;"></button>
+                        {% else %}
+                            <button type="submit" style="background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer" ><img src="{% static 'pink.png' %}" style="width: 15px; height: 15px;"></button>
+                        {% endif %}
+                    {% endif %}
+                    {{picked.getlikes}}&nbsp;&nbsp;&nbsp;&nbsp;
+                    {{picked.pub_date}}
+                    
+                </form> 
+            </div>
+            
+        </div>
+        <hr>
+        {% endif %}
 
-    <div class="w3-row w3-padding-32 w3-section">
+        <!-- 댓글 -->
+        {% for comment in comments %}
+            <div>
+                <img src="{{comment.image.url}}" style="max-height: 200px;">
+                
+                <div style="float: right; padding:15px;">
+                    <p style="text-align: right;"><b>{{comment.writer}}</b></p>
+                    <p style="text-align: right;">{{comment.body}}</p>
+                    <form action="{% url 'mission_comment_like' comment.id %}" method="get">
+                        {% if user.is_authenticated %}
+                            {% if user in comment.likers.all %}
+                                <button type="submit" style="background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer" ><img src="{% static 'heart.png' %}" style="width: 15px; height: 15px;"></button>
+                            {% else %}
+                                <button type="submit" style="background: inherit ; border:none; box-shadow:none; border-radius:0; padding:0; overflow:visible; cursor:pointer" ><img src="{% static 'pink.png' %}" style="width: 15px; height: 15px;"></button>
+                            {% endif %}
+                        {% endif %}
+                        {{comment.getlikes}}&nbsp;&nbsp;&nbsp;&nbsp;
+                        {{comment.pub_date}}
+                        <br>
+                    </form> 
+                    {% if request.user == comment.writer %}
+                        <a href="{% url 'mission_comment_delete' comment.id %}" style="float:right;margin-top:5px; text-decoration:none;">댓글 삭제하기</a>
+                    {% endif %}
+                    <br><br>
+                    {% if not mission.pick and user == mission.writer %}
+                        <a href="{% url 'mission_pick' comment.id %}" style="float:right;margin-top:5px; text-decoration:none;">채택하기</a>
+                    {% endif %}
+                </div>
+                
+            </div>
+            <hr>
+        {% endfor %}
+    </div>
+
+    <!-- 댓글 -->
+    <!-- <div class="w3-row w3-padding-32 w3-section">
         
         {% for comment in comments %}
         <div class="w3-col w3-panel">
@@ -72,7 +151,7 @@
                 <a href="{% url 'mission_comment_delete' comment.id %}">삭제</a>
                 <hr>
             {% endfor %}
-        </div>
-      </div>
+        </div> 
+      </div>-->
 </div>
 {% endblock content %}

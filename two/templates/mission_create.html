@@ -9,7 +9,7 @@
     <p>제목: <input type="text" name="title"></p>
     <p>의뢰 내용: <textarea name="body" class="w3-input w3-padding-16"></textarea></p>
     <p>의뢰 사진: <input type="file" name="image"></p>
-    <p>포인트 설정하기: <input type="text" name="point"></p>
+    <p>포인트 설정하기: <input type="number" min="0" max="{{request.user.point}}" step="1" name="point"></p>
     <p>마감기한: <input type="date" name="end_date" id='enddate'></p>
     <!-- <p><input type="submit" value="SUBMIT"></p> -->
     <p><button class="w3-button w3-light-grey w3-section" type="submit">올리기</button></p>

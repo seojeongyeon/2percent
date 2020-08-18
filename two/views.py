@@ -159,9 +159,20 @@ def mission_create(request):
 def mission_detail(request, mission_id):
     mission = get_object_or_404(Mission, pk=mission_id)
     comments = mission.missioncomment_set.all()
+    sort = request.GET.get('sort','') #url의 쿼리스트링을 가져온다. 없는 경우 공백을 리턴한다
+    if sort == 'like':
+        comments = comments.annotate(likes=Count('likers')).order_by('-likes')
+    else:
+        comments = comments.order_by('-pub_date')
+
+    if mission.pick :
+        picked = get_object_or_404(MissionComment, pk=mission.pick)
+    else :
+        picked = ''
     return render(request, 'mission_detail.html', {
         'mission': mission,
         'comments' : comments,
+        'picked' : picked
         })
 
 def mission_scrap(request, mission_id):
