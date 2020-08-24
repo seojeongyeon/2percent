@@ -108,7 +108,7 @@
                 {% if request.user == comment.author %}
                 <a href="{% url 'comment_delete' comment.id%}" style="float: right; margin-top:5px; text-decoration:none;">댓글 삭제하기</a>
                 
-            {% endif %}
+                {% endif %}
                 </form> 
             </div>
             <hr>
