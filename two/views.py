@@ -147,6 +147,7 @@ def mission_create(request):
         mission.title = request.POST['title']
         mission.pub_date = timezone.datetime.now()
         mission.writer = request.user
+        mission.writer.point -= mission.point # mission 포인트만큼 차감
         mission.body = request.POST['body']
         mission.image = request.FILES['image']
         mission.point = request.POST['point']
@@ -231,6 +232,7 @@ def mission_pick(request, comment_id):
     comment.save()
 
     mission = comment.mission
+    mission.writer.point += mission.point//2 # 채택 시 작성자에게 포인트 지급
     mission.pick = comment.id
     mission.save()
 
