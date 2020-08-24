@@ -151,6 +151,8 @@ def mission_create(request):
         mission.image = request.FILES['image']
         mission.point = request.POST['point']
         mission.end_date = request.POST['end_date']
+        mission.writer.point -= int(mission.point) # mission 포인트만큼 차감
+        mission.writer.save()
         mission.save()
         return redirect('mission_detail', mission.id)
     else :
@@ -231,7 +233,11 @@ def mission_pick(request, comment_id):
     comment.save()
 
     mission = comment.mission
+    mission.writer.point += mission.point//2 # 채택 시 의뢰글 작성자에게 의뢰 포인트의 절반 지급
+    comment.writer.point += mission.point # 채택 시 답변 작성자에게 의뢰 포인트 지급
     mission.pick = comment.id
+    mission.writer.save()
+    comment.writer.save()
     mission.save()
 
     writer = comment.writer
