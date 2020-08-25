@@ -11,7 +11,7 @@ class User(AbstractUser):
     info = models.TextField(max_length=200, blank=True, null=True)
     birthday = models.DateField(blank=True, null=True)
     followers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='followings')
-    point = models.IntegerField(default=0)
+    point = models.IntegerField(default=100)
     
     pscraps = models.ManyToManyField(Photoshop, related_name="pscrap_users")
     mscraps = models.ManyToManyField(Mission, related_name="mscrap_users")
