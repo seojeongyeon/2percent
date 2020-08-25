@@ -16,6 +16,10 @@ def home(request):
     c = Contest.objects.all().annotate(likes=Count('contest_like')).order_by('-contest_like')
     contests = Contest.objects
     best_contests = Contest.objects.all().order_by('-contest_like')
+    
+    recent_mission = Mission.objects.all().order_by('-pub_date')[:5]
+    recent_photoshop = Photoshop.objects.all().order_by('-date')[:5]
+    recent_contest = Contest.objects.all().order_by('-id')[:5]
 
     best_list = []
     if len(best_contests) >= 5:
@@ -31,7 +35,16 @@ def home(request):
             return redirect('contest')
     else:
         form = ContestForm()
-    return render(request, 'home.html', {'p':p,'c':c, 'contests':contests, 'best_contests':best_list, 'contests':best_contests, 'form':form})
+    return render(request, 'home.html', {
+        'p':p,'c':c, 
+        'contests':contests, 
+        'best_contests':best_list, 
+        'contests':best_contests, 
+        'form':form,
+        'recent_mission' : recent_mission,
+        'recent_photoshop' :recent_photoshop,
+        'recent_contest' : recent_contest,
+        })
 
 def photoshop(request):
     photoshops = Photoshop.objects
