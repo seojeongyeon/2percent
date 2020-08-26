@@ -81,36 +81,40 @@
         
           <!-- w3-center -->
         
-        <div class="w3-row w3-padding-64">
-           <br>
+          
             <h1 class="w3-center">2%를 부탁해</h1><br><br><br>
+            
+          <div class="w3-row w3-padding-64">
             <div class="w3-col m6 w3-padding-large w3-hide-small">
              <img src="static/main/images/03.jpg" class="w3-round w3-image w3-opacity-min" width="600" height="750">
             </div>
         
-            <div class="w3-col m6 w3-padding-large">
-              <br><br><br><br><h2>사진 의뢰하기</h2>
+            <div class="w3-col m6 w3-padding-large" style="vertical-align:middle">
+              <h2>사진 의뢰하기</h2>
               <p class="w3-large">전문가의 도움이 필요할 땐 쌓아둔 포인트를 사용한 <span class="w3-tag w3-pink">의뢰</span> 서비스.</p>
-              <br><div class='container' style="width: 90%;margin: 0 auto;"><p style="color:palevioletred;">[의뢰 게시판]의 최신글 확인하기<br>
-              <a href="{% url 'mission' %}"style="color:gray; text-decoration: underline;">&nbsp;&nbsp;&nbsp;➝ 사진에서 나무 좀 지워주세요!! 포인트 30드려요ㅜ</a><br>
-              <a href="{% url 'mission' %}"style="color:gray; text-decoration: underline;">&nbsp;&nbsp;&nbsp;➝ 사진 밝기만 조금 올려주시면 감사하겠습니다~^^</a><br>
-              <a href="{% url 'mission' %}"style="color:gray; text-decoration: underline;">&nbsp;&nbsp;&nbsp;➝ 급해요(ू˃̣̣̣̣̣̣︿˂̣̣̣̣̣̣ ू) 면접용 사진 뽀샵 부탁드립니다ㅠㅠㅠ</a></p></div>
+              <br>
+              <div class='container' ><p style="color:palevioletred;">[의뢰 게시판]의 최신글 확인하기<br>
+                  {% for mission in recent_mission %}
+                  <a href="{% url 'mission_detail' mission.id %}"style="color:gray; text-decoration: underline;">&nbsp;&nbsp;&nbsp;➝ {{mission.title}}</a><br>
+                  {% endfor %}
+              </div>
             
             </div>
-            
           </div>
         
           
           <div class="w3-row">
             <div class="w3-col m6 w3-padding-large">
-              <br><br><br><br><h2>나만의 보정법 공유하고 구독하기</h2>
+              <h2>나만의 보정법 공유하고 구독하기</h2>
                 <p class="w3-large">나만의 <span class="w3-tag w3-pink">보정 방법</span>을 상세하게 작성하고 공유하기.<br>내 마음에 드는 보정 방법만 <span class="w3-tag w3-pink">구독</span>하기.</p>
                 <br><div class='container' style="width: 90%;margin: 0 auto;">
                   <p style="color:palevioletred;">[보정법 게시판]의 최신글 확인하기<br>
-                  <a href="{% url 'photoshop' %}"style="color:gray; text-decoration: underline;">&nbsp;&nbsp;&nbsp;➝ 주말에 찍은 한강 사진이예요!</a><br>
-                  <a href="{% url 'photoshop' %}"style="color:gray; text-decoration: underline;">&nbsp;&nbsp;&nbsp;➝ 제가 자주쓰는 보정법 두번째 글 ꉂꉂ(ᵔᗜᵔ*) </a><br>
-                  <a href="{% url 'photoshop' %}"style="color:gray; text-decoration: underline;">&nbsp;&nbsp;&nbsp;➝ 어둑어둑한 사진 깨끗하게 보정하는 방법ㅎㅎ </a></p></div>
-            </div>
+                    {% for photoshop in recent_photoshop %}
+                    <a href="{% url 'photodetail' photoshop.id %}"style="color:gray; text-decoration: underline;">&nbsp;&nbsp;&nbsp;➝ {{photoshop.title}}</a><br>
+                
+                    {% endfor %}
+                </div>
+              </div>
             <div class="w3-col m6 w3-padding-large w3-hide-small">
              <img src="static/main/images/02.jpg" class="w3-round w3-image w3-opacity-min" width="600" height="750">
             </div>
